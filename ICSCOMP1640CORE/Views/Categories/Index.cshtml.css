@@ -1,0 +1,17 @@
+﻿
+
+
+/*Mobile*/
+@media only screen and (max-width: 739px) {
+    a.btn.btn-outline-danger.fas.fa-trash-alt {
+        margin-bottom: 10px !important;
+    } 
+}
+
+/*Tablet*/
+@media only screen and (min-width: 740px) and (max-width: 1023px) {
+    a.btn.btn-outline-danger.fas.fa-trash-alt {
+        margin-bottom: 10px !important;
+    } 
+}
+
