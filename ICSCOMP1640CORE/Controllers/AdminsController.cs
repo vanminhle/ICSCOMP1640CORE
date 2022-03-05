@@ -46,7 +46,23 @@ namespace ICSCOMP1640CORE.Controllers
             };
             _db.Departments.Add(newDepartment);
             _db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("DepartmentIndex");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteDepartment(int id)
+        {
+            var departmentsInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
+
+            if (departmentsInDb == null)
+            {
+                return NotFound();
+            }
+
+            _db.Departments.Remove(departmentsInDb);
+            _db.SaveChanges();
+
+            return RedirectToAction("DepartmentIndex");
         }
     }
 }
