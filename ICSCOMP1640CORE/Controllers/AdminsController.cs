@@ -1,35 +1,68 @@
 ﻿using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
-using ICSCOMP1640CORE.Utilities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace ICSCOMP1640CORE.Controllers
 {
-    [Authorize(Roles = Role.Admin)]
     public class AdminsController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-
         private ApplicationDbContext _db;
-        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+
+        public AdminsController(ApplicationDbContext db)
         {
             _db = db;
-            _userManager = userManager;
-            _roleManager = roleManager;
-
+        }
+        public IActionResult DepartmentIndex()
+        {
+            var departments = _db.Departments.ToList();
+            return View(departments);
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult CreateDepartment()
         {
             return View();
         }
 
+        [HttpPost]
+        public IActionResult CreateDepartment(Department model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-        //Manage account of each QA Coordinator Departments
+            var existDepartment = _db.Departments.Any(x => x.DepartmentName == model.DepartmentName);
+            if (existDepartment == true)
+            {
+                ModelState.AddModelError("", "Department Already Exists.");
+                return View(model);
+            }
+            var newDepartment = new Department()
+            {
+                DepartmentName = model.DepartmentName,
+                Description = model.Description,
+            };
+            _db.Departments.Add(newDepartment);
+            _db.SaveChanges();
+            return RedirectToAction("DepartmentIndex");
+        }
 
+        [HttpGet]
+        public IActionResult DeleteDepartment(int id)
+        {
+            var departmentsInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
 
+            if (departmentsInDb == null)
+            {
+                return NotFound();
+            }
+
+            _db.Departments.Remove(departmentsInDb);
+            _db.SaveChanges();
+
+            return RedirectToAction("DepartmentIndex");
+        }
     }
 }
