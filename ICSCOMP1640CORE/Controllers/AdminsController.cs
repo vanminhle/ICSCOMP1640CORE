@@ -64,5 +64,36 @@ namespace ICSCOMP1640CORE.Controllers
 
             return RedirectToAction("DepartmentIndex");
         }
+
+        [HttpGet]
+        public IActionResult EditDepartment(int id)
+        {
+            var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
+
+            if (departmentInDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(departmentInDb);
+        }
+
+        [HttpPost]
+        public IActionResult EditDepartment(Department department)
+        // In the get method we use id parameter, in post method we use department instance, so department.DepartmentId will be null.
+        //To resolve we should use hidden for the id in the edit view.
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(department);
+            }
+            var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == department.DepartmentId);
+
+            departmentInDb.DepartmentName = department.DepartmentName;
+            departmentInDb.Description = department.Description;
+            _db.SaveChanges();
+
+            return RedirectToAction("Index", "Admins");
+        }
     }
 }
