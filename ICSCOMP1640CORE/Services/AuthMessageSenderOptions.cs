@@ -1,4 +1,4 @@
-﻿namespace ICSCOMP1640CORE.Utilities
+﻿namespace ICSCOMP1640CORE.Services
 {
     public class AuthMessageSenderOptions
     {

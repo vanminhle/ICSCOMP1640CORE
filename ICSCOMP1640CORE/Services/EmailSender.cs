@@ -5,8 +5,9 @@ using SendGrid;
 using SendGrid.Helpers.Mail;
 using System.Threading.Tasks;
 using System;
+using System.Net;
 
-namespace ICSCOMP1640CORE.Utilities.EmailSender
+namespace ICSCOMP1640CORE.Services
 {
     public class EmailSender : IEmailSender
     {
@@ -22,28 +23,31 @@ namespace ICSCOMP1640CORE.Utilities.EmailSender
             return Execute(Options.SendGridKey, subject, message, email);
         }
 
-        public Task Execute(string apiKey, string subject, string message, string email)
+        public async Task Execute(string apiKey, string subject, string message, string email)
         {
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("Joe@contoso.com", "Joe Smith"),
+                From = new EmailAddress("minhlbgcd191002@fpt.edu.vn", "ICSMailService"),
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message
             };
             msg.AddTo(new EmailAddress(email));
 
-            // Disable click tracking.
-            // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
-
             msg.SetClickTracking(false, false);
-            return client.SendEmailAsync(msg);
 
-            /*            var response = client.SendEmailAsync(msg);
-                        _logger.LogInformation(response.IsSuccessStatusCode
-                                               ? $"Email to {toEmail} queued successfully!"
-                                               : $"Failure Email to {toEmail}");*/
+            //var response = client.SendEmailAsync(msg);*/
+
+
+            var response = await client.SendEmailAsync(msg);
+            if (response.StatusCode != HttpStatusCode.OK
+                && response.StatusCode != HttpStatusCode.Accepted)
+            {
+                var errorMessage = response.Body.ReadAsStringAsync().Result;
+                throw new Exception($"Failed to send mail to, status code {response.StatusCode}, {errorMessage}");
+            }
+            //return client.SendEmailAsync(msg);
         }
     }
 
