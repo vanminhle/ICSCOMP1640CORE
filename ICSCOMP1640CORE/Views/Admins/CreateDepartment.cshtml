@@ -2,27 +2,30 @@
 @{
     ViewBag.Title = "Create A Department";
 }
-<h1>Create A Department</h1>
+<head>
+  <link rel="stylesheet" href="~/css/CreateDepartment/CreateDepartment.css">
+</head>
+<div class="Frame"><center><h1>Create A Department</h1></center>
 
 <form asp-controller="Admins" asp-action="CreateDepartment" method="post">
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group Description">
+    <div class="form-group Name">
         <label>Department Name</label>
         @Html.TextBoxFor(t => t.DepartmentName, "", new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.DepartmentName, "",
              new { @class = "text-danger" }
          )
     </div>
-    <div class="form-group">
+    <div class="form-group Name">
         <label>Description</label>
         @Html.TextBoxFor(t => t.Description, "", new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.Description, "",
              new { @class = "text-danger" }
          )
     </div>
-
-    <button type="submit" class="btn btn-outline-success">Create</button>
-
-</form>
-
-<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">   Back to previous page</a></center>
+    <div class="form-group button">
+        <button type="submit" class="btn btn-outline-success col-1 Create">Create</button>
+        <a class="nav-link btn btn-outline-primary col-1 fas fa-reply Back" asp-controller="Admins" asp-action="Index">   Back</a></center>
+    </div>
+    
+</form></div>

@@ -13,7 +13,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             _db = db;
         }
-        public IActionResult Index()
+        public IActionResult DepartmentIndex()
         {
             var departments = _db.Departments.ToList();
             return View(departments);
