@@ -1,8 +1,11 @@
 ﻿@page
 @model LoginModel
 
+@{
+    ViewData["Title"] = "Login";
+}
+
 <!DOCTYPE html>
-<h1>@ViewData["Title"]</h1>
   <link rel="stylesheet" href="~/css/Login/Login.css" />
 <section class="form-login" style="box-sizing: content-box !important; padding: 15px 20px 15px 20px !important;">
 	<form id="account" method="post">
@@ -23,7 +26,7 @@
 			<span asp-validation-for="Input.Password" class="text-danger" style="font-size: 13px; padding-top: 5px;"></span>
 		</div>
 		<div class="Login"style="box-sizing: content-box !important;">
-	
+
 			<button id="login-submit" type="submit" class="button-Login" style="box-sizing: content-box !important;">Login</button>
 		</div>
 		<div class="remember-password">
