@@ -11,7 +11,7 @@ namespace ICSCOMP1640CORE.Models
         public string FullName { get; set; }
 
         [StringLength(30)]
-        public string? Address { get; set; }
+        public string Address { get; set; }
 
         public int Age { get; set; }
     }

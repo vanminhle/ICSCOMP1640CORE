@@ -9,9 +9,9 @@ namespace ICSCOMP1640CORE.Models
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
-        public User Users { get; set; }
+        public User User { get; set; }
 
         [ForeignKey("DepartmentId")]
-        public Department Departments { get; set; }
+        public Department Department { get; set; }
     }
 }
