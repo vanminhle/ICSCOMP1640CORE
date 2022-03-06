@@ -3,6 +3,9 @@
 @{
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
+@{
+    ViewData["Title"] = "Account Manage";
+}
   <link rel="stylesheet" href="~/css/Profile/Profile.css" />
 <h4>@ViewData["Title"]</h4>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
@@ -24,10 +27,10 @@
                 <input asp-for="Input.PhoneNumber" class="form-control" />
                 <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="btn btn-primary" 
+            <button id="update-profile-button" type="submit" class="btn btn-primary"
             style="margin-left: 90px;
                      width: 160px;background-color:#32be8f;color:black;border-color:white;
-                        
+
 ">Save</button>
         </form>
     </div>

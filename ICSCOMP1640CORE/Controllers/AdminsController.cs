@@ -1,5 +1,6 @@
 ﻿using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
+using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ using System.Linq;
 
 namespace ICSCOMP1640CORE.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = Role.Admin)]
     public class AdminsController : Controller
     {
         private readonly UserManager<User> _userManager;

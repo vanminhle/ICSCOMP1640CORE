@@ -1,11 +1,15 @@
 ﻿using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
+using ICSCOMP1640CORE.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 
 namespace ICSCOMP1640CORE.Controllers
 {
+    [Authorize(Roles = Role.Coordinator)]
+
     public class CategoriesController : Controller
     {
         public ApplicationDbContext _db;

@@ -1,5 +1,6 @@
-﻿
-@inject SignInManager<IdentityUser> SignInManager
+﻿@using ICSCOMP1640CORE.Models
+
+@inject SignInManager<User> SignInManager
 @{
     var hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
 }

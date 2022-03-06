@@ -97,7 +97,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        /*wait _signInManager.SignInAsync(user, isPersistent: false);*/
                         return LocalRedirect(returnUrl);
                     }
                 }

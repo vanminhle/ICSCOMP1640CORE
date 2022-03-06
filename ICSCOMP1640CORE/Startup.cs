@@ -27,13 +27,16 @@ namespace ICSCOMP1640CORE
         {
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")));
+                    Configuration.GetConnectionString("DefaultConnection"))
+                );
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
+
+
             services.AddControllersWithViews();
 
             services.AddTransient<IEmailSender, EmailSender>();
