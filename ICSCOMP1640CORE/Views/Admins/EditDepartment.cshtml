@@ -1,0 +1,27 @@
+﻿@model ICSCOMP1640CORE.Models.Department
+@{
+    ViewBag.Title = "Edit Department Information";
+}
+<head>
+  <link rel="stylesheet" href="~/css/EditDepartment/EditDepartment.css">
+</head>
+<div class="Frame">
+    <h2>Edit Department Information</h2>
+<form asp-controller="Admins" asp-action="EditDepartment" method="post">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.DepartmentId)
+    <div class="form-group Name">
+        <label>Department Name</label>
+        @Html.TextBoxFor(m => m.DepartmentName, "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.DepartmentName, "",
+            new { @class = "text-danger" })
+    </div>
+    <div class="form-group Name">
+        <label>Description</label>
+        @Html.TextBoxFor(m => m.Description, "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Description, "",
+            new { @class = "text-danger" })
+    </div>
+    <button type="submit" class="btn btn- btn-outline-primary button">Edit</button>
+</form>
+</div>

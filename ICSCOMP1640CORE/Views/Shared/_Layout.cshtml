@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using ICSCOMP1640CORE.Utilities
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,6 +7,7 @@
     <title>@ViewData["Title"] - ICSCOMP1640CORE</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 </head>
 <body>
     <header>
@@ -17,14 +19,23 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                     <ul class="nav navbar-nav">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (User.IsInRole(Role.Admin))
+                        {
+                            <li>@Html.ActionLink("Departments", "DepartmentIndex", "Admins")</li>
+                        }
+                        if (User.IsInRole(Role.Coordinator))
+                        {
+                            <li>@Html.ActionLink("Idea Category", "Index", "Categories")</li>
+                        }
+                        if (User.IsInRole(Role.Staff))
+                        {
+                            
+                        }
+                    }
+                </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>

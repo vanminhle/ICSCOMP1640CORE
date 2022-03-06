@@ -12,7 +12,8 @@
                 <th scope="col">Address</th>
                 <th scope="col">Age</th>
                 <th scope="col">Email</th>
-                <th scope="col">User Name</th>
+                <th scope="col">Phone number</th>
+                <th scope="col">Department</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -27,11 +28,11 @@
                 <td>@item.User.Email</td>
                 <td>@item.User.PhoneNumber</td>
                 <td>@item.Department</td>
-                @*<td>
-                    @Html.ActionLink(" Delete", "Delete", "Admins", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-                    @Html.ActionLink(" Edit", "EditStaff", "Admins", new { Id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
-                    @Html.ActionLink(" Change password", "ChangePassword", "Admins", new { UserId = item.Id }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
-                </td>*@
+                <td>
+                    @Html.ActionLink(" Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+                    @Html.ActionLink(" Edit", "EditStaff", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
+                    @Html.ActionLink(" Change password", "ChangePassword", "Admins", new { UserId = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
+                </td>
             </tr>
             }
         </tbody>
