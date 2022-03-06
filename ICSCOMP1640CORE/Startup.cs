@@ -35,7 +35,6 @@ namespace ICSCOMP1640CORE
                 .AddDefaultUI()
                 .AddDefaultTokenProviders();
             services.AddControllersWithViews();
-            services.AddControllersWithViews();
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
