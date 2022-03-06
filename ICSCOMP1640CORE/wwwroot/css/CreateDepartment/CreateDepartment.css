@@ -1,0 +1,26 @@
+﻿﻿body {
+}
+
+.Name {
+    width: 80%;
+    margin-left: 100px;
+}
+
+.button {
+    display: flex;
+}
+
+.Create {
+    margin-right: 10px;
+    margin-left: 470px;
+}
+
+.Back {
+    margin-right: auto;
+    align-content: center;
+}
+.Frame {
+    border: 1px solid;
+    border-radius: 12px;
+    margin-top: 50px;
+}

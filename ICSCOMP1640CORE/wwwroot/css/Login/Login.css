@@ -5,7 +5,7 @@
     padding: 20px 30px 20px 30px;
     width: 35%;
     margin: 50px auto;
-    
+
 }
 .form-control {
     padding: 15px 0 15px 0;
@@ -50,11 +50,12 @@ h2 {
     background-image: linear-gradient(to right, #32be8f, #32be8f, #32be8f);
 }
     .button-Login:hover {
-        background-image: linear-gradient(to right, #0b7d57, #0b7d57, #0b7d57);       
+        background-image: linear-gradient(to right, #0b7d57, #0b7d57, #0b7d57);
     }
 .checkbox{
     margin-left:20px;
 }
+
 
 @media screen and (max-width :768px) {
     .form-login {
