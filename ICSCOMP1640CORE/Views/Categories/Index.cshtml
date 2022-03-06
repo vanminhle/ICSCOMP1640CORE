@@ -5,8 +5,8 @@
     <div>
         @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
         {
-                <p>
-                     Find By Name: @Html.TextBox("searchCategory")
+            <p>
+                @Html.TextBox("searchCategory", "", new { placeholder = "Find By Name"})
                     <input type="submit" value="Search" />
                 </p>
         }

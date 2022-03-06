@@ -1,4 +1,5 @@
-﻿using ICSCOMP1640CORE.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,12 @@ namespace ICSCOMP1640CORE.Controllers
     public class CategoriesController : Controller
     {
         public ApplicationDbContext _db;
-        public CategoriesController(ApplicationDbContext db)
+        private readonly INotyfService _notfy;
+
+        public CategoriesController(ApplicationDbContext db, INotyfService notfy)
         {
             _db = db;
+            _notfy = notfy;
         }
         public IActionResult Index(string searchCategory)
         {
@@ -38,10 +42,13 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return View("CreateCategory");
             }
-            var check = _db.Categories.Any(c => c.CategoryName.Equals(category));
+            var check = _db.Categories.Any(
+                c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                ModelState.AddModelError("ExistCategory", "The Category Is Already Exist. ");
+                _notfy.Error("Name Of Category Is Already Exist", 3);
+                return View("CreateCategory");
+
             }
             var newCategoryInDb = new Category
             {
@@ -50,6 +57,7 @@ namespace ICSCOMP1640CORE.Controllers
             };
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
+            _notfy.Success("Category Added Successfully!", 3);
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -90,14 +98,16 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return NotFound();
             }
-            var check = _db.Categories.Any(c => c.CategoryName.Equals(category));
+            var check = _db.Categories.Any(c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                ModelState.AddModelError("ExistCategory", "The Category Is Already Exist. ");
+                _notfy.Error("Name Of Category Is Already Exist", 3);
+                return View("EditCategory");
             }
             categoryInDb.CategoryName = category.CategoryName;
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
+            _notfy.Success("Edit Category Successfully!", 3);
             return RedirectToAction("Index");
         }
     }
