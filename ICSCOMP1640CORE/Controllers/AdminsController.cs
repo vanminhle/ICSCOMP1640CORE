@@ -1,17 +1,24 @@
 ﻿using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace ICSCOMP1640CORE.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminsController : Controller
     {
-        private ApplicationDbContext _db;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public AdminsController(ApplicationDbContext db)
+        private ApplicationDbContext _db;
+        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
         public IActionResult DepartmentIndex()
         {
