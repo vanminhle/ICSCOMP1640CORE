@@ -10,6 +10,7 @@ namespace ICSCOMP1640CORE.Models
 
         [ForeignKey("UserId")]
         public User User { get; set; }
+
         public int DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]
