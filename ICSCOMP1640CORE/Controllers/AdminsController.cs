@@ -1,8 +1,10 @@
-﻿using ICSCOMP1640CORE.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace ICSCOMP1640CORE.Controllers
@@ -12,17 +14,25 @@ namespace ICSCOMP1640CORE.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly INotyfService _notyf;
 
         private ApplicationDbContext _db;
-        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
+            _notyf = notyf;
         }
-        public IActionResult DepartmentIndex()
+        public IActionResult DepartmentIndex(string searchString)
         {
             var departments = _db.Departments.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                departments = departments
+                    .Where(s => s.DepartmentName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
             return View(departments);
         }
 
@@ -43,7 +53,8 @@ namespace ICSCOMP1640CORE.Controllers
             var existDepartment = _db.Departments.Any(x => x.DepartmentName == model.DepartmentName);
             if (existDepartment == true)
             {
-                ModelState.AddModelError("", "Department Already Exists.");
+                /*ModelState.AddModelError("", "Department Already Exists.");*/
+                _notyf.Warning("Department Already Exists.");
                 return View(model);
             }
             var newDepartment = new Department()
@@ -51,6 +62,7 @@ namespace ICSCOMP1640CORE.Controllers
                 DepartmentName = model.DepartmentName,
                 Description = model.Description,
             };
+            _notyf.Success("Department is created successfully.");
             _db.Departments.Add(newDepartment);
             _db.SaveChanges();
             return RedirectToAction("DepartmentIndex");
@@ -65,7 +77,7 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return NotFound();
             }
-
+            _notyf.Success("Department is deleted successfully.");
             _db.Departments.Remove(departmentsInDb);
             _db.SaveChanges();
 
@@ -95,12 +107,19 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(department);
             }
             var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == department.DepartmentId);
+            var existDepartment = _db.Departments.Any(x => x.DepartmentName == department.DepartmentName);
 
+            if (existDepartment == true)
+            {
+                _notyf.Warning("Department Already Exists.");
+                return View(department);
+            }
+            _notyf.Warning("Department is edit successfully.");
             departmentInDb.DepartmentName = department.DepartmentName;
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
 
-            return RedirectToAction("Index", "Admins");
+            return RedirectToAction("DepartmentIndex", "Admins");
         }
     }
 }
