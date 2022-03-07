@@ -1,8 +1,35 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+	ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="~/css/Home/Index.css" />
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+@*<div class="text-center">
+	<h1 class="display-4">Welcome</h1>
+	<p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+	</div>*@
+
+<div class="jumbotron" style="background-image: @Url.Content("~/img/jumbotron-bg.png")">
+	<h1>Welcome.</h1>
+</div>
+
+<div class="row">
+
+			<div class="col">
+				<div class="card border-info mb-3">
+					<div class="card-header">Term and Conditions</div>
+					<div class="card-body text-info">
+						<p class="card-text">Things you need no remember and principles when using this system</p>
+						<a class="nav-link btn btn-outline-info">Term and Conditions</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="card border-success mb-3">
+					<div class="card-header">About Us</div>
+					<div class="card-body text-success">
+						<p class="card-text">About ASP.NET Core and description about this software</p>
+						<a class="nav-link btn btn-outline-success">Read More</a>
+					</div>
+				</div>
+			</div>
 </div>

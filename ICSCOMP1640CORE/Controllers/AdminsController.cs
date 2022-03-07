@@ -129,6 +129,8 @@ namespace ICSCOMP1640CORE.Controllers
             return RedirectToAction("DepartmentIndex");
         }
 
+        //Coordinator
+
         public IActionResult Index()
         {
             return View();
@@ -148,13 +150,22 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpPost]
         public IActionResult CreateCoordinator(Coordinator coordinator)
         {
-            if (!ModelState.IsValid) return View(coordinator);
+
+            if (coordinator.DepartmentId == 0)
+            {
+                TempData["Danger"] = "Please choose Coordinator Department";
+                return RedirectToAction("CreateCoordinator");
+            }
 
             if (_userManager.FindByEmailAsync(coordinator.User.Email).GetAwaiter().GetResult() != null)
             {
                 TempData["Danger"] = "The email address is already registered";
                 return RedirectToAction("CreateCoordinator");
             }
+
+
+
+            if (!ModelState.IsValid) return View(coordinator);
             var user = coordinator.User;
             user.UserName = user.Email;
 

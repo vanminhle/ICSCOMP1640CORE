@@ -11,7 +11,7 @@
 </head>
 <body>
 	<header>
-		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mt-2">
 			<div class="container">
 				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ICSCOMP1640CORE</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -19,12 +19,14 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 				<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-					<ul class="nav navbar-nav">
+					<ul class="nav navbar-nav" style="gap: 15px;">
 						@if (User.Identity.IsAuthenticated)
 						{
 							if (User.IsInRole(Role.Admin))
 							{
 								<li>@Html.ActionLink("Departments", "DepartmentIndex", "Admins")</li>
+								<li>@Html.ActionLink("Coordinator", "ManageCoordinator", "Admins")</li>
+
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{

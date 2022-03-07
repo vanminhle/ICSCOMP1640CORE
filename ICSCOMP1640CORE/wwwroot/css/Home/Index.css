@@ -1,0 +1,11 @@
+﻿.jumbotron {
+    margin-top: 70px;
+    box-shadow: 0px 10px 34px 12px rgba(0,0,0,10%);
+    background-image: url("img/jumbotron-bg.png");
+    color: white;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+
+

@@ -1,12 +1,10 @@
 ﻿* {
     box-sizing: content-box;
-
-
 }
 
 body {
-    background-image: linear-gradient(transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px), linear-gradient(90deg, transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px);
-    background-size: 100% 12px, 12px 100%;
+    /*background-image: linear-gradient(transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px), linear-gradient(90deg, transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px);
+    background-size: 100% 12px, 12px 100%;*/
 }
 
 .container {
@@ -21,8 +19,9 @@ body {
     background-color: #fff;
     padding: 35px;
     margin: 50px auto;
+    border-radius: 1.5%;
     width: 38%;
-    box-shadow: 0px 10px 34px 12px rgba(0,0,0,0.05);
+    box-shadow: 0px 10px 34px 12px rgba(0,0,0,0.10);
     display: flex;
     flex-direction: column;
     gap: 10px;
