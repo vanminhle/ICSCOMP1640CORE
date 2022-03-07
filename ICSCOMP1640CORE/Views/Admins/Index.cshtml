@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="jumbotron">
+    <h1>Welcome admin.</h1>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card border-info mb-3">
+            <div class="card-header">Management QA Coordinator Account.</div>
+            <div class="card-body text-info">
+                <p class="card-text">Click the button below to manage QA Coordinator Account.</p>
+                <a class="nav-link btn btn-outline-info" asp-controller="Admins" asp-action="ManageCoordinator">Manage</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-success mb-3">
+            <div class="card-header">Create QA Coordinator Account.</div>
+            <div class="card-body text-success">
+                <p class="card-text">Click the button below to create QA Coordinator Account.</p>
+                <a class="nav-link btn btn-outline-success" asp-controller="Admins" asp-action="CreateCoordinator">Create</a>
+            </div>
+        </div>
+    </div>
+</div>
