@@ -21,7 +21,6 @@ namespace ICSCOMP1640CORE.Controllers
 
         private ApplicationDbContext _db;
 
-        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf)
         {
             _db = db;
@@ -30,7 +29,6 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult DepartmentIndex()
         public IActionResult DepartmentIndex(string searchString)
         {
             var departments = _db.Departments.ToList();
@@ -176,7 +174,8 @@ namespace ICSCOMP1640CORE.Controllers
 
         public IActionResult ManageCoordinator()
         {
-            var coordinatorInDb = _db.Coordinators.Include(x => x.User).ToList();
+            var coordinatorInDb = _db.Coordinators.Include(x => x.User).Include(y => y.Department).ToList();
+
             return View(coordinatorInDb);
         }
 
@@ -209,7 +208,6 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorinDb.User.PhoneNumber = user.PhoneNumber;
             _db.SaveChanges();
 
-            return RedirectToAction("ManageTrainer");
             return RedirectToAction("DepartmentIndex", "Admins");
         }
     }
