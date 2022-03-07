@@ -3,17 +3,19 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICSCOMP1640CORE.Models
 {
-    public class Staff
+    public class DepartmentIdea
     {
         [Key]
-        public string UserId { get; set; }
-
-        [ForeignKey("UserId")]
-        public User User { get; set; }
         public int DepartmentId { get; set; }
 
         [ForeignKey("DepartmentId")]
         public Department Department { get; set; }
+
+        //Foreign key Idea Table
+        public int IdeaId { get; set; }
+
+        [ForeignKey("IdeaId")]
+        public Idea Idea { get; set; }
 
 
     }

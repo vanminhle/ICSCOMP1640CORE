@@ -15,5 +15,6 @@ namespace ICSCOMP1640CORE.Models
         [StringLength(20)]
 
         public string Description { get; set; }
+
     }
 }
