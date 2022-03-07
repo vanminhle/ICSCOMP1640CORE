@@ -7,12 +7,12 @@
   <link rel="stylesheet" href="~/css/DepartmentIndex/DepartmentIndex.css">
 </head>
 <h2>Departments</h2>
-<form asp-controller="Admins" asp-action="Index" method="get">
-    <center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="CreateDepartment">Create a new Department</a></center>
-    <div class="form-group Search">
-        @Html.TextBox("searchString", null, new { @class = "form-control" })
+    @using (Html.BeginForm("DepartmentIndex","Admins",FormMethod.Get)){
+        <div class="form-group" style = "gap:10px; display: flex; width: 40%;">
+        @Html.TextBox("searchString" ,null, new { @class = "form-control" , @placeholder = "Find By Name" })
         <button type="submit" class="btn btn-outline-primary">Search</button>
-    </div>
+    </div>}
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -37,4 +37,4 @@
         }
     </tbody>
 </table>
-</form>
+<center><a class="nav-link btn btn-outline-primary col-4" asp-controller="Admins" asp-action="CreateDepartment">Create A new Department</a></center>

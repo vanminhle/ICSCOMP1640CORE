@@ -1,3 +1,5 @@
+using AspNetCoreHero.ToastNotification;
+using AspNetCoreHero.ToastNotification.Extensions;
 using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Services;
@@ -39,6 +41,7 @@ namespace ICSCOMP1640CORE
 
             services.AddControllersWithViews();
 
+            services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
         }
@@ -64,6 +67,8 @@ namespace ICSCOMP1640CORE
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseNotyf();
 
             app.UseEndpoints(endpoints =>
             {
