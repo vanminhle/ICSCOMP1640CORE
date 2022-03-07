@@ -70,6 +70,7 @@ namespace ICSCOMP1640CORE.Controllers
             }
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
+            _notfy.Success("Delete Category Successfully!", 3);
             return RedirectToAction("Index");
         }
         [HttpGet]
