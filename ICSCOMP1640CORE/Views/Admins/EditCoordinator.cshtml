@@ -1,17 +1,18 @@
 ﻿@model ICSCOMP1640CORE.Models.Coordinator
 
 @{
-	ViewData["Title"] = "Create Coordinator Account";
+	ViewData["Title"] = "Edit Coordinator Account";
 }
 
-<h1 class="mt-5 mb-4">Create QA Coordinator Account</h1>
+<h1 class="mt-5 mb-4">Edit QA Coordinator Account</h1>
 @if (TempData["Danger"] != null)
 {
-	<div class="alert alert-danger alert-dismissable">
-		<strong>@TempData["Danger"]</strong>
-	</div>
+		<div class="alert alert-danger alert-dismissable">
+			<strong>@TempData["Danger"]</strong>
+		</div>
 }
-<form asp-controller="Admins" asp-action="CreateCoordinator" method="post">
+<form asp-controller="Admins" asp-action="EditCoordinator" method="post">
+	@Html.HiddenFor(i => i.UserId)
 	<div class="mw-100 mb-5">
 		<div class="form-group">
 			<label>Full Name</label>
@@ -19,16 +20,16 @@
 			<span asp-validation-for="User.FullName" class="text-danger"></span>
 		</div>
 		<div class="form-row">
-			<div class="form-group col-md-6">
+			@*<div class="form-group col-md-6">
 				<label>Email</label>
 				<input type="email" class="form-control" placeholder="mail@example.com" asp-for="User.Email" required>
 				<span asp-validation-for="User.Email" class="text-danger"></span>
-			</div>
-			<div class="form-group col-md-6">
+				</div>*@
+			@*<div class="form-group col-md-6">
 				<label>Password</label>
 				<input type="password" class="form-control" placeholder="Password" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" asp-for="User.PasswordHash" id="myInput" required>
 				<span asp-validation-for="User.PasswordHash" class="text-danger"></span>
-			</div>
+				</div>*@
 		</div>
 
 		<div class="form-row">
@@ -50,7 +51,7 @@
 			@Html.DropDownListFor(model => model.DepartmentId, ViewBag.departmentList as SelectList,
 			"Select Department", new { @class = "form-control", required= "required"})
 		</div>
-		<button type="submit" class="btn btn-outline-success">Create</button>
+		<button type="submit" class="btn btn-outline-success">Edit</button>
 		<a class="btn btn-outline-primary" asp-controller="Admins" asp-action="ManageCoordinator">Cancel</a>
 	</div>
 </form>

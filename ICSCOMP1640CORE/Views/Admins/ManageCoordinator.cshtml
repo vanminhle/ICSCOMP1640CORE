@@ -33,13 +33,12 @@
 					<td>@item.User.PhoneNumber</td>
 					<td>@item.Department.DepartmentName</td>
 					<td>
-						@Html.ActionLink(" Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-						@Html.ActionLink(" Edit", "EditStaff", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
-						@Html.ActionLink(" Change password", "ChangePassword", "Admins", new { UserId = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
+						@Html.ActionLink("Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink("Edit", "EditCoordinator", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
 						@Html.ActionLink("InforCoordinator","InforCoordinator","Admins",new { Id = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
 					</td>
 				</tr>
-			}			
+			}
 		</tbody>
 	</table>
 	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">   Back to previous page</a></center>

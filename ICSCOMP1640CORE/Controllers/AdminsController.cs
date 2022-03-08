@@ -93,10 +93,7 @@ namespace ICSCOMP1640CORE.Controllers
         public IActionResult EditDepartment(int id)
         {
             var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
-            var department = _db.Departments.ToList();
-            var departmentList = _db.Departments.Select(x => new { x.DepartmentId, x.DepartmentName }).ToList();
 
-            ViewBag.departmentList = new SelectList(departmentList, "DepartmentId", "DepartmentName");
             if (departmentInDb == null)
             {
                 return NotFound();
@@ -121,7 +118,7 @@ namespace ICSCOMP1640CORE.Controllers
                 _notyf.Warning("Department Already Exists.");
                 return View(department);
             }
-            _notyf.Warning("Department is edit successfully.");
+            _notyf.Success("Department is edit successfully.");
             departmentInDb.DepartmentName = department.DepartmentName;
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
@@ -131,11 +128,7 @@ namespace ICSCOMP1640CORE.Controllers
 
         //Coordinator
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+        [HttpGet]
         public IActionResult CreateCoordinator()
         {
             Coordinator model = new Coordinator();
@@ -151,30 +144,23 @@ namespace ICSCOMP1640CORE.Controllers
         public IActionResult CreateCoordinator(Coordinator coordinator)
         {
 
-            if (coordinator.DepartmentId == 0)
-            {
-                TempData["Danger"] = "Please choose Coordinator Department";
-                return RedirectToAction("CreateCoordinator");
-            }
-
             if (_userManager.FindByEmailAsync(coordinator.User.Email).GetAwaiter().GetResult() != null)
             {
                 TempData["Danger"] = "The email address is already registered";
                 return RedirectToAction("CreateCoordinator");
             }
 
-
-
             if (!ModelState.IsValid) return View(coordinator);
+
             var user = coordinator.User;
             user.UserName = user.Email;
 
             IdentityResult result = _userManager.CreateAsync(user, user.PasswordHash).GetAwaiter().GetResult();
-
             if (result.Succeeded)
             {
                 _userManager.AddToRoleAsync(user, "Coordinator").GetAwaiter().GetResult();
             }
+
             var coordinatorProfile = new Coordinator();
             coordinatorProfile.UserId = user.Id;
             coordinatorProfile.DepartmentId = coordinator.DepartmentId;
@@ -183,6 +169,7 @@ namespace ICSCOMP1640CORE.Controllers
             return RedirectToAction("ManageCoordinator");
         }
 
+        [HttpGet]
         public IActionResult ManageCoordinator()
         {
             var coordinatorInDb = _db.Coordinators.Include(x => x.User).Include(y => y.Department).ToList();
@@ -200,27 +187,37 @@ namespace ICSCOMP1640CORE.Controllers
             return RedirectToAction("ManageCoordinator");
         }
 
+        [HttpGet]
         public ActionResult EditCoordinator(string Id)
         {
-            var todoInDb = _db.Users
-              .SingleOrDefault(item => item.Id == Id);
+            var coordinatorindb = _db.Coordinators.SingleOrDefault(item => item.UserId == Id);
 
-            return View(todoInDb);
+            var user = _db.Users.ToList();
+
+            var departmentList = _db.Departments.Select(x => new { x.DepartmentId, x.DepartmentName }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "DepartmentId", "DepartmentName");
+
+            return View(coordinatorindb);
         }
 
         [HttpPost]
-        public ActionResult EditCoordinator(User user)
+        public ActionResult EditCoordinator(Coordinator coordinator)
         {
             var coordinatorinDb = _db.Coordinators.Include(x => x.User)
-                .SingleOrDefault(item => item.UserId == user.Id);
-            coordinatorinDb.User.FullName = user.FullName;
-            coordinatorinDb.User.Address = user.Address;
-            coordinatorinDb.User.Age = user.Age;
-            coordinatorinDb.User.PhoneNumber = user.PhoneNumber;
+                .SingleOrDefault(item => item.UserId == coordinator.UserId);
+
+            coordinatorinDb.User.FullName = coordinator.User.FullName;
+            coordinatorinDb.User.Address = coordinator.User.Address;
+            coordinatorinDb.User.Age = coordinator.User.Age;
+            coordinatorinDb.User.PhoneNumber = coordinator.User.PhoneNumber;
+
+            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
+
             _db.SaveChanges();
 
-            return RedirectToAction("DepartmentIndex", "Admins");
+            return RedirectToAction("ManageCoordinator");
         }
+
         [HttpGet]
         public ActionResult InforCoordinator(string Id)
         {
