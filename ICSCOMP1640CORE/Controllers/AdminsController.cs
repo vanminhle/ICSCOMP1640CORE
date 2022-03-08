@@ -221,5 +221,19 @@ namespace ICSCOMP1640CORE.Controllers
 
             return RedirectToAction("DepartmentIndex", "Admins");
         }
+        [HttpGet]
+        public ActionResult InforCoordinator(string Id)
+        {
+
+            var userId = _userManager.GetUserId(User);
+            var coordinatorInDb = _db.Coordinators.Include(x => x.User).Include(y => y.Department).SingleOrDefault(item => item.UserId == Id);
+            if (coordinatorInDb == null)
+            {
+                return NotFound();
+            }
+            return View(coordinatorInDb);
+
+
+        }
     }
 }
