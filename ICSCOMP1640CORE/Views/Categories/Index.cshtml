@@ -5,10 +5,11 @@
     <div>
         @using (Html.BeginForm("Index", "Categories", FormMethod.Get))
         {
-                <p>
-                     Find By Name: @Html.TextBox("searchCategory")
-                    <input type="submit" value="Search" />
-                </p>
+            <div style="text-align: right">
+
+                    @Html.TextBox("searchCategory", null, new {@placeholder = "Find By Name" })
+                    <input type="submit" value="Search" style="margin-left: -5px" />
+            </div>
         }
     </div>
     <br>
@@ -30,8 +31,8 @@
                     <td>@item.CategoryName</td>
                     <td>@item.Description</td>
                     <td>
-                        @Html.ActionLink(" Delete", "DeleteCategory", "Categories", new { Id = item.CategoryId }, new { @class = "btn btn-outline-danger mb-3 col-sm-4 fas fa-trash-alt space" })
-                        @Html.ActionLink(" Edit", "EditCategory", "Categories", new { id = item.CategoryId }, new { @class = "btn btn-outline-info mb-3 col-sm-4  	fas fa-edit" })
+                        @Html.ActionLink("", "DeleteCategory", "Categories", new { Id = item.CategoryId }, new { @class = "btn btn-outline-danger mb-3 col-sm-3 fas fa-trash-alt space" })
+                        @Html.ActionLink("", "EditCategory", "Categories", new { id = item.CategoryId }, new { @class = "btn btn-outline-info mb-3 col-sm-3  	fas fa-edit" })
                     </td>
                 </tr>
             }

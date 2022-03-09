@@ -1,4 +1,5 @@
-﻿using ICSCOMP1640CORE.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -13,9 +14,11 @@ namespace ICSCOMP1640CORE.Controllers
     public class CategoriesController : Controller
     {
         public ApplicationDbContext _db;
-        public CategoriesController(ApplicationDbContext db)
+        private readonly INotyfService _notyf;
+        public CategoriesController(ApplicationDbContext db, INotyfService notyf)
         {
             _db = db;
+            _notyf = notyf;
         }
         public IActionResult Index(string searchCategory)
         {
@@ -38,10 +41,11 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return View("CreateCategory");
             }
-            var check = _db.Categories.Any(c => c.CategoryName.Equals(category));
+            var check = _db.Categories.Any(c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                ModelState.AddModelError("ExistCategory", "The Category Is Already Exist. ");
+                _notyf.Warning("Department Already Exists.");
+                return View(category);
             }
             var newCategoryInDb = new Category
             {
@@ -50,6 +54,7 @@ namespace ICSCOMP1640CORE.Controllers
             };
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
+            _notyf.Success("Department is created successfully.");
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -90,14 +95,16 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return NotFound();
             }
-            var check = _db.Categories.Any(c => c.CategoryName.Equals(category));
+            var check = _db.Categories.Any(c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                ModelState.AddModelError("ExistCategory", "The Category Is Already Exist. ");
+                _notyf.Warning("Category Already Exists.");
+                return View(category);
             }
             categoryInDb.CategoryName = category.CategoryName;
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
+            _notyf.Success("Category is edited successfully.");
             return RedirectToAction("Index");
         }
     }
