@@ -7,7 +7,7 @@
 }
 
 @using (Html.BeginForm("DepartmentIndex","Admins",FormMethod.Get)){
-    <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+    <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
         <h1 class="flex-row text-center">Departments</h1>
         <div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
             @Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
