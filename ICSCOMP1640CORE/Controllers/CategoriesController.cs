@@ -15,6 +15,7 @@ namespace ICSCOMP1640CORE.Controllers
     {
         public ApplicationDbContext _db;
         private readonly INotyfService _notyf;
+
         public CategoriesController(ApplicationDbContext db, INotyfService notyf)
         {
             _db = db;
@@ -45,7 +46,7 @@ namespace ICSCOMP1640CORE.Controllers
                 c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                _notfy.Error("Name Of Category Is Already Exist", 3);
+                _notyf.Warning("Category Already Exists.", 3);
                 return View("CreateCategory");
 
             }
@@ -56,7 +57,7 @@ namespace ICSCOMP1640CORE.Controllers
             };
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
-            _notfy.Success("Category Added Successfully!", 3);
+            _notyf.Success("Category is created successfully.", 3);
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -69,7 +70,7 @@ namespace ICSCOMP1640CORE.Controllers
             }
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
-            _notfy.Success("Delete Category Successfully!", 3);
+            _notyf.Success("Category is deleted successfully.", 3);
             return RedirectToAction("Index");
         }
         [HttpGet]
@@ -101,13 +102,13 @@ namespace ICSCOMP1640CORE.Controllers
             var check = _db.Categories.Any(c => c.CategoryName.Equals(category.CategoryName));
             if (check)
             {
-                _notfy.Error("Name Of Category Is Already Exist", 3);
+                _notyf.Warning("Category Already Exists.", 3);
                 return View("EditCategory");
             }
             categoryInDb.CategoryName = category.CategoryName;
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
-            _notfy.Success("Edit Category Successfully!", 3);
+            _notyf.Success("Category is edit successfully.", 3);
             return RedirectToAction("Index");
         }
     }
