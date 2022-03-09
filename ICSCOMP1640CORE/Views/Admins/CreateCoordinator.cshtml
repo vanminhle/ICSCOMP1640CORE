@@ -12,44 +12,56 @@
 	</div>
 }
 <form asp-controller="Admins" asp-action="CreateCoordinator" method="post">
-	<div class="mw-100 mb-5">
-		<div class="form-group">
-			<label>Full Name</label>
-			<input type="text" class="form-control" placeholder="Nguyen Van A" asp-for="User.FullName" required>
-			<span asp-validation-for="User.FullName" class="text-danger"></span>
+	<div class="mw-50 mb-5">
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label>Full Name</label>
+				<input type="text" class="form-control" placeholder="Nguyen Van A" asp-for="FullName" required>
+				<span asp-validation-for="FullName" class="text-danger"></span>
+			</div>
+			<div class="form-group col-md-6">
+				<label>Gender</label>
+				@Html.DropDownListFor(m => m.Gender,new SelectList(Enum.GetValues(typeof(Gender))),"Select Gender")
+			</div>
 		</div>
+		<div class="form-group">
+
+		</div>
+
 		<div class="form-row">
 			<div class="form-group col-md-6">
 				<label>Email</label>
-				<input type="email" class="form-control" placeholder="mail@example.com" asp-for="User.Email" required>
-				<span asp-validation-for="User.Email" class="text-danger"></span>
+				<input type="email" class="form-control" placeholder="mail@example.com" asp-for="Email" required>
+				<span asp-validation-for="Email" class="text-danger"></span>
 			</div>
 			<div class="form-group col-md-6">
 				<label>Password</label>
-				<input type="password" class="form-control" placeholder="Password" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" asp-for="User.PasswordHash" id="myInput" required>
-				<span asp-validation-for="User.PasswordHash" class="text-danger"></span>
+				<input type="password" class="form-control" placeholder="Password" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" asp-for="PasswordHash" id="myInput" required>
+				<span asp-validation-for="PasswordHash" class="text-danger"></span>
 			</div>
 		</div>
 
 		<div class="form-row">
 			<div class="form-group col-md-6">
 				<label>Address</label>
-				<input type="text" class="form-control" placeholder="Address" asp-for="User.Address" required>
+				<input type="text" class="form-control" placeholder="Address" asp-for="Address" required>
 			</div>
 			<div class="form-group col-md-4">
 				<label>Phone number</label>
-				<input type="tel" class="form-control" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" title="Phone number must be 10 numbers" placeholder="09XXXXXXXX" asp-for="User.PhoneNumber" required>
+				<input type="tel" class="form-control" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" title="Phone number must be 10 numbers" placeholder="09XXXXXXXX" asp-for="PhoneNumber" required>
 			</div>
 			<div class="form-group col-md-2">
 				<label>Age</label>
-				<input type="number" min=25 max=60 class="form-control" placeholder="Age" asp-for="User.Age" required>
+				<input type="number" min=25 max=60 class="form-control" placeholder="Age" asp-for="Age" required>
 			</div>
 		</div>
+
 		<div class="form-group">
 			<label>Department</label>
 			@Html.DropDownListFor(model => model.DepartmentId, ViewBag.departmentList as SelectList,
 			"Select Department", new { @class = "form-control", required= "required"})
 		</div>
+
 		<button type="submit" class="btn btn-outline-success">Create</button>
 		<a class="btn btn-outline-primary" asp-controller="Admins" asp-action="ManageCoordinator">Cancel</a>
 	</div>

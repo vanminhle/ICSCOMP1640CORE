@@ -4,11 +4,17 @@ using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Controllers
 {
@@ -18,15 +24,18 @@ namespace ICSCOMP1640CORE.Controllers
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly INotyfService _notyf;
+        private readonly IEmailSender _emailSender;
+
 
         private ApplicationDbContext _db;
 
-        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf)
+        public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf, IEmailSender emailSender)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
             _notyf = notyf;
+            _emailSender = emailSender;
         }
 
         public IActionResult DepartmentIndex(string searchString)
@@ -35,7 +44,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 departments = departments
-                    .Where(s => s.DepartmentName.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.Name.ToLower().Contains(searchString.ToLower()))
                 .ToList();
             }
             return View(departments);
@@ -55,7 +64,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(model);
             }
 
-            var existDepartment = _db.Departments.Any(x => x.DepartmentName == model.DepartmentName);
+            var existDepartment = _db.Departments.Any(x => x.Name == model.Name);
             if (existDepartment == true)
             {
                 /*ModelState.AddModelError("", "Department Already Exists.");*/
@@ -64,7 +73,7 @@ namespace ICSCOMP1640CORE.Controllers
             }
             var newDepartment = new Department()
             {
-                DepartmentName = model.DepartmentName,
+                Name = model.Name,
                 Description = model.Description,
             };
             _notyf.Success("Department is created successfully.");
@@ -76,7 +85,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult DeleteDepartment(int id)
         {
-            var departmentsInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
+            var departmentsInDb = _db.Departments.SingleOrDefault(x => x.Id == id);
 
             if (departmentsInDb == null)
             {
@@ -92,7 +101,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult EditDepartment(int id)
         {
-            var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == id);
+            var departmentInDb = _db.Departments.SingleOrDefault(x => x.Id == id);
 
             if (departmentInDb == null)
             {
@@ -110,8 +119,8 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 return View(department);
             }
-            var departmentInDb = _db.Departments.SingleOrDefault(x => x.DepartmentId == department.DepartmentId);
-            var existDepartment = _db.Departments.Any(x => x.DepartmentName == department.DepartmentName);
+            var departmentInDb = _db.Departments.SingleOrDefault(x => x.Id == department.Id);
+            var existDepartment = _db.Departments.Any(x => x.Name == department.Name);
 
             if (existDepartment == true)
             {
@@ -119,7 +128,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(department);
             }
             _notyf.Success("Department is edit successfully.");
-            departmentInDb.DepartmentName = department.DepartmentName;
+            departmentInDb.Name = department.Name;
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
 
@@ -133,18 +142,18 @@ namespace ICSCOMP1640CORE.Controllers
         {
             Coordinator model = new Coordinator();
 
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
             var department = _db.Departments.ToList();
-            var departmentList = _db.Departments.Select(x => new { x.DepartmentId, x.DepartmentName }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
 
-            ViewBag.departmentList = new SelectList(departmentList, "DepartmentId", "DepartmentName");
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult CreateCoordinator(Coordinator coordinator)
+        public async Task<IActionResult> CreateCoordinator(Coordinator coordinator)
         {
 
-            if (_userManager.FindByEmailAsync(coordinator.User.Email).GetAwaiter().GetResult() != null)
+            if (_userManager.FindByEmailAsync(coordinator.Email).GetAwaiter().GetResult() != null)
             {
                 TempData["Danger"] = "The email address is already registered";
                 return RedirectToAction("CreateCoordinator");
@@ -152,29 +161,56 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (!ModelState.IsValid) return View(coordinator);
 
-            var user = coordinator.User;
-            user.UserName = user.Email;
+            /*var user = coordinator;
+            user.UserName = user.Email;*/
 
-            IdentityResult result = _userManager.CreateAsync(user, user.PasswordHash).GetAwaiter().GetResult();
+            /*coordinatorProfile = new Coordinator();
+            //coordinatorProfile.Id = coordinator.Id;
+            coordinatorProfile.Id = user.Id;
+            coordinatorProfile.FullName = user.FullName;
+            coordinatorProfile.Gender = user.Gender;
+            coordinatorProfile.Age = user.Age;
+            coordinatorProfile.Address = user.Address;
+            coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
+
+            IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
+            //_db.Users.Add(coordinatorProfile);
+
+            _db.SaveChanges();
+
             if (result.Succeeded)
             {
-                _userManager.AddToRoleAsync(user, "Coordinator").GetAwaiter().GetResult();
-            }
+                _userManager.AddToRoleAsync(coordinator, "Coordinator").GetAwaiter().GetResult();
 
-            var coordinatorProfile = new Coordinator();
-            coordinatorProfile.UserId = user.Id;
-            coordinatorProfile.DepartmentId = coordinator.DepartmentId;
-            _db.Coordinators.Add(coordinatorProfile);
-            _db.SaveChanges();
+                var userId = await _userManager.GetUserIdAsync(coordinator);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(coordinator);
+
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { userId = userId, code = code },
+                    protocol: Request.Scheme);
+                await _emailSender.SendEmailAsync(
+                    coordinator.Email,
+                    "Confirm your email",
+                    $"Hi, {coordinator.FullName} Please confirm your email account {coordinator.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            }
             return RedirectToAction("ManageCoordinator");
         }
 
         [HttpGet]
         public IActionResult ManageCoordinator()
         {
-            var coordinatorInDb = _db.Coordinators.Include(x => x.User).Include(y => y.Department).ToList();
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+            foreach(var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
 
-            return View(coordinatorInDb);
+            }
+
+            return View(data);
         }
 
         [HttpGet]
@@ -190,47 +226,50 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public ActionResult EditCoordinator(string Id)
         {
-            var coordinatorindb = _db.Coordinators.SingleOrDefault(item => item.UserId == Id);
-
+            var coordinatorindb = _db.Users.SingleOrDefault(item => item.Id == Id);
             var user = _db.Users.ToList();
 
-            var departmentList = _db.Departments.Select(x => new { x.DepartmentId, x.DepartmentName }).ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "DepartmentId", "DepartmentName");
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
 
             return View(coordinatorindb);
         }
 
         [HttpPost]
-        public ActionResult EditCoordinator(Coordinator coordinator)
+        public ActionResult EditCoordinator(string id, Coordinator coordinator)
         {
-            var coordinatorinDb = _db.Coordinators.Include(x => x.User)
-                .SingleOrDefault(item => item.UserId == coordinator.UserId);
+            var coordinatorinDb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
 
-            coordinatorinDb.User.FullName = coordinator.User.FullName;
-            coordinatorinDb.User.Address = coordinator.User.Address;
-            coordinatorinDb.User.Age = coordinator.User.Age;
-            coordinatorinDb.User.PhoneNumber = coordinator.User.PhoneNumber;
+            if (coordinatorinDb == null)
+            {
+                return BadRequest();
+            }
 
-            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
+            coordinatorinDb.FullName = coordinator.FullName;
+            coordinatorinDb.Address = coordinator.Address;
+            coordinatorinDb.Age = coordinator.Age;
+            coordinatorinDb.Gender = coordinator.Gender;
+            coordinatorinDb.Department = coordinator.Department;
+            coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
 
+            /*coordinatorinDb.DepartmentId = coordinator.DepartmentId;*/
+
+            _db.Update(coordinatorinDb);
             _db.SaveChanges();
 
             return RedirectToAction("ManageCoordinator");
         }
 
         [HttpGet]
-        public ActionResult InforCoordinator(string Id)
+        public ActionResult InforCoordinator(string id)
         {
 
-            var userId = _userManager.GetUserId(User);
-            var coordinatorInDb = _db.Coordinators.Include(x => x.User).Include(y => y.Department).SingleOrDefault(item => item.UserId == Id);
-            if (coordinatorInDb == null)
+            var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            if (info == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);
-
-
+            return View(info);
         }
     }
 }

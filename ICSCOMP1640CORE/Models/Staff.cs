@@ -3,17 +3,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ICSCOMP1640CORE.Models
 {
-    public class Staff
+    public class Staff : User
     {
-        [Key]
-        public string UserId { get; set; }
 
-        [ForeignKey("UserId")]
-        public User User { get; set; }
-        public int DepartmentId { get; set; }
-
-        [ForeignKey("DepartmentId")]
-        public Department Department { get; set; }
+        // When Created
+        // Set Roles to Staff
 
 
     }

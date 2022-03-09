@@ -1,47 +1,48 @@
 ﻿@model IEnumerable<ICSCOMP1640CORE.Models.Department>
 @{
-    ViewData["Department List"] = "";
+	ViewData["Department List"] = "";
 }
 @{
-    ViewBag.Title = "Departments";
+	ViewBag.Title = "Departments";
 }
 
-@using (Html.BeginForm("DepartmentIndex","Admins",FormMethod.Get)){
-    <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
-        <h1 class="flex-row text-center">Departments</h1>
-        <div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
-            @Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </div>
+@using (Html.BeginForm("DepartmentIndex", "Admins", FormMethod.Get))
+{
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+		<h1 class="flex-row text-center">Departments</h1>
+		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
+			@Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
+			<button type="submit" class="btn btn-primary">Search</button>
+		</div>
+	</div>
 
 
-<div class="table-responsive">
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col" class="col-sm-1">ID</th>
-                <th scope="col" class="col-sm-4">Department Name</th>
-                <th scope="col" class="col-sm-4">Description</th>
-                <th scope="col" class="col-sm-2">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <th class="align-middle" scope="row">@item.DepartmentId</th>
-                    <td class="align-middle">@item.DepartmentName</td>
-                    <td class="align-middle">@item.Description</td>
-                    <td class="align-middle">
-                        @Html.ActionLink("", "DeleteDepartment", "Admins", new { id = item.DepartmentId }, new { @class = "btn btn-danger far fa-trash-alt" })
-                        @Html.ActionLink("", "EditDepartment", "Admins", new { id = item.DepartmentId }, new { @class = "btn btn-success fas fa-edit" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th scope="col" class="col-sm-1">ID</th>
+					<th scope="col" class="col-sm-4">Department Name</th>
+					<th scope="col" class="col-sm-4">Description</th>
+					<th scope="col" class="col-sm-2">Action</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<th class="align-middle" scope="row">@item.Id</th>
+						<td class="align-middle">@item.Name</td>
+						<td class="align-middle">@item.Description</td>
+						<td class="align-middle">
+							@Html.ActionLink("", "DeleteDepartment", "Admins", new { id = item.Id }, new { @class = "btn btn-danger far fa-trash-alt" })
+							@Html.ActionLink("", "EditDepartment", "Admins", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit" })
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
 
 }
 

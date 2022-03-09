@@ -7,22 +7,21 @@ namespace ICSCOMP1640CORE.Models
     public class Comment
     {
         [Key]
-        public int CommentId { get; set; }
+        public int Id { get; set; }
 
-        //Foreign key UserId
-
+        //Foreign key UserId, comment can be give by any user
+        [ForeignKey("User")]
         public string UserId { get; set; }
+        public User User { get; set; }
 
-        [ForeignKey("UserId")]
-        public Staff Staff { get; set; }
 
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime CommentDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         [Required(ErrorMessage = "You should provide comment of the idea")]
-        public string CommentText { get; set; }
+        public string Content { get; set; }
 
     }
 }
