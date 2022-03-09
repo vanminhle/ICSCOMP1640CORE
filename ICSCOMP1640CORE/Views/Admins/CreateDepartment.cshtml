@@ -11,8 +11,8 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group" style="width:50%">
         <label>Department Name</label>
-        @Html.TextBoxFor(t => t.DepartmentName, "", new { @class = "form-control" })
-        @Html.ValidationMessageFor(m => m.DepartmentName, "",
+        @Html.TextBoxFor(t => t.Name, "", new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name, "",
              new { @class = "text-danger" }
          )
     </div>
@@ -27,5 +27,5 @@
         <button type="submit" class="btn btn-outline-success" style="margin-top: 10px">Create</button>
         <a class="nav-link btn btn-outline-primary" style="margin-top: 10px" asp-controller="Admins" asp-action="DepartmentIndex">   Back</a></center>
     </div>
-    
+
 </form>
