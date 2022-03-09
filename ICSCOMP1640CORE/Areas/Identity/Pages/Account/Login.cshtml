@@ -7,11 +7,11 @@
 
 <!DOCTYPE html>
   <link rel="stylesheet" href="~/css/Login/Login.css" />
-<section class="form-login" style="box-sizing: content-box !important; padding: 15px 20px 15px 20px !important;">
-	<form id="account" method="post">
+	<form id="account" method="post" class="form-login shadow bg-white rounded">
+
 		<div class="title">
-			<img class="img-avatar" src="~/img/avatar.svg" height="80px" width="80px" style="align-self: center;">
-			<h2>Login</h2>
+			@*<img class="img-avatar" src="~/img/avatar.svg" height="80px" width="80px" style="align-self: center;">*@
+			<h2>Log in</h2>
 		</div>
 
 		<div asp-validation-summary="ModelOnly" class="text-danger" style="text-align: center;"></div>
@@ -25,31 +25,34 @@
 			<input asp-for="Input.Password" placeholder="Password" class="form-control" autocomplete="current-password" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
 			<span asp-validation-for="Input.Password" class="text-danger" style="font-size: 13px; padding-top: 5px;"></span>
 		</div>
-		<div class="Login"style="box-sizing: content-box !important;">
 
-			<button id="login-submit" type="submit" class="button-Login" style="box-sizing: content-box !important;">Login</button>
-		</div>
-		<div class="remember-password">
-			<div class="checkbox">
+		<div class="remember-forgot">
+			<div class="checkbox-remember">
 				<label asp-for="Input.RememberMe" class="form-label">
 					<input class="form-check-input" asp-for="Input.RememberMe" />
 					@Html.DisplayNameFor(m => m.Input.RememberMe)
 				</label>
 			</div>
-		</div>
-		<div class="manage">
-			<p>
+
+			<div class="button-forgot">
 				<a style="text-decoration: none;" id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-			</p>
-			@*<p>
-				<a class="link-manage" asp-page="./ResetPassword" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-			</p>*@
+			</div>
+		</div>
+
+		<div class="login">
+			<button id="login-submit" type="submit" class="button-Login">Login</button>
+		</div>
+
+		<div class="manage">
+
 			<p>
 			<a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
 			</p>
+			<p>
+				Don’t have an account? <a class="link-manage" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register</a>
+			</p>
 		</div>
 	</form>
-</section>
 
 @*<div class="row">
 	<div class="col-md-4 m6">

@@ -1,41 +1,45 @@
 ﻿@model IEnumerable<ICSCOMP1640CORE.Models.Coordinator>
 
+
 <h1>QA Coordinator Account account</h1>
 
 <main>
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
+	             <a class="nav-link btn btn-outline-success" asp-controller="Admins" asp-action="CreateCoordinator">Create</a>
 
-                <th scope="col">Full Name</th>
-                <th scope="col">Address</th>
-                <th scope="col">Age</th>
-                <th scope="col">Email</th>
-                <th scope="col">Phone number</th>
-                <th scope="col">Department</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-            <tr>
 
-                <td>@item.User.FullName</td>
-                <td>@item.User.Address</td>
-                <td>@item.User.Age</td>
-                <td>@item.User.Email</td>
-                <td>@item.User.PhoneNumber</td>
-                <td>@item.Department</td>
-                <td>
-                    @Html.ActionLink(" Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-                    @Html.ActionLink(" Edit", "EditStaff", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
-                    @Html.ActionLink(" Change password", "ChangePassword", "Admins", new { UserId = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
-                </td>
-            </tr>
-            }
-        </tbody>
-    </table>
-    <center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">   Back to previous page</a></center>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+
+				<th scope="col">Full Name</th>
+				<th scope="col">Address</th>
+				<th scope="col">Age</th>
+				<th scope="col">Email</th>
+				<th scope="col">Phone number</th>
+				<th scope="col">Department</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+
+					<td>@item.User.FullName</td>
+					<td>@item.User.Address</td>
+					<td>@item.User.Age</td>
+					<td>@item.User.Email</td>
+					<td>@item.User.PhoneNumber</td>
+					<td>@item.Department.DepartmentName</td>
+					<td>
+						@Html.ActionLink("Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink("Edit", "EditCoordinator", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
+						@Html.ActionLink("InforCoordinator","InforCoordinator","Admins",new { Id = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">   Back to previous page</a></center>
 </main>

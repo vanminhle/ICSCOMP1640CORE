@@ -1,25 +1,43 @@
-﻿.form-login {
-    border: 1px solid grey;
-    border-radius: 20px;
-    padding: 0px;
-    padding: 20px 30px 20px 30px;
-    width: 35%;
-    margin: 50px auto;
-
+﻿* {
+    box-sizing: content-box;
 }
+
+body {
+    /*background-image: linear-gradient(transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px), linear-gradient(90deg, transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px);
+    background-size: 100% 12px, 12px 100%;*/
+}
+
+.container {
+    z-index: -1 !important;
+}
+
+.navbar {
+    display: none;
+}
+
+.form-login {
+    background-color: #fff;
+    padding: 35px;
+    margin: 50px auto;
+    border-radius: 1.5%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10 !important;
+}
+
+.title {
+    margin-bottom: 10px;
+}
+
+.h2, h2 {
+    font-size: 2.1rem;
+}
+
 .form-control {
     padding: 15px 0 15px 0;
     text-indent: 10px;
-}
-.title {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 15px;
-}
-
-h2 {
-    text-align: center;
 }
 
 
@@ -28,161 +46,98 @@ h2 {
     position: relative;
 }
 
+.checkbox-remember {
+    margin-left: 20px;
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+}
+
 .remember-password {
     margin-top: 20px
 }
+
+.login {
+    display: flex;
+}
+
+.button-Login {
+    padding: 10px 90px 10px 90px;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: black;
+    background-image: linear-gradient(to right, #32be8f, #32be8f, #32be8f);
+    margin: 0 auto;
+}
+
+    .button-Login:hover {
+        background-image: linear-gradient(to right, #0b7d57, #0b7d57, #0b7d57);
+    }
 
 .manage {
     margin-top: 15px;
     text-align: center;
     font-size: 16px;
 }
-.Login{
-    padding:0px;
-    margin: 10px 0 0 0;
-}
-.button-Login {
-    margin-left:80px;
-    padding: 10px 90px 10px 90px;
-    border: 1px solid white;
-    border-radius: 9px;
-    color: black;
-    background-image: linear-gradient(to right, #32be8f, #32be8f, #32be8f);
-}
-    .button-Login:hover {
-        background-image: linear-gradient(to right, #0b7d57, #0b7d57, #0b7d57);
-    }
-.checkbox{
-    margin-left:20px;
-}
 
-
-@media screen and (max-width :768px) {
+@media (max-width: 1198px) {
     .form-login {
-        width: 55% !important;
-    }
-
-    .form-control {
-        margin-left: -2px;
-        padding-right: 74px;
-        width: 80%;
-    }
-
-    .w-100 btn btn-lg btn-primary {
-        padding-right: 5px;
-    }
-
-    .manage {
-        align-self: center;
-    }
-
-    .title {
-        margin-left: -35px
-    }
-
-    .img-avatar {
-        margin-left: 17px;
+        width: 34%;
     }
 }
 
-@media screen and (max-width :601px) {
+
+@media (max-width: 992px) {
     .form-login {
-        width: 70% !important;
-    }
-
-    .title {
-        margin-left: 33px;
-    }
-    h2{
-        margin-right:40px;
-    }
-    .img-avatar {
-        margin-left: -40px;
-    }
-
-    .button-Login {
-        margin-left:71px !important;
-    }
-    .remember-password {
-        margin-left: -30px;
-        margin-top: 10px;
-    }
-    .manage{
-        font-size:10px;
-        text-align:center;
-    }
-    .checkbox {
-        margin-left: 46px;
-    }
-    #forgot-password{
-        font-size: 15px;
+        width: 47%;
     }
 }
 
-@media screen and (max-width :415px) {
-    * {
-        overflow: hidden
+@media (max-width: 768px) {
+    .form-login {
+        width: 50%;
     }
+}
 
-    .title {
-        margin-left: -11px;
-    }
-
-    .title h2 {
-        margin-left: 45px;
-    }
-
-    .img-avatar {
-        margin-left: 8px;
+@media (max-width: 485px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
     }
 
     .form-login {
-        width: 85% !important;
-    }
-
-    .form-control {
-        margin-left: 0px;
-        width: 243px;
-    }
-
-    .button-Login {
-        margin-left: 15px !important;
-        width: 102px;
-    }
-
-    .checkbox {
-        margin-left: 49px;
+        margin: 25px auto;
+        width: 64%;
     }
 }
 
-@media screen and (max-width:376px) {
-    .form-login {
-        padding-right: 61px;
-        padding-left: 40px;
-        padding-bottom: 39px;
-    }
-    .form-control {
-        width: 212px;
-    }
-    .button-Login {
-        width: 77px;
-    }
-}
-@media screen and (max-width:321px){
-    .form-control {
-        width: 169px;
-    }
-    .button-Login {
-        width: 32px;
-    }
-}
-
-@media screen and (max-width:1025px) {
-    .button-Login {
-        margin-left: 77px;
+@media (max-width: 416px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+        box-shadow: 0px rgba(0,0,0,0);
     }
 
     .form-login {
-        width: 40%;
+        margin: 30px auto;
+        width: 70%;
+    }
+}
+
+@media (max-width: 360px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .form-login {
+        margin: 30px auto;
+        width: 81%;
+        box-shadow: none;
     }
 }

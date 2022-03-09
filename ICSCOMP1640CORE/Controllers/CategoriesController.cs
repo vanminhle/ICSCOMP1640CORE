@@ -14,12 +14,11 @@ namespace ICSCOMP1640CORE.Controllers
     public class CategoriesController : Controller
     {
         public ApplicationDbContext _db;
-        private readonly INotyfService _notfy;
-
-        public CategoriesController(ApplicationDbContext db, INotyfService notfy)
+        private readonly INotyfService _notyf;
+        public CategoriesController(ApplicationDbContext db, INotyfService notyf)
         {
             _db = db;
-            _notfy = notfy;
+            _notyf = notyf;
         }
         public IActionResult Index(string searchCategory)
         {

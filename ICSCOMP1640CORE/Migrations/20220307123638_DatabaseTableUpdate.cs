@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ICSCOMP1640CORE.Migrations
 {
-    public partial class fixDatabase : Migration
+    public partial class DatabaseTableUpdate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -189,7 +189,7 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -205,7 +205,7 @@ namespace ICSCOMP1640CORE.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -213,7 +213,7 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DepartmentId = table.Column<int>(type: "int", nullable: true)
+                    DepartmentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -229,7 +229,7 @@ namespace ICSCOMP1640CORE.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -237,9 +237,9 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "b1438b52-a681-4da2-ad97-b43582676ffa", "629eefdc-b3e4-4eb7-a3b2-709d3d224000", "Admin", "ADMIN" },
-                    { "ec74b906-8099-4055-8e27-3a40403b67c1", "a6498b96-683f-46bb-808e-148886ed6f01", "Staff", "STAFF" },
-                    { "4b34d340-ad9e-4317-9f24-c5e7b48ed1ab", "1181befe-d905-4514-ad3f-556026d4c9e3", "Coordinator", "COORDINATOR" }
+                    { "510b0d78-e0c6-40d7-8e13-70c07e166801", "0a2ab6c2-b5df-44bb-8310-d5aeb9f61a9c", "Admin", "ADMIN" },
+                    { "c425e4a3-1141-4eab-9c49-c1f0497c2daa", "99abad44-d56e-42f0-9cce-bf53fd5f093d", "Staff", "STAFF" },
+                    { "28647a06-fa41-4c9f-90d3-d81c42c66937", "94817464-63be-43b5-bb11-0b2742803488", "Coordinator", "COORDINATOR" }
                 });
 
             migrationBuilder.InsertData(
@@ -247,19 +247,19 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FullName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "bf500224-5870-4ae9-92ec-005ee2a55e40", 0, null, 0, "537a3e05-56e4-41d3-8ebb-88c8696b5a9b", "User", "admin@gmail.com", true, "Administrator", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEGzhswy6+M3xnISgPM5RqbPB+ImCJUo3ahVJMoQY88E7gtUcgWSHuJrO8wxbw4n4gQ==", null, true, "fe04ea16-1643-4df6-a39f-bc1ef666939f", false, "admin@gmail.com" },
-                    { "677d8338-e7fa-4e0b-92b7-f8e0c3751092", 0, null, 0, "5ceca122-7964-4849-8b33-12effa0f1d1d", "User", "coordinator@gmail.com", true, "Coordinator", false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEIgc647sA7rGZvgspbRoE930QWGrA+vrwVlE+ZPHVF+tJ1fPDEjfTC02l1XaCS7ekA==", null, true, "655dd570-eb85-44f3-bf55-e654c97bbcbe", false, "coordinator@gmail.com" }
+                    { "1a75bb5f-222f-41b2-adf5-e4fc5de3fddb", 0, null, 0, "69e2c0f2-874f-4e4e-8aff-2076ea4433ba", "User", "admin@gmail.com", true, "Administrator", false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEDImniKRzv581567duhnM0r9icTUlGT2OJ0WgVhx8y7jC7hpKyXyPUlOmvaWNERo9g==", null, true, "b15f8f5e-d6bb-495d-819f-c32995374e77", false, "admin@gmail.com" },
+                    { "a8b3b892-dc2f-491c-860c-bcc50d30c841", 0, null, 0, "538a1e62-adf4-459d-a2a5-aa7bef32c1e0", "User", "coordinator@gmail.com", true, "Coordinator", false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEMnneh41RhD+ZSHVTC5t18Cz1oVisvz3nKXt4xUwTHQhXF5g2OJ6spDaJ1fLH+zq+w==", null, true, "34f3149a-eda9-4fab-9eff-97fce097bcb1", false, "coordinator@gmail.com" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "b1438b52-a681-4da2-ad97-b43582676ffa", "bf500224-5870-4ae9-92ec-005ee2a55e40" });
+                values: new object[] { "510b0d78-e0c6-40d7-8e13-70c07e166801", "1a75bb5f-222f-41b2-adf5-e4fc5de3fddb" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "4b34d340-ad9e-4317-9f24-c5e7b48ed1ab", "677d8338-e7fa-4e0b-92b7-f8e0c3751092" });
+                values: new object[] { "28647a06-fa41-4c9f-90d3-d81c42c66937", "a8b3b892-dc2f-491c-860c-bcc50d30c841" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

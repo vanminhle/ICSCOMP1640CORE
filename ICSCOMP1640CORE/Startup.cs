@@ -46,6 +46,7 @@ namespace ICSCOMP1640CORE
 
             services.AddControllersWithViews();
 
+            services.AddNotyf(config => { config.DurationInSeconds = 10; config.IsDismissable = true; config.Position = NotyfPosition.TopRight; });
             services.AddTransient<IEmailSender, EmailSender>();
             services.Configure<AuthMessageSenderOptions>(Configuration);
         }
@@ -73,6 +74,8 @@ namespace ICSCOMP1640CORE
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseNotyf();
 
             app.UseEndpoints(endpoints =>
             {
