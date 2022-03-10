@@ -123,7 +123,8 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                     Address = Input.Address,
                     Gender = Input.Gender,
                     Age = Input.Age,
-                   DepartmentId = Input.DepartmentId
+                   DepartmentId = Input.DepartmentId,
+                 
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 _userManager.AddToRoleAsync(user, "Staff").GetAwaiter().GetResult();

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -29,16 +30,24 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
         // Coordinator Profile
         [HttpGet]
-        public ActionResult InforCoordinator()
+        public ActionResult InforCoordinator(string id)
         {
-            var userId = _userManager.GetUserId(User);
+            /*var userId = _userManager.GetUserId(User);
             var coordinatorInDb = _db.Users.Include(x => x.UserName)
                 .SingleOrDefault(t => t.UserName == userId);
             if (coordinatorInDb == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);
+            return View(coordinatorInDb);*/
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (CoordinatorInDb == null)
+            {
+                return NotFound();
+            }
+            return View(CoordinatorInDb);
         }
 
         //Coordinator Manage Idea Category

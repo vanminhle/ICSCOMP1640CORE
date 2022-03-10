@@ -172,7 +172,8 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorProfile.Age = user.Age;
             coordinatorProfile.Address = user.Address;
             coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
-
+            var user = coordinator;
+           user.UserName = user.Email;
             IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
             //_db.Users.Add(coordinatorProfile);
 
