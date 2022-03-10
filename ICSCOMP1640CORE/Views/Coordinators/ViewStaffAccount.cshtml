@@ -1,0 +1,35 @@
+﻿@model List<ICSCOMP1640CORE.Models.User>
+
+
+
+<h1>Staff Account</h1>
+
+<main>
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Full Name</th>				
+				<th scope="col">Email</th>	
+				<th scope="col">Department</th>
+				<th scope="col">Email Confirm</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.FullName</td>				
+					<td>@item.Email</td>		
+					<td>@item.Department.Name</td>
+					<td>@item.EmailConfirmed</td>
+					<td>
+						@Html.ActionLink("Delete", "DeleteStaffAccount", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink("Detail", "DetailStaffs", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-success" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">Back to previous page</a></center>
+</main>

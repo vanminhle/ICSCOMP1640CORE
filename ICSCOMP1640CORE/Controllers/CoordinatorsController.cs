@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -29,16 +30,24 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
         // Coordinator Profile
         [HttpGet]
-        public ActionResult InforCoordinator()
+        public ActionResult InforCoordinator(string id)
         {
-            var userId = _userManager.GetUserId(User);
+            /*var userId = _userManager.GetUserId(User);
             var coordinatorInDb = _db.Users.Include(x => x.UserName)
                 .SingleOrDefault(t => t.UserName == userId);
             if (coordinatorInDb == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);
+            return View(coordinatorInDb);*/
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (CoordinatorInDb == null)
+            {
+                return NotFound();
+            }
+            return View(CoordinatorInDb);
         }
 
         //Coordinator Manage Idea Category
@@ -135,5 +144,40 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf.Success("Category is edited successfully.");
             return RedirectToAction("ManageCategory", "Coordinators");
         }
+        [HttpGet]
+        public IActionResult ViewStaffAccount()
+        {
+            var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+
+            }
+            return View(data);
+        }
+        [HttpGet]
+        public IActionResult DetailStaffs()
+        {
+
+            return ViewStaffAccount();
+        }
+
+        [HttpGet]
+        public IActionResult DeleteStaffAccount(string id)
+        {
+            var staffsInDb = _db.Users.SingleOrDefault(x => x.Id == id);
+
+            if (staffsInDb == null)
+            {
+                return NotFound();
+            }
+            _notyf.Success("Staff is deleted successfully.");
+            _db.Users.Remove(staffsInDb);
+            _db.SaveChanges();
+
+            return RedirectToAction("ViewStaffAccount");
+        }
+      
+
     }
 }
