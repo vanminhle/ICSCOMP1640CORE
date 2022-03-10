@@ -135,5 +135,40 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf.Success("Category is edited successfully.");
             return RedirectToAction("ManageCategory", "Coordinators");
         }
+        [HttpGet]
+        public IActionResult ViewStaffAccount()
+        {
+            var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+
+            }
+            return View(data);
+        }
+        [HttpGet]
+        public IActionResult DetailStaffs()
+        {
+
+            return ViewStaffAccount();
+        }
+
+        [HttpGet]
+        public IActionResult DeleteStaffAccount(string id)
+        {
+            var staffsInDb = _db.Users.SingleOrDefault(x => x.Id == id);
+
+            if (staffsInDb == null)
+            {
+                return NotFound();
+            }
+            _notyf.Success("Staff is deleted successfully.");
+            _db.Users.Remove(staffsInDb);
+            _db.SaveChanges();
+
+            return RedirectToAction("ViewStaffAccount");
+        }
+      
+
     }
 }

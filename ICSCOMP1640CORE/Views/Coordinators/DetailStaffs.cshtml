@@ -1,0 +1,38 @@
+﻿@model List<ICSCOMP1640CORE.Models.User>
+
+
+<h1>Staff Account Details</h1>
+
+<main>
+
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+
+				<th scope="col">Full Name</th>
+				<th scope="col">Address</th>
+				<th scope="col">Age</th>
+				<th scope="col">Email</th>
+				<th scope="col">Gender</th>
+				<th scope="col">Phone number</th>
+				<th scope="col">Department</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+
+					<td>@item.FullName</td>
+					<td>@item.Address</td>
+					<td>@item.Age</td>
+					<td>@item.Email</td>
+					<td>@item.Gender</td>
+					<td>@item.PhoneNumber</td>
+					<td>@item.Department.Name</td>					
+				</tr>
+			}
+		</tbody>
+	</table>
+	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Coordinators" asp-action="ViewStaffAccount">Back</a></center>
+</main>
