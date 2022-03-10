@@ -30,7 +30,7 @@
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{
-								<li>@Html.ActionLink("Idea Category", "Index", "Categories")</li>
+								<li>@Html.ActionLink("Categories", "ManageCategory", "Coordinators")</li>
 							}
 							if (User.IsInRole(Role.Staff))
 							{

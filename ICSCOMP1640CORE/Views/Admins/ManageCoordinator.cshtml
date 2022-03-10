@@ -1,11 +1,11 @@
-﻿@model IEnumerable<ICSCOMP1640CORE.Models.Coordinator>
+﻿@model List<ICSCOMP1640CORE.Models.User>
 
 
 <h1>QA Coordinator Account account</h1>
 
 <main>
 
-	             <a class="nav-link btn btn-outline-success" asp-controller="Admins" asp-action="CreateCoordinator">Create</a>
+	<a class="nav-link btn btn-outline-success" asp-controller="Admins" asp-action="CreateCoordinator">Create</a>
 
 
 	<table class="table">
@@ -16,6 +16,7 @@
 				<th scope="col">Address</th>
 				<th scope="col">Age</th>
 				<th scope="col">Email</th>
+				<th scope="col">Gender</th>
 				<th scope="col">Phone number</th>
 				<th scope="col">Department</th>
 				<th scope="col">Action</th>
@@ -26,20 +27,21 @@
 			{
 				<tr>
 
-					<td>@item.User.FullName</td>
-					<td>@item.User.Address</td>
-					<td>@item.User.Age</td>
-					<td>@item.User.Email</td>
-					<td>@item.User.PhoneNumber</td>
-					<td>@item.Department.DepartmentName</td>
+					<td>@item.FullName</td>
+					<td>@item.Address</td>
+					<td>@item.Age</td>
+					<td>@item.Email</td>
+					<td>@item.Gender</td>
+					<td>@item.PhoneNumber</td>
+					<td>@item.Department.Name</td>
 					<td>
-						@Html.ActionLink("Delete", "Delete", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-						@Html.ActionLink("Edit", "EditCoordinator", "Admins", new { Id = item.UserId }, new { @class = "btn btn-outline-info fas fa-edit" })
-						@Html.ActionLink("InforCoordinator","InforCoordinator","Admins",new { Id = item.UserId }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
+						@Html.ActionLink("Delete", "Delete", "Admins", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink("Edit", "EditCoordinator", "Admins", new { Id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
+						@Html.ActionLink("InforCoordinator","InforCoordinator","Admins",new { Id = item.Id }, new { @class = "btn btn-outline-warning fas fa-unlock-alt" })
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
-	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">   Back to previous page</a></center>
+	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">Back to previous page</a></center>
 </main>

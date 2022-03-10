@@ -1,20 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ICSCOMP1640CORE.Models
 {
     public class Department
     {
         [Key]
-        public int DepartmentId { get; set; }
+        public int Id { get; set; }
+
+
 
         [Required(ErrorMessage = "Department Name is required")]
         [StringLength(20)]
-        public string DepartmentName { get; set; }
+        public string Name { get; set; }
+
+
 
         [Required(ErrorMessage = "Description is required")]
-        [StringLength(20)]
-
         public string Description { get; set; }
+
+
+
+        public List<Idea> Ideas { get; set; }
+        public List<User> Users { get; set; }
+
 
     }
 }

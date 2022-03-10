@@ -34,6 +34,22 @@ namespace ICSCOMP1640CORE.Data.SeedData
 
             #endregion RoleData
 
+            #region DepartmentData
+
+            var managerDepartment = new Department()
+            {
+                Id = 1,
+                Name = "Manager",
+                Description = "The Organization senior management"
+
+            };
+
+            builder.Entity<Department>().HasData(
+                managerDepartment
+                );
+
+            #endregion DepartmentData
+
             #region UserData
 
             var hasher = new PasswordHasher<User>();
@@ -47,6 +63,7 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "Admin@123"),
+                DepartmentId = 1
             };
             var coordinator = new User()
             {
@@ -58,6 +75,7 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 EmailConfirmed = true,
                 PhoneNumberConfirmed = true,
                 PasswordHash = hasher.HashPassword(null, "Coordinator@123"),
+                DepartmentId = 1
             };
             builder.Entity<User>().HasData(
                 admin,
