@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -26,7 +24,6 @@ namespace ICSCOMP1640CORE.Controllers
         private readonly INotyfService _notyf;
         private readonly IEmailSender _emailSender;
 
-
         private ApplicationDbContext _db;
 
         public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf, IEmailSender emailSender)
@@ -38,7 +35,7 @@ namespace ICSCOMP1640CORE.Controllers
             _emailSender = emailSender;
         }
 
-        public IActionResult DepartmentIndex(string searchString)
+        public IActionResult DepartmentsIndex(string searchString)
         {
             var departments = _db.Departments.ToList();
             if (!String.IsNullOrEmpty(searchString))
@@ -68,7 +65,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (existDepartment == true)
             {
                 /*ModelState.AddModelError("", "Department Already Exists.");*/
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Department is already exists.");
                 return View(model);
             }
             var newDepartment = new Department()
@@ -79,7 +76,7 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf.Success("Department is created successfully.");
             _db.Departments.Add(newDepartment);
             _db.SaveChanges();
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         [HttpGet]
@@ -95,7 +92,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Departments.Remove(departmentsInDb);
             _db.SaveChanges();
 
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         [HttpGet]
@@ -124,15 +121,15 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (existDepartment == true)
             {
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Department is already exists.");
                 return View(department);
             }
-            _notyf.Success("Department is edit successfully.");
+            _notyf.Success("Department is edited successfully.");
             departmentInDb.Name = department.Name;
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
 
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         //Coordinator
@@ -152,10 +149,11 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCoordinator(Coordinator coordinator)
         {
-
             if (_userManager.FindByEmailAsync(coordinator.Email).GetAwaiter().GetResult() != null)
             {
-                TempData["Danger"] = "The email address is already registered";
+                //TempData["Danger"] = "The email address is already registered";
+                _notyf.Error("This email address is already registered! Please try again!");
+
                 return RedirectToAction("CreateCoordinator");
             }
 
@@ -173,6 +171,8 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorProfile.Address = user.Address;
             coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
 
+            var user = coordinator;
+            user.UserName = user.Email;
             IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
             //_db.Users.Add(coordinatorProfile);
 
@@ -196,18 +196,24 @@ namespace ICSCOMP1640CORE.Controllers
                     "Confirm your email",
                     $"Hi, {coordinator.FullName} Please confirm your email account {coordinator.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             }
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is created successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
-        public IActionResult ManageCoordinator()
+        public IActionResult ManageCoordinators(string searchString)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
-            foreach(var user in data)
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
+            foreach (var user in data)
             {
                 _db.Entry(user).Reference(x => x.Department).Load();
-
             }
 
             return View(data);
@@ -220,7 +226,8 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Users.Remove(coordinatorindb);
             _db.SaveChanges();
 
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is deleted successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
@@ -257,13 +264,13 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Update(coordinatorinDb);
             _db.SaveChanges();
 
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is edited successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
-
             var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
             if (info == null)
             {

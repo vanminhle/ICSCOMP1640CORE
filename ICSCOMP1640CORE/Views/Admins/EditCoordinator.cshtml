@@ -5,6 +5,7 @@
 }
 
 <h1 class="mt-5 mb-4">Edit QA Coordinator Account</h1>
+
 @if (TempData["Danger"] != null)
 {
 		<div class="alert alert-danger alert-dismissable">
@@ -14,15 +15,19 @@
 <form asp-controller="Admins" asp-action="EditCoordinator" method="post">
 	@Html.HiddenFor(i => i.Id)
 	<div class="mw-100 mb-5">
-		<div class="form-group">
-			<label>Full Name</label>
-			<input type="text" class="form-control" placeholder="Nguyen Van A" asp-for="FullName" required>
-			<span asp-validation-for="FullName" class="text-danger"></span>
-		</div>
-		<div class="form-group col-md-6">
+		<div class="form-row">
+				<div class="form-group col-md-9">
+					<label>Full Name</label>
+					<input type="text" class="form-control" placeholder="Nguyen Van A" asp-for="FullName" required>
+					<span asp-validation-for="FullName" class="text-danger"></span>
+				</div>
+
+				<div class="form-group col-md-3">
 				<label>Gender</label>
-				@Html.DropDownListFor(m => m.Gender,new SelectList(Enum.GetValues(typeof(Gender))),"Select Gender")
-		</div>
+				@Html.DropDownListFor(m => m.Gender, new SelectList(Enum.GetValues(typeof(Gender))),"Select Gender",
+				new { @class = "form-control", required= "required"})
+				</div>
+			</div>
 		@*<div class="form-row">
 			<div class="form-group col-md-6">
 				<label>Email</label>
@@ -55,7 +60,9 @@
 			@Html.DropDownListFor(model => model.DepartmentId, ViewBag.departmentList as SelectList,
 			"Select Department", new { @class = "form-control", required= "required"})
 		</div>
-		<button type="submit" class="btn btn-outline-success">Edit</button>
-		<a class="btn btn-outline-primary" asp-controller="Admins" asp-action="ManageCoordinator">Cancel</a>
+		<div class="mt-4">
+			<button type="submit" class="btn btn-outline-success">Edit</button>
+			<a class="btn btn-outline-primary" asp-controller="Admins" asp-action="ManageCoordinators">Cancel</a>
+		</div>
 	</div>
 </form>

@@ -6,3 +6,5 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Roslynator", "RCS1155:Use StringComparison when comparing strings.", Justification = "<Pending>", Scope = "member", Target = "~M:ICSCOMP1640CORE.Controllers.AdminsController.DepartmentIndex(System.String)~Microsoft.AspNetCore.Mvc.IActionResult")]
+[assembly: SuppressMessage("Roslynator", "RCS1155:Use StringComparison when comparing strings.", Justification = "<Pending>", Scope = "member", Target = "~M:ICSCOMP1640CORE.Controllers.AdminsController.DepartmentsIndex(System.String)~Microsoft.AspNetCore.Mvc.IActionResult")]
+[assembly: SuppressMessage("Roslynator", "RCS1155:Use StringComparison when comparing strings.", Justification = "<Pending>", Scope = "member", Target = "~M:ICSCOMP1640CORE.Controllers.AdminsController.ManageCoordinators(System.String)~Microsoft.AspNetCore.Mvc.IActionResult")]

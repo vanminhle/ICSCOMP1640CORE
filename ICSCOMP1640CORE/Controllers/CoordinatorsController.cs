@@ -66,10 +66,10 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 return View("CreateCategory");
             }
-            var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
+            var check = _db.Categories.Any(c => c.Name.Equals((category.Name).Trim()));
             if (check)
             {
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Category is already exists.", 3);
                 return View(category);
             }
             var newCategoryInDb = new Category
@@ -79,7 +79,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             };
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
-            _notyf.Success("Department is created successfully.");
+            _notyf.Success("Category is created successfully.", 3);
             return RedirectToAction("ManageCategory","Coordinators");
         }
 
@@ -93,6 +93,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
+            _notyf.Success("Category is deleted successfully.", 3);
             return RedirectToAction("ManageCategory", "Coordinators");
         }
 
@@ -126,13 +127,13 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
             if (check)
             {
-                _notyf.Warning("Category Already Exists.");
+                _notyf.Warning("Category is already exists", 3);
                 return View(category);
             }
             categoryInDb.Name = category.Name;
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
-            _notyf.Success("Category is edited successfully.");
+            _notyf.Success("Category is edited successfully.", 3);
             return RedirectToAction("ManageCategory", "Coordinators");
         }
     }

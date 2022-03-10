@@ -1,5 +1,6 @@
 ﻿@page
 @model LoginModel
+@using AspNetCoreHero.ToastNotification.Abstractions
 
 @{
     ViewData["Title"] = "Login";
@@ -14,7 +15,8 @@
 			<h2>Log in</h2>
 		</div>
 
-		<div asp-validation-summary="ModelOnly" class="text-danger" style="text-align: center;"></div>
+		@*<div asp-validation-summary="ModelOnly" class="text-danger" style="text-align: center;"></div>*@
+
 		<div class="form-floating" >
 			<label>Email</label>
 			<input asp-for="Input.Email" placeholder="Email" class="form-control" autocomplete="username" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
