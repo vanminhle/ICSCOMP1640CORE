@@ -34,7 +34,7 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf = notyf;
             _emailSender = emailSender;
         }
-
+        //Department
         public IActionResult DepartmentsIndex(string searchString)
         {
             var departments = _db.Departments.ToList();
@@ -220,7 +220,7 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(string Id)
+        public IActionResult DeleteCondinator(string Id)
         {
             var coordinatorindb = _db.Users.SingleOrDefault(item => item.Id == Id);
             _db.Users.Remove(coordinatorindb);
@@ -270,6 +270,180 @@ namespace ICSCOMP1640CORE.Controllers
 
         [HttpGet]
         public ActionResult InforCoordinator(string id)
+        {
+            var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return View(info);
+        }
+
+        //Manager
+        [HttpGet]
+        public IActionResult CreateManager()
+        {
+            Manager model = new Manager();
+
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            var department = _db.Departments.ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateManager(Manager manager)
+        {
+            if (_userManager.FindByEmailAsync(manager.Email).GetAwaiter().GetResult() != null)
+            {
+                //TempData["Danger"] = "The email address is already registered";
+                _notyf.Error("This email address is already registered! Please try again!");
+
+                return RedirectToAction("CreateCoordinator");
+            }
+
+            if (!ModelState.IsValid) return View(manager);
+
+            /*var user = coordinator;
+            user.UserName = user.Email;*/
+
+            /*coordinatorProfile = new Coordinator();
+            //coordinatorProfile.Id = coordinator.Id;
+            coordinatorProfile.Id = user.Id;
+            coordinatorProfile.FullName = user.FullName;
+            coordinatorProfile.Gender = user.Gender;
+            coordinatorProfile.Age = user.Age;
+            coordinatorProfile.Address = user.Address;
+            coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
+
+            var user = manager;
+            user.UserName = user.Email;
+            IdentityResult result = _userManager.CreateAsync(manager, manager.PasswordHash).GetAwaiter().GetResult();
+            //_db.Users.Add(coordinatorProfile);
+
+            _db.SaveChanges();
+
+            if (result.Succeeded)
+            {
+                _userManager.AddToRoleAsync(manager, "Manager").GetAwaiter().GetResult();
+
+                var userId = await _userManager.GetUserIdAsync(manager);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(manager);
+
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new { userId = userId, code = code },
+                    protocol: Request.Scheme);
+                await _emailSender.SendEmailAsync(
+                    manager.Email,
+                    "Confirm your email",
+                    $"Hi, {manager.FullName} Please confirm your email account {manager.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            }
+            _notyf.Success("Coordinator account is created successfully.");
+            return RedirectToAction("ManageCoordinators");
+        }
+        [HttpGet]
+        public IActionResult ManageManager(string searchString)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Manager").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            return View(data);
+        }
+        [HttpGet]
+        public IActionResult DeleteManager(string Id)
+        {
+            var managerindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            _db.Users.Remove(managerindb);
+            _db.SaveChanges();
+
+            _notyf.Success("Coordinator account is deleted successfully.");
+            return RedirectToAction("ManageManager");
+        }
+
+        [HttpGet]
+        public ActionResult EditManager(string Id)
+        {
+            var managerindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            var user = _db.Users.ToList();
+
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+
+            return View(managerindb);
+        }
+
+        [HttpPost]
+        public ActionResult EditManager(string id, Manager manager)
+        {
+            var managerindb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (managerindb == null)
+            {
+                return BadRequest();
+            }
+
+            managerindb.FullName = manager.FullName;
+            managerindb.Address = manager.Address;
+            managerindb.Age = manager.Age;
+            managerindb.Gender = manager.Gender;
+            managerindb.Department = manager.Department;
+            managerindb.PhoneNumber = manager.PhoneNumber;
+
+            /*coordinatorinDb.DepartmentId = coordinator.DepartmentId;*/
+
+            _db.Update(managerindb);
+            _db.SaveChanges();
+
+            _notyf.Success("Manager account is edited successfully.");
+            return RedirectToAction("ManageManager");
+        }
+
+        [HttpGet]
+        public ActionResult InforManager(string id)
+        {
+            var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return View(info);
+        }
+
+        //Staff
+        [HttpGet]
+        public IActionResult ManageStaff(string searchString)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            return View(data);
+        }
+        [HttpGet]
+        public ActionResult InforStaff(string id)
         {
             var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
             if (info == null)

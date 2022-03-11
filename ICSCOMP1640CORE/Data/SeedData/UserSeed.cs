@@ -25,11 +25,17 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 Name = "Coordinator",
                 NormalizedName = "COORDINATOR",
             };
+            var managerRole = new IdentityRole()
+            {
+                Name = "Manager",
+                NormalizedName = "MANAGER",
+            };
 
             builder.Entity<IdentityRole>().HasData(
                 adminRole,
                 staffRole,
-                coordinatorRole
+                coordinatorRole,
+                managerRole
                 );
 
             #endregion RoleData
@@ -77,9 +83,22 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 PasswordHash = hasher.HashPassword(null, "Coordinator@123"),
                 DepartmentId = 1
             };
+            var manager = new User()
+            {
+                Email = "manager@gmail.com",
+                UserName = "manager@gmail.com",
+                NormalizedUserName = "manager@gmail.com".ToUpper(),
+                NormalizedEmail = "manager@gmail.com".ToUpper(),
+                FullName = "Manager",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Manager@123"),
+                DepartmentId = 1
+            };
             builder.Entity<User>().HasData(
                 admin,
-                coordinator
+                coordinator,
+                manager
                 );
 
             #endregion UserData
@@ -88,7 +107,8 @@ namespace ICSCOMP1640CORE.Data.SeedData
 
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id },
-                new IdentityUserRole<string> { UserId = coordinator.Id, RoleId = coordinatorRole.Id }
+                new IdentityUserRole<string> { UserId = coordinator.Id, RoleId = coordinatorRole.Id },
+                new IdentityUserRole<string> { UserId = manager.Id, RoleId = managerRole.Id }
                 );
 
             #endregion UserRole
