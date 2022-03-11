@@ -1,23 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
-using ICSCOMP1640CORE.Utilities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 namespace ICSCOMP1640CORE.Controllers
 {
-    public class Staffs : Controller
+    public class StaffsController : Controller
     {
         private ApplicationDbContext _db;
         private readonly INotyfService _notyf;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public Staffs(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
             _userManager = userManager;

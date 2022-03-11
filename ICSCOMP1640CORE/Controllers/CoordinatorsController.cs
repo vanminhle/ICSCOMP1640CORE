@@ -78,7 +78,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
             if (check)
             {
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Department Already Exists.", 3);
                 return View(category);
             }
             var newCategoryInDb = new Category
@@ -88,8 +88,8 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             };
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
-            _notyf.Success("Department is created successfully.");
-            return RedirectToAction("ManageCategory","Coordinators");
+            _notyf.Success("Department is created successfully.", 3);
+            return RedirectToAction("ManageCategory", "Coordinators");
         }
 
         [HttpGet]
@@ -100,6 +100,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound();
             }
+            _notyf.Success("Category is deleted successfully.", 3);
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
             return RedirectToAction("ManageCategory", "Coordinators");
@@ -141,7 +142,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             categoryInDb.Name = category.Name;
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
-            _notyf.Success("Category is edited successfully.");
+            _notyf.Success("Category is edited successfully.", 3);
             return RedirectToAction("ManageCategory", "Coordinators");
         }
         [HttpGet]
@@ -171,13 +172,45 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound();
             }
-            _notyf.Success("Staff is deleted successfully.");
+            _notyf.Success("Staff account is deleted successfully.", 3);
             _db.Users.Remove(staffsInDb);
             _db.SaveChanges();
 
             return RedirectToAction("ViewStaffAccount");
         }
-      
 
+        [HttpGet]
+        public IActionResult GetIdeaFromCoor()
+        {
+
+            var ideaInDb = _db.Ideas
+                .Include(x => x.Department)
+                .Include(x => x.Category)
+                .Include(x => x.User)
+                .Where(x => x.DepartmentId == 2)
+                .ToList();
+
+
+            return View(ideaInDb);
+        }
+        [HttpGet]
+        public IActionResult ViewIdea(int id)
+        {
+            var ideaInDb = _db.Ideas.Include(x => x.Category).SingleOrDefault(x => x.Id == id);
+            return View(ideaInDb);
+        }
+        [HttpGet]
+        public IActionResult DeleteIdea(int id)
+        {
+            var ideaInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
+            if (ideaInDb == null)
+            {
+                return NotFound();
+            }
+            _notyf.Success("Idea is deleted successfully.", 3);
+            _db.Ideas.Remove(ideaInDb);
+            _db.SaveChanges();
+            return RedirectToAction("GetIdeaFromCoor", "Coordinators");
+        }
     }
 }

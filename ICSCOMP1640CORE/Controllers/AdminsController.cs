@@ -8,9 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -173,7 +171,7 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorProfile.Address = user.Address;
             coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
             var user = coordinator;
-           user.UserName = user.Email;
+            user.UserName = user.Email;
             IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
             //_db.Users.Add(coordinatorProfile);
 
@@ -205,7 +203,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
-            foreach(var user in data)
+            foreach (var user in data)
             {
                 _db.Entry(user).Reference(x => x.Department).Load();
 

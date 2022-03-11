@@ -26,10 +26,12 @@
 					<td>
 						@Html.ActionLink("Delete", "DeleteStaffAccount", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
 						@Html.ActionLink("Detail", "DetailStaffs", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-success" })
+
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
+							@Html.ActionLink("Ideals", "GetIdeaFromCoor", "Coordinators", new { @class = "btn btn-success" })
 	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">Back to previous page</a></center>
 </main>
