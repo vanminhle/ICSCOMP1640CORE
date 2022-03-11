@@ -180,6 +180,7 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (result.Succeeded)
             {
+
                 _userManager.AddToRoleAsync(coordinator, "Coordinator").GetAwaiter().GetResult();
 
                 var userId = await _userManager.GetUserIdAsync(coordinator);
@@ -189,7 +190,7 @@ namespace ICSCOMP1640CORE.Controllers
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { userId = userId, code = code },
+                    new { area = "Identity", userId = user.Id, code = code },
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     coordinator.Email,
@@ -256,7 +257,7 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorinDb.Address = coordinator.Address;
             coordinatorinDb.Age = coordinator.Age;
             coordinatorinDb.Gender = coordinator.Gender;
-            coordinatorinDb.Department = coordinator.Department;
+            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
             coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
 
             /*coordinatorinDb.DepartmentId = coordinator.DepartmentId;*/
@@ -285,9 +286,9 @@ namespace ICSCOMP1640CORE.Controllers
         {
             Manager model = new Manager();
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
             var department = _db.Departments.ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
 
             return View(model);
         }
@@ -300,27 +301,15 @@ namespace ICSCOMP1640CORE.Controllers
                 //TempData["Danger"] = "The email address is already registered";
                 _notyf.Error("This email address is already registered! Please try again!");
 
-                return RedirectToAction("CreateCoordinator");
+                return RedirectToAction("CreateManager");
             }
 
             if (!ModelState.IsValid) return View(manager);
 
-            /*var user = coordinator;
-            user.UserName = user.Email;*/
-
-            /*coordinatorProfile = new Coordinator();
-            //coordinatorProfile.Id = coordinator.Id;
-            coordinatorProfile.Id = user.Id;
-            coordinatorProfile.FullName = user.FullName;
-            coordinatorProfile.Gender = user.Gender;
-            coordinatorProfile.Age = user.Age;
-            coordinatorProfile.Address = user.Address;
-            coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
-
             var user = manager;
             user.UserName = user.Email;
+            manager.DepartmentId = 1;
             IdentityResult result = _userManager.CreateAsync(manager, manager.PasswordHash).GetAwaiter().GetResult();
-            //_db.Users.Add(coordinatorProfile);
 
             _db.SaveChanges();
 
@@ -335,18 +324,18 @@ namespace ICSCOMP1640CORE.Controllers
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { userId = userId, code = code },
+                    values: new{ area = "Identity", userId = user.Id, code = code },
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     manager.Email,
                     "Confirm your email",
                     $"Hi, {manager.FullName} Please confirm your email account {manager.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             }
-            _notyf.Success("Coordinator account is created successfully.");
-            return RedirectToAction("ManageCoordinators");
+            _notyf.Success("Manager account is created successfully.");
+            return RedirectToAction("ManageManagers");
         }
         [HttpGet]
-        public IActionResult ManageManager(string searchString)
+        public IActionResult ManageManagers(string searchString)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Manager").Result.ToList();
@@ -371,7 +360,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.SaveChanges();
 
             _notyf.Success("Coordinator account is deleted successfully.");
-            return RedirectToAction("ManageManager");
+            return RedirectToAction("ManageManagers");
         }
 
         [HttpGet]
@@ -380,8 +369,8 @@ namespace ICSCOMP1640CORE.Controllers
             var managerindb = _db.Users.SingleOrDefault(item => item.Id == Id);
             var user = _db.Users.ToList();
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
 
             return View(managerindb);
         }
@@ -400,16 +389,13 @@ namespace ICSCOMP1640CORE.Controllers
             managerindb.Address = manager.Address;
             managerindb.Age = manager.Age;
             managerindb.Gender = manager.Gender;
-            managerindb.Department = manager.Department;
             managerindb.PhoneNumber = manager.PhoneNumber;
-
-            /*coordinatorinDb.DepartmentId = coordinator.DepartmentId;*/
 
             _db.Update(managerindb);
             _db.SaveChanges();
 
             _notyf.Success("Manager account is edited successfully.");
-            return RedirectToAction("ManageManager");
+            return RedirectToAction("ManageManagers");
         }
 
         [HttpGet]
@@ -425,7 +411,7 @@ namespace ICSCOMP1640CORE.Controllers
 
         //Staff
         [HttpGet]
-        public IActionResult ManageStaff(string searchString)
+        public IActionResult ManageStaffs(string searchString)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();

@@ -28,13 +28,19 @@
 						{
 							if (User.IsInRole(Role.Admin))
 							{
+								<li>@Html.ActionLink("Managers", "ManageManagers", "Admins")</li>
+								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Admins")</li>
 								<li>@Html.ActionLink("Departments", "DepartmentsIndex", "Admins")</li>
-								<li>@Html.ActionLink("Coordinator", "ManageCoordinators", "Admins")</li>
-
+								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Admins")</li>
+							}
+							if (User.IsInRole(Role.Manager))
+							{
+								<li>@Html.ActionLink("Categories", "ManageCategories", "Managers")</li>
+								<li>@Html.ActionLink("Coordinators", "InforCoordinator", "Managers")</li>
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{
-								<li>@Html.ActionLink("Categories", "ManageCategory", "Coordinators")</li>
+
 							}
 							if (User.IsInRole(Role.Staff))
 							{

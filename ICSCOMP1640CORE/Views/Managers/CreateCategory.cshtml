@@ -2,7 +2,7 @@
 @Html.ValidationMessage("ExistCategory")
 <h1 style="text-align: center">Create Category</h1>
 
-<form asp-controller="Coordinators" asp-action="CreateCategory" method="post">
+<form asp-controller="Managers" asp-action="CreateCategory" method="post">
 	<div class="form-group">
 		<label>Name of category</label>
 		<input type="text" class="form-control" placeholder="Input name" asp-for="Name">
@@ -12,5 +12,5 @@
 		<input type="text" class="form-control" placeholder="Input description" asp-for="Description">
 	</div>
 	<button type="submit" class="btn btn-outline-success">Create</button>
-	<center><a class="btn btn-outline-primary col-3 fas fa-reply" asp-controller="Coordinators" asp-action="ManageCategory">   Back</a></center>
+	<center><a class="btn btn-outline-primary col-3 fas fa-reply" asp-controller="Managers" asp-action="ManageCategories">   Back</a></center>
 </form>

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -27,9 +29,30 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf = notyf;
         }
 
-        // Coordinator Profile
+        // Staff 
         [HttpGet]
-        public ActionResult InforCoordinator()
+        public async Task<IActionResult> ManageStaffsAsync(string searchString)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var currentUser = await _userManager.GetUserAsync(User);
+            var currentDepartmentId = currentUser.DepartmentId;
+            var dataStaff = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            var data = dataStaff.Where(x =>x.DepartmentId == currentDepartmentId);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            return View(data);
+        }
+        [HttpGet]
+        public ActionResult InforStaff()
         {
             var userId = _userManager.GetUserId(User);
             var coordinatorInDb = _db.Users.Include(x => x.UserName)
@@ -41,100 +64,16 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             return View(coordinatorInDb);
         }
 
-        //Coordinator Manage Idea Category
         [HttpGet]
-        public IActionResult ManageCategory(string searchCategory)
+        public IActionResult DeleteStaff(string Id)
         {
-            var categoryInDb = _db.Categories.ToList();
-            if (!String.IsNullOrEmpty(searchCategory))
-            {
-                categoryInDb = categoryInDb.FindAll(s => s.Name.Contains(searchCategory));
-            }
-            return View(categoryInDb);
-        }
-
-        [HttpGet]
-        public IActionResult CreateCategory()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public IActionResult CreateCategory(Category category)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View("CreateCategory");
-            }
-            var check = _db.Categories.Any(c => c.Name.Equals((category.Name).Trim()));
-            if (check)
-            {
-                _notyf.Warning("Category is already exists.", 3);
-                return View(category);
-            }
-            var newCategoryInDb = new Category
-            {
-                Name = category.Name,
-                Description = category.Description,
-            };
-            _db.Categories.Add(newCategoryInDb);
+            var staffindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            _db.Users.Remove(staffindb);
             _db.SaveChanges();
-            _notyf.Success("Category is created successfully.", 3);
-            return RedirectToAction("ManageCategory","Coordinators");
+
+            _notyf.Success("Staff account is deleted successfully.");
+            return RedirectToAction("ManageStaffsAsync");
         }
 
-        [HttpGet]
-        public IActionResult DeleteCategory(int id)
-        {
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            _db.Categories.Remove(categoryInDb);
-            _db.SaveChanges();
-            _notyf.Success("Category is deleted successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
-        }
-
-        [HttpGet]
-        public IActionResult EditCategory(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            return View(categoryInDb);
-        }
-
-        [HttpPost]
-        public IActionResult EditCategory(Category category)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(category);
-            }
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == category.Id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
-            if (check)
-            {
-                _notyf.Warning("Category is already exists", 3);
-                return View(category);
-            }
-            categoryInDb.Name = category.Name;
-            categoryInDb.Description = category.Description;
-            _db.SaveChanges();
-            _notyf.Success("Category is edited successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
-        }
     }
 }

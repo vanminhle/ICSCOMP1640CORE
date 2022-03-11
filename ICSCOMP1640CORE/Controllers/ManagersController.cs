@@ -27,23 +27,9 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf = notyf;
         }
 
-        // Coordinator Profile
+        //Manage Idea Category
         [HttpGet]
-        public ActionResult InforCoordinator()
-        {
-            var userId = _userManager.GetUserId(User);
-            var coordinatorInDb = _db.Users.Include(x => x.UserName)
-                .SingleOrDefault(t => t.UserName == userId);
-            if (coordinatorInDb == null)
-            {
-                return NotFound();
-            }
-            return View(coordinatorInDb);
-        }
-
-        //Coordinator Manage Idea Category
-        [HttpGet]
-        public IActionResult ManageCategory(string searchCategory)
+        public IActionResult ManageCategories(string searchCategory)
         {
             var categoryInDb = _db.Categories.ToList();
             if (!String.IsNullOrEmpty(searchCategory))
@@ -80,7 +66,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _db.Categories.Add(newCategoryInDb);
             _db.SaveChanges();
             _notyf.Success("Category is created successfully.", 3);
-            return RedirectToAction("ManageCategory","Coordinators");
+            return RedirectToAction("ManageCategories", "Managers");
         }
 
         [HttpGet]
@@ -94,7 +80,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
             _notyf.Success("Category is deleted successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
+            return RedirectToAction("ManageCategories", "Managers");
         }
 
         [HttpGet]
@@ -134,7 +120,38 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
             _notyf.Success("Category is edited successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
+            return RedirectToAction("ManageCategories", "Managers");
+        }
+        //Coordinator
+        [HttpGet]
+        public IActionResult ManageCoordinator(string searchString)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            return View(data);
+        }
+        [HttpGet]
+        public ActionResult InforCoordinator()
+        {
+            var userId = _userManager.GetUserId(User);
+            var coordinatorInDb = _db.Users.Include(x => x.UserName)
+                .SingleOrDefault(t => t.UserName == userId);
+            if (coordinatorInDb == null)
+            {
+                return NotFound();
+            }
+            return View(coordinatorInDb);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿@model ICSCOMP1640CORE.Models.User
-
+@{
+    ViewBag.Title = "Info Manager";
+}
 
 <link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
 <!---<title> Responsive Registration Form | CodingLab </title>--->
@@ -24,14 +26,11 @@
                     Age:&nbsp;&nbsp;@Model.Age
                 </div>
                 <div class="element">
-                    Department Name :&nbsp;&nbsp; @Model.DepartmentId
-                </div>
-                <div class="element">
                     Gender Name :&nbsp;&nbsp; @Model.Gender
                 </div>
             </div>
 
-            <a asp-controller="Admins" asp-action="ManageManager" class="btn btn-dark">Back</a>
+            <a asp-controller="Admins" asp-action="ManageManagers" class="btn btn-dark">Back</a>
 
         </div>
 

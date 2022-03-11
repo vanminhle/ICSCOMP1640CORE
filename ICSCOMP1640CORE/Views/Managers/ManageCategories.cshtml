@@ -3,7 +3,7 @@
 <h1 style="text-align: center; margin-bottom: 30px; border-bottom: 1px solid #ccc; line-height: 5rem">Category</h1>
 <main>
 	<div>
-		@using (Html.BeginForm("ManageCategory", "Coordinators", FormMethod.Get))
+		@using (Html.BeginForm("ManageCategories", "Managers", FormMethod.Get))
 		{
 			<p>
 				Find By Name: @Html.TextBox("searchCategory")
@@ -30,12 +30,12 @@
 					<td>@item.Name</td>
 					<td>@item.Description</td>
 					<td>
-						@Html.ActionLink("Delete", "DeleteCategory","Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger mb-3 col-sm-4 fas fa-trash-alt space" })
-						@Html.ActionLink("Edit", "EditCategory", "Coordinators", new { id = item.Id }, new { @class = "btn btn-outline-info mb-3 col-sm-4 fas fa-edit" })
+						@Html.ActionLink("Delete", "DeleteCategory","Managers", new { Id = item.Id }, new { @class = "btn btn-outline-danger mb-3 col-sm-4 fas fa-trash-alt space" })
+						@Html.ActionLink("Edit", "EditCategory", "Managers", new { id = item.Id }, new { @class = "btn btn-outline-info mb-3 col-sm-4 fas fa-edit" })
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
-	<center><a class="btn btn-outline-success fas fa-plus " asp-area="" asp-controller="Coordinators" asp-action="CreateCategory"> Add new one category</a></center>
+	<center><a class="btn btn-outline-success fas fa-plus " asp-area="" asp-controller="Managers" asp-action="CreateCategory"> Add new one category</a></center>
 </main>
