@@ -37,7 +37,7 @@ namespace ICSCOMP1640CORE.Models
         //Data
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime SubmitDate { get; set; }
+        public DateTime SubmitDate { get; private set; }
 
         [Required(ErrorMessage = "Idea Name is required")]
         [StringLength(20)]
@@ -52,6 +52,10 @@ namespace ICSCOMP1640CORE.Models
         public int Rating { get; set; }
         public List<Comment> Comments { get; set; }
 
+        public Idea()
+        {
+            SubmitDate = DateTime.Now;
+        }
 
     }
 }
