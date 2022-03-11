@@ -13,15 +13,21 @@ namespace ICSCOMP1640CORE.Models
         [ForeignKey("User")]
         public string UserId { get; set; }
         public User User { get; set; }
+        public int IdeaId { get; set; }
+        public Idea Idea { get; set; }
 
 
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedAt { get; private set; }
 
         [Required(ErrorMessage = "You should provide comment of the idea")]
         public string Content { get; set; }
+        public Comment()
+        {
+            CreatedAt = DateTime.Now;
+        }
 
     }
 }

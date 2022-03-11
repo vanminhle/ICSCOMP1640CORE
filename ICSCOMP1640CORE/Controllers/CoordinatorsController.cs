@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ICSCOMP1640CORE.Data;
+using ICSCOMP1640CORE.Enums;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;

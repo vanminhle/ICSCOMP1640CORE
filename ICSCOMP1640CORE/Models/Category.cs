@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ICSCOMP1640CORE.Models
 {
@@ -17,5 +18,6 @@ namespace ICSCOMP1640CORE.Models
         [Display(Name = "Category Description")]
 
         public string Description { get; set; }
+        public List<Idea> Ideas { get; set; }
     }
 }

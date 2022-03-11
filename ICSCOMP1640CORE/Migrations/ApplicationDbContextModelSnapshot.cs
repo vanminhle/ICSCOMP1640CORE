@@ -55,10 +55,15 @@ namespace ICSCOMP1640CORE.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("IdeaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IdeaId");
 
                     b.HasIndex("UserId");
 
@@ -88,9 +93,15 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = 1,
+                            Id = 2,
                             Description = "The Organization senior management",
                             Name = "Manager"
+                        },
+                        new
+                        {
+                            Id = 1,
+                            Description = "The Administrator System",
+                            Name = "Admin"
                         });
                 });
 
@@ -171,24 +182,31 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "13089e9a-3a5d-4985-ba6b-4e7d52f84a4a",
-                            ConcurrencyStamp = "df564e93-f9e9-4324-b011-cd8f4be07f78",
+                            Id = "02385165-9c7e-4fb7-8ed0-9809edb2fa47",
+                            ConcurrencyStamp = "260e17b4-86c4-462c-b995-aabd1a2d96cf",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "6bffdb91-775a-474c-bb3b-849e38057435",
-                            ConcurrencyStamp = "8ef12dbf-8948-4f29-bf5f-63e3d4a3919a",
+                            Id = "06cd1452-82b7-4a94-a3f4-a7fed2a50605",
+                            ConcurrencyStamp = "a66b9501-1a30-4c4a-a122-763c2165cae0",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "0a4b8387-822c-4844-bd7f-96b1d79f5020",
-                            ConcurrencyStamp = "197843fa-68ec-438b-8c86-baf0351f667f",
+                            Id = "e5a1e97f-b162-424d-8731-6e3e74737a29",
+                            ConcurrencyStamp = "c25465d6-f81d-4dd1-983a-270ae684f88a",
                             Name = "Coordinator",
                             NormalizedName = "COORDINATOR"
+                        },
+                        new
+                        {
+                            Id = "a29f21da-8379-4be9-b1b7-08dd967aee28",
+                            ConcurrencyStamp = "17a55cfa-7e03-4e46-a638-06120acf4cbc",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
                         });
                 });
 
@@ -350,13 +368,18 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "e233eb1d-98e4-4aca-b23f-97d9e9631ced",
-                            RoleId = "13089e9a-3a5d-4985-ba6b-4e7d52f84a4a"
+                            UserId = "982e97ff-82c8-4227-8d59-930450d321aa",
+                            RoleId = "02385165-9c7e-4fb7-8ed0-9809edb2fa47"
                         },
                         new
                         {
-                            UserId = "7b099584-c946-4cf5-99fb-011d2f6c5ef8",
-                            RoleId = "0a4b8387-822c-4844-bd7f-96b1d79f5020"
+                            UserId = "b7e01247-3f06-4abf-8a90-3df641a5cf0f",
+                            RoleId = "e5a1e97f-b162-424d-8731-6e3e74737a29"
+                        },
+                        new
+                        {
+                            UserId = "cb2d17a8-6f28-4506-910e-b12154916e80",
+                            RoleId = "a29f21da-8379-4be9-b1b7-08dd967aee28"
                         });
                 });
 
@@ -401,24 +424,22 @@ namespace ICSCOMP1640CORE.Migrations
                     b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasIndex("DepartmentId");
-
                     b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "e233eb1d-98e4-4aca-b23f-97d9e9631ced",
+                            Id = "982e97ff-82c8-4227-8d59-930450d321aa",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b9a4af73-1ffd-4cfb-9bc4-26341b92d1ea",
+                            ConcurrencyStamp = "3de2f281-5cd1-4b00-b421-50734465f7cb",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIcAvjt7Is8iTBakhCMZogpPa9KT8KAMnZWJJsvevlCL3JKtWRfCI3Peph+PUxRfbA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEP7B3IHFwmdqjqnTe/S+PUN01Nv+KU4EzKFjc+b96i33mx2fqiAEj/POf8quBsqEUw==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "0b40732e-fd68-4acb-84b1-4d8e24fa96a4",
+                            SecurityStamp = "22aa088f-0088-48f5-a73e-8ad6cbcdbc23",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com",
                             Age = 0,
@@ -427,30 +448,66 @@ namespace ICSCOMP1640CORE.Migrations
                         },
                         new
                         {
-                            Id = "7b099584-c946-4cf5-99fb-011d2f6c5ef8",
+                            Id = "b7e01247-3f06-4abf-8a90-3df641a5cf0f",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "75d41e1a-be9f-498e-aa35-269a950c5fc1",
+                            ConcurrencyStamp = "e01d9fc0-2459-4040-ab40-58eb3deb0443",
                             Email = "coordinator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "COORDINATOR@GMAIL.COM",
                             NormalizedUserName = "COORDINATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENFzjVVNrZRzLbaTXSF+XLYqfoT3Xw7B2SMY8XIiCX2r2STH5tTJUjc0+K/2an2kig==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGLTqnDlenBP0jgGMcG21+We6jPQgehvNzw5kuhfzjYc5jgwgAbMTIO2jxsdixlB3Q==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "9845603a-b464-4520-81c0-a09246b09d85",
+                            SecurityStamp = "1d72c26e-ef42-423b-b159-bf6eb2ed5c70",
                             TwoFactorEnabled = false,
                             UserName = "coordinator@gmail.com",
                             Age = 0,
                             DepartmentId = 1,
                             FullName = "Coordinator"
+                        },
+                        new
+                        {
+                            Id = "cb2d17a8-6f28-4506-910e-b12154916e80",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "14d01a7c-a3a7-47a6-a20c-c5e785354ed7",
+                            Email = "manager@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MANAGER@GMAIL.COM",
+                            NormalizedUserName = "MANAGER@GMAIL.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPw9YMkr9tVlxn2m6fzB5K6UMr7NqjH2n0JTVgroO3/6mQ/1uRep1OjrkrTSDHIt9g==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "a3e7a0d4-9c8e-4fe2-a464-cfcdbebf1d28",
+                            TwoFactorEnabled = false,
+                            UserName = "manager@gmail.com",
+                            Age = 0,
+                            DepartmentId = 1,
+                            FullName = "Manager"
                         });
+                });
+
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Staff", b =>
+                {
+                    b.HasBaseType("ICSCOMP1640CORE.Models.User");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.HasDiscriminator().HasValue("Staff");
                 });
 
             modelBuilder.Entity("ICSCOMP1640CORE.Models.Comment", b =>
                 {
+                    b.HasOne("ICSCOMP1640CORE.Models.Idea", "Idea")
+                        .WithMany("Comments")
+                        .HasForeignKey("IdeaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ICSCOMP1640CORE.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
+
+                    b.Navigation("Idea");
 
                     b.Navigation("User");
                 });
@@ -458,7 +515,7 @@ namespace ICSCOMP1640CORE.Migrations
             modelBuilder.Entity("ICSCOMP1640CORE.Models.Idea", b =>
                 {
                     b.HasOne("ICSCOMP1640CORE.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Ideas")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -531,10 +588,10 @@ namespace ICSCOMP1640CORE.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.User", b =>
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Staff", b =>
                 {
                     b.HasOne("ICSCOMP1640CORE.Models.Department", "Department")
-                        .WithMany("Users")
+                        .WithMany("Staffs")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -542,11 +599,21 @@ namespace ICSCOMP1640CORE.Migrations
                     b.Navigation("Department");
                 });
 
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Category", b =>
+                {
+                    b.Navigation("Ideas");
+                });
+
             modelBuilder.Entity("ICSCOMP1640CORE.Models.Department", b =>
                 {
                     b.Navigation("Ideas");
 
-                    b.Navigation("Users");
+                    b.Navigation("Staffs");
+                });
+
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Idea", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

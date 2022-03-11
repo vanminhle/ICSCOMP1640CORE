@@ -22,10 +22,4 @@ namespace ICSCOMP1640CORE.Models
         public Department Department { get; set; }
 
     }
-
-    public enum Gender
-    {
-        Male,
-        Female
-    }
 }

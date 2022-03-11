@@ -15,37 +15,49 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 Name = "Admin",
                 NormalizedName = "ADMIN",
             };
-            var staffRole = new IdentityRole()
+            var managerRole = new IdentityRole()
             {
-                Name = "Staff",
-                NormalizedName = "STAFF",
+                Name = "Manager",
+                NormalizedName = "MANAGER",
             };
             var coordinatorRole = new IdentityRole()
             {
                 Name = "Coordinator",
                 NormalizedName = "COORDINATOR",
             };
+            var staffRole = new IdentityRole()
+            {
+                Name = "Staff",
+                NormalizedName = "STAFF",
+            };
 
             builder.Entity<IdentityRole>().HasData(
                 adminRole,
                 staffRole,
-                coordinatorRole
+                coordinatorRole,
+                managerRole
                 );
 
             #endregion RoleData
 
             #region DepartmentData
 
-            var managerDepartment = new Department()
+            var adminDepartment = new Department()
             {
                 Id = 1,
+                Name = "Admin",
+                Description = "The Administrator System"
+            };
+            var managerDepartment = new Department()
+            {
+                Id = 2,
                 Name = "Manager",
                 Description = "The Organization senior management"
-
             };
 
             builder.Entity<Department>().HasData(
-                managerDepartment
+                managerDepartment,
+                adminDepartment
                 );
 
             #endregion DepartmentData
@@ -65,6 +77,18 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 PasswordHash = hasher.HashPassword(null, "Admin@123"),
                 DepartmentId = 1
             };
+            var manager = new User()
+            {
+                Email = "manager@gmail.com",
+                UserName = "manager@gmail.com",
+                NormalizedUserName = "manager@gmail.com".ToUpper(),
+                NormalizedEmail = "manager@gmail.com".ToUpper(),
+                FullName = "Manager",
+                EmailConfirmed = true,
+                PhoneNumberConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Manager@123"),
+                DepartmentId = 1
+            };
             var coordinator = new User()
             {
                 Email = "coordinator@gmail.com",
@@ -79,7 +103,8 @@ namespace ICSCOMP1640CORE.Data.SeedData
             };
             builder.Entity<User>().HasData(
                 admin,
-                coordinator
+                coordinator,
+                manager
                 );
 
             #endregion UserData
@@ -88,7 +113,8 @@ namespace ICSCOMP1640CORE.Data.SeedData
 
             builder.Entity<IdentityUserRole<string>>().HasData(
                 new IdentityUserRole<string> { UserId = admin.Id, RoleId = adminRole.Id },
-                new IdentityUserRole<string> { UserId = coordinator.Id, RoleId = coordinatorRole.Id }
+                new IdentityUserRole<string> { UserId = coordinator.Id, RoleId = coordinatorRole.Id },
+                new IdentityUserRole<string> { UserId = manager.Id , RoleId = managerRole.Id }
                 );
 
             #endregion UserRole

@@ -1,5 +1,6 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ICSCOMP1640CORE.Data;
+using ICSCOMP1640CORE.Enums;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -35,7 +36,7 @@ namespace ICSCOMP1640CORE.Controllers
             _emailSender = emailSender;
         }
 
-        public IActionResult DepartmentsIndex(string searchString)
+        public IActionResult DepartmentsIndex(string searchString, int pg=1)
         {
             var departments = _db.Departments.ToList();
             if (!String.IsNullOrEmpty(searchString))
@@ -44,7 +45,26 @@ namespace ICSCOMP1640CORE.Controllers
                     .Where(s => s.Name.ToLower().Contains(searchString.ToLower()))
                 .ToList();
             }
-            return View(departments);
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = departments.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = departments.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            //return View(departments);
+
+            return View(data);
+
         }
 
         [HttpGet]
