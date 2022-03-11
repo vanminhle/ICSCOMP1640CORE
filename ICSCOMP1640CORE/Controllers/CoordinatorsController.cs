@@ -29,11 +29,16 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf = notyf;
         }
 
-        // Staff 
+        // Staff
         [HttpGet]
-        public async Task<IActionResult> ManageStaffsAsync(string searchString)
+        public async Task<IActionResult> ManageStaffs(string searchString)
         {
-            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+
+            /*var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department)
+                .Where(m => m.DepartmentId == currentDepartmentId)
+                .ToList();*/
+
+
             var currentUser = await _userManager.GetUserAsync(User);
             var currentDepartmentId = currentUser.DepartmentId;
             var dataStaff = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
@@ -52,27 +57,29 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             return View(data);
         }
         [HttpGet]
-        public ActionResult InforStaff()
+        public ActionResult InforStaff(string id)
         {
-            var userId = _userManager.GetUserId(User);
-            var coordinatorInDb = _db.Users.Include(x => x.UserName)
-                .SingleOrDefault(t => t.UserName == userId);
-            if (coordinatorInDb == null)
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
+            if (info == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);
+            return View(info);
         }
 
         [HttpGet]
         public IActionResult DeleteStaff(string Id)
         {
             var staffindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            if (staffindb == null)
+            {
+                return NotFound();
+            }
             _db.Users.Remove(staffindb);
             _db.SaveChanges();
 
             _notyf.Success("Staff account is deleted successfully.");
-            return RedirectToAction("ManageStaffsAsync");
+            return RedirectToAction("ManageStaffs");
         }
 
     }

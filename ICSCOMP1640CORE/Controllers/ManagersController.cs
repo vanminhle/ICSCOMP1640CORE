@@ -124,7 +124,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
         //Coordinator
         [HttpGet]
-        public IActionResult ManageCoordinator(string searchString)
+        public IActionResult ManageCoordinators(string searchString)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
@@ -142,16 +142,14 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             return View(data);
         }
         [HttpGet]
-        public ActionResult InforCoordinator()
+        public ActionResult InforCoordinator(string id)
         {
-            var userId = _userManager.GetUserId(User);
-            var coordinatorInDb = _db.Users.Include(x => x.UserName)
-                .SingleOrDefault(t => t.UserName == userId);
-            if (coordinatorInDb == null)
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
+            if (info == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);
+            return View(info);
         }
     }
 }

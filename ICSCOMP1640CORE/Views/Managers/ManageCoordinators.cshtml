@@ -34,7 +34,7 @@
                         <td class="align-middle" scope="row">@item.Department.Name</td>
                         <th class="align-middle" scope="row">@item.EmailConfirmed</th>
                         <td class="align-middle">
-                            @Html.ActionLink("", "InforCoordinator", "Manager", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title = "Info" })
+                            @Html.ActionLink("", "InforCoordinator", "Managers", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title = "Info" })
                         </td>
                     </tr>
                 }

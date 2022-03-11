@@ -36,11 +36,11 @@
 							if (User.IsInRole(Role.Manager))
 							{
 								<li>@Html.ActionLink("Categories", "ManageCategories", "Managers")</li>
-								<li>@Html.ActionLink("Coordinators", "InforCoordinator", "Managers")</li>
+								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Managers")</li>
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{
-
+								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Coordinators")</li>
 							}
 							if (User.IsInRole(Role.Staff))
 							{

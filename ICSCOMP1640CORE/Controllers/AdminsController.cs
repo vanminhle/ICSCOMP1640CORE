@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Text;
@@ -272,7 +273,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
-            var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
             if (info == null)
             {
                 return NotFound();
@@ -431,7 +432,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public ActionResult InforStaff(string id)
         {
-            var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
             if (info == null)
             {
                 return NotFound();
