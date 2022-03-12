@@ -1,10 +1,10 @@
 ﻿@model ICSCOMP1640CORE.Models.User
 
 @{
-	ViewData["Title"] = "Edit Staff Account";
+	ViewData["Title"] = "Edit Profile";
 }
 
-<h1 class="mt-5 mb-4">Edit QA Staff Account</h1>
+<h1 class="mt-5 mb-4">Edit Profile</h1>
 
 @if (TempData["Danger"] != null)
 {
@@ -62,7 +62,7 @@
 		</div>
 		<div class="mt-4">
 			<button type="submit" class="btn btn-outline-success">Edit</button>
-			<a class="btn btn-outline-primary" asp-controller="Admins" asp-action="ManageCoordinators">Cancel</a>
+			<a class="btn btn-outline-primary"  asp-area="Identity" asp-page="/Account/Manage/Index">Cancel</a>
 		</div>
 	</div>
 </form>
