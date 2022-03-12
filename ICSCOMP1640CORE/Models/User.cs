@@ -12,7 +12,20 @@ namespace ICSCOMP1640CORE.Models
 
         [StringLength(30)]
         public string Address { get; set; }
-
+        public string Gender { get; set; }
         public int Age { get; set; }
+
+        /* User can have their Department Id Assign */
+
+        [ForeignKey("Department")]
+        public int DepartmentId { get; set; }
+        public Department Department { get; set; }
+
+    }
+
+    public enum Gender
+    {
+        Male,
+        Female
     }
 }

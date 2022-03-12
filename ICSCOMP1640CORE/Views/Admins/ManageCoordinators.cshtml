@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ICSCOMP1640CORE.Models.User>
+@{
+	ViewBag.Title = "Coordinators Index";
+}
+
+@using (Html.BeginForm("ManageCoordinators", "Admins", FormMethod.Get))
+{
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+		<h2 class="flex-row text-center mt-2">Coordnators Index</h2>
+		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
+			@Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
+			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
+		</div>
+	</div>
+
+
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead class="thead-dark">
+				<tr>
+					<th scope="col" class="col-5">Full Name</th>
+					<th scope="col" class="col-5">Email</th>
+					<th scope="col" class="col-1">Gender</th>
+					<th scope="col" class="col-1">Department</th>
+					<th scope="col" class="col-1">Verified</th>
+					<th scope="col" class="col-1">Edit</th>
+					<th scope="col" class="col-1">Info</th>
+					<th scope="col" class="col-1">Delete</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model)
+				{
+					<tr>
+						<th class="align-middle" scope="row">@item.FullName</th>
+						<td class="align-middle" scope="row">@item.Email</td>
+						<td class="align-middle" scope="row">@item.Gender</td>
+						<td class="align-middle" scope="row">@item.Department.Name</td>
+						<th class="align-middle" scope="row">@item.EmailConfirmed</th>
+						<td class="align-middle">
+							@Html.ActionLink("", "EditCoordinator", "Admins", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit", @title="Edit" })
+						</td>
+						<td class="align-middle">
+							@Html.ActionLink("","InforCoordinator","Admins", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title="Info" })
+						</td>
+						<td class="align-middle">
+							@Html.ActionLink("", "DeleteCondinator", "Admins", new { id = item.Id }, new { @class = "btn btn-danger far fa-trash-alt", @title="Delete" })
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+<a class="btn btn-primary mt-3" asp-controller="Admins" asp-action="CreateCoordinator">Create Coordinator</a>
+
+
+
