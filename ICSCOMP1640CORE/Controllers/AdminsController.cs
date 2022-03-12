@@ -42,7 +42,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 departments = departments
-                    .Where(s => s.Name.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
             return View(departments);
@@ -210,7 +210,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 data = data
-                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
             foreach (var user in data)
@@ -343,7 +343,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 data = data
-                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
             foreach (var user in data)
@@ -419,7 +419,7 @@ namespace ICSCOMP1640CORE.Controllers
             if (!String.IsNullOrEmpty(searchString))
             {
                 data = data
-                    .Where(s => s.FullName.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
             foreach (var user in data)

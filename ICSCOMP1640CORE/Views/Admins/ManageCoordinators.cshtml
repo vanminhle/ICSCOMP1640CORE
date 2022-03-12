@@ -20,7 +20,8 @@
 				<tr>
 					<th scope="col" class="col-5">Full Name</th>
 					<th scope="col" class="col-5">Email</th>
-					<th scope="col" class="col-2">Department</th>
+					<th scope="col" class="col-1">Gender</th>
+					<th scope="col" class="col-1">Department</th>
 					<th scope="col" class="col-1">Verified</th>
 					<th scope="col" class="col-1">Edit</th>
 					<th scope="col" class="col-1">Info</th>
@@ -33,6 +34,7 @@
 					<tr>
 						<th class="align-middle" scope="row">@item.FullName</th>
 						<td class="align-middle" scope="row">@item.Email</td>
+						<td class="align-middle" scope="row">@item.Gender</td>
 						<td class="align-middle" scope="row">@item.Department.Name</td>
 						<th class="align-middle" scope="row">@item.EmailConfirmed</th>
 						<td class="align-middle">
@@ -51,7 +53,7 @@
 	</div>
 }
 
-<a class="btn btn-primary mt-4" asp-controller="Admins" asp-action="CreateCoordinator">Create Coordinator</a>
+<a class="btn btn-primary mt-3" asp-controller="Admins" asp-action="CreateCoordinator">Create Coordinator</a>
 
 
 

@@ -21,9 +21,8 @@
 		<table class="table table-bordered">
 			<thead class="thead-dark">
 				<tr>
-					<th scope="col" class="col-1">ID</th>
-					<th scope="col" class="col-4">Department Name</th>
-					<th scope="col" class="col-4">Description</th>
+					<th scope="col" class="col-5">Department Name</th>
+					<th scope="col" class="col-6">Description</th>
 					<th scope="col" class="col-1">Edit</th>
 					<th scope="col" class="col-1">Delete</th>
 				</tr>
@@ -32,7 +31,6 @@
 				@foreach (var item in Model)
 				{
 					<tr>
-						<th class="align-middle" scope="row">@item.Id</th>
 						<td class="align-middle">@item.Name</td>
 						<td class="align-middle">@item.Description</td>
 						<td class="align-middle">
@@ -48,4 +46,4 @@
 	</div>
 }
 
-<a class="btn btn-primary mt-4" asp-controller="Admins" asp-action="CreateDepartment">Create Department</a>
+<a class="btn btn-primary mt-3" asp-controller="Admins" asp-action="CreateDepartment">Create Department</a>
