@@ -62,7 +62,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             var newCategoryInDb = new Category
             {
-                Name = category.Name,
+                Name = category.Name.Trim(),
                 Description = category.Description,
             };
             _db.Categories.Add(newCategoryInDb);
@@ -112,13 +112,13 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound();
             }
-            var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
+            var check = _db.Categories.Any(c => c.Name.Equals((category.Name).Trim()));
             if (check)
             {
                 _notyf.Warning("Category is already exists", 3);
                 return View(category);
             }
-            categoryInDb.Name = category.Name;
+            categoryInDb.Name = category.Name.Trim();
             categoryInDb.Description = category.Description;
             _db.SaveChanges();
             _notyf.Success("Category is edited successfully.", 3);

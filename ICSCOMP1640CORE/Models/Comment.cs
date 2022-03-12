@@ -22,6 +22,9 @@ namespace ICSCOMP1640CORE.Models
 
         [Required(ErrorMessage = "You should provide comment of the idea")]
         public string Content { get; set; }
-
+        public Comment()
+        {
+            CreatedAt = DateTime.Now;
+        }
     }
 }

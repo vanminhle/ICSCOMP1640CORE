@@ -33,7 +33,7 @@
                     <td class="align-middle" scope="row">@item.Name</td>
                     <td class="align-middle" scope="row">@item.Description</td>
                     <td class="align-middle">
-                        @Html.ActionLink("", "EditCategory", "Managers", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title = "Edit" })
+                        @Html.ActionLink("", "EditCategory", "Managers", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit", @title = "Edit" })
                     </td>
 					                    <td class="align-middle">
                         @Html.ActionLink("", "DeleteCategory","Managers", new { id = item.Id }, new { @class = "btn btn-danger fa fa-trash", @title = "Delete" })

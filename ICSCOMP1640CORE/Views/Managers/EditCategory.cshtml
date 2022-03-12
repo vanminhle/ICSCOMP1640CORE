@@ -1,18 +1,32 @@
 ﻿@model ICSCOMP1640CORE.Models.Category
 @Html.ValidationMessage("ExistCategory")
 
-<h1 style="text-align: center">Edit Category</h1>
+@{
+    ViewBag.Title = "Edit Category";
+}
+
+<h1 class="mt-5 mb-4">Edit Category</h1>
+
 <form asp-controller="Managers" asp-action="EditCategory" method="post">
 	@Html.HiddenFor(i => i.Id)
-	<div class="form-group">
-		<label>Name of category</label>
-		<input type="text" class="form-control" placeholder="Input name" asp-for="Name">
-	</div>
-	<div class="form-group">
-		<label>Description</label>
-		<input type="text" class="form-control" placeholder="Description input" asp-for="Description">
-	</div>
-	<button type="submit" class="btn btn-outline-success">Edit</button>
-	<center><a class="btn btn-outline-primary col-3 fas fa-reply" asp-controller="Managers" asp-action="ManageCategories">   Back</a></center>
+    <div class="mw-100 mb-5">
+		<div class="form-row">
+			<div class="form-group col-md-6">
+                <label>Category Name</label>
+				<input type="text" class="form-control" placeholder="Category Name" asp-for="Name" required>
+                @Html.ValidationMessageFor(m => m.Name, "", new { @class = "text-danger" })
+			</div>
 
+			<div class="form-group col-md-6">
+			<label>Description</label>
+			<input type="text" class="form-control" placeholder="Category Description" asp-for="Description" required>
+            @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+        <div class="mt-4">
+			<button type="submit" class="btn btn-outline-success">Edit</button>
+			<a class="btn btn-outline-primary" asp-controller="Managers" asp-action="ManageCategories">Cancel</a>
+        </div>
+    </div>
 </form>

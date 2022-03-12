@@ -36,7 +36,7 @@ namespace ICSCOMP1640CORE.Controllers
             _emailSender = emailSender;
         }
         //Department
-        public IActionResult DepartmentsIndex(string searchString)
+        public IActionResult DepartmentsIndex(string searchString, int pg = 1)
         {
             var departments = _db.Departments.ToList();
             if (!String.IsNullOrEmpty(searchString))
@@ -45,7 +45,23 @@ namespace ICSCOMP1640CORE.Controllers
                     .Where(s => s.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
-            return View(departments);
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = departments.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = departments.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         [HttpGet]
@@ -62,7 +78,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(model);
             }
 
-            var existDepartment = _db.Departments.Any(x => x.Name == model.Name);
+            var existDepartment = _db.Departments.Any(x => x.Name == model.Name.Trim());
             if (existDepartment == true)
             {
                 /*ModelState.AddModelError("", "Department Already Exists.");*/
@@ -71,7 +87,7 @@ namespace ICSCOMP1640CORE.Controllers
             }
             var newDepartment = new Department()
             {
-                Name = model.Name,
+                Name = model.Name.Trim(),
                 Description = model.Description,
             };
             _notyf.Success("Department is created successfully.");
@@ -118,7 +134,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(department);
             }
             var departmentInDb = _db.Departments.SingleOrDefault(x => x.Id == department.Id);
-            var existDepartment = _db.Departments.Any(x => x.Name == department.Name);
+            var existDepartment = _db.Departments.Any(x => x.Name == department.Name.Trim());
 
             if (existDepartment == true)
             {
@@ -126,7 +142,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(department);
             }
             _notyf.Success("Department is edited successfully.");
-            departmentInDb.Name = department.Name;
+            departmentInDb.Name = department.Name.Trim();
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
 
@@ -203,7 +219,7 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpGet]
-        public IActionResult ManageCoordinators(string searchString)
+        public IActionResult ManageCoordinators(string searchString, int pg = 1)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
@@ -218,7 +234,22 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.Entry(user).Reference(x => x.Department).Load();
             }
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
 
         [HttpGet]
@@ -336,7 +367,7 @@ namespace ICSCOMP1640CORE.Controllers
             return RedirectToAction("ManageManagers");
         }
         [HttpGet]
-        public IActionResult ManageManagers(string searchString)
+        public IActionResult ManageManagers(string searchString, int pg = 1)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Manager").Result.ToList();
@@ -351,8 +382,24 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.Entry(user).Reference(x => x.Department).Load();
             }
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
+
         [HttpGet]
         public IActionResult DeleteManager(string Id)
         {
@@ -412,7 +459,7 @@ namespace ICSCOMP1640CORE.Controllers
 
         //Staff
         [HttpGet]
-        public IActionResult ManageStaffs(string searchString)
+        public IActionResult ManageStaffs(string searchString, int pg = 1)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
@@ -427,8 +474,24 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.Entry(user).Reference(x => x.Department).Load();
             }
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
+
         [HttpGet]
         public ActionResult InforStaff(string id)
         {
