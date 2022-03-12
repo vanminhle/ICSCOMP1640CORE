@@ -5,9 +5,11 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -150,6 +152,62 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
                 return NotFound();
             }
             return View(info);
+        }
+        [HttpGet]
+        public ActionResult InforStaff(string id)
+        {
+            var info = _db.Users.OfType<User>().Include("Staff").FirstOrDefault(t => t.Id == id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return View(info);
+        }
+        [HttpGet]
+        public ActionResult InforManager(string id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var ManagerInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (ManagerInDb == null)
+            {
+                return NotFound();
+            }
+            return View(ManagerInDb);
+        }
+        [HttpGet]
+        public ActionResult EditProfile(string Id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Id = userId.ToString();
+            var ManagerInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
+
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            return View(ManagerInDb);
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(Manager manager, string id)
+        {
+            var ManagerInDb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (ManagerInDb == null)
+            {
+                return BadRequest();
+            }
+
+            ManagerInDb.FullName = manager.FullName;
+            ManagerInDb.Address = manager.Address;
+            ManagerInDb.Age = manager.Age;
+            ManagerInDb.Gender = manager.Gender;
+            ManagerInDb.DepartmentId = manager.DepartmentId;
+            ManagerInDb.PhoneNumber = manager.PhoneNumber;
+
+            _db.Update(ManagerInDb);
+            _db.SaveChanges();
+            _notyf.Success("Manager account is edited successfully.");
+            return RedirectToAction("InforManager");
         }
     }
 }
