@@ -5,6 +5,7 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -81,6 +82,53 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf.Success("Staff account is deleted successfully.");
             return RedirectToAction("ManageStaffs");
         }
+        [HttpGet]
+        public ActionResult InforCoordinator(string id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (CoordinatorInDb == null)
+            {
+                return NotFound();
+            }
+            return View(CoordinatorInDb);
+        }
+        [HttpGet]
+        public ActionResult EditProfile(string Id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
+
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            return View(CoordinatorInDb);
+        }
+
+        [HttpPost]
+        public ActionResult EditProfile(Coordinator coordinator, string id)
+        {
+            var coordinatorinDb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (coordinatorinDb == null)
+            {
+                return BadRequest();
+            }
+
+            coordinatorinDb.FullName = coordinator.FullName;
+            coordinatorinDb.Address = coordinator.Address;
+            coordinatorinDb.Age = coordinator.Age;
+            coordinatorinDb.Gender = coordinator.Gender;
+            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
+            coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
+
+            _db.Update(coordinatorinDb);
+            _db.SaveChanges();
+            _notyf.Success("Coordinator account is edited successfully.");
+            return RedirectToAction("InforCoordinator");
+        }
 
     }
+
 }

@@ -1,0 +1,37 @@
+﻿@model ICSCOMP1640CORE.Models.User
+
+
+<link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
+<!---<title> Responsive Registration Form | CodingLab </title>--->
+
+<body>
+	<div class="infor">
+		<div class="title">
+			<div class="title-Infor" style="font-size:40px;text-align: center;border-bottom:1px solid black; padding-bottom:20px;">
+				Information Coordinator
+			</div>
+			<div class="containerInfor">
+				<div class="element">
+					FullName :&nbsp;&nbsp; @Model.FullName
+				</div>
+				<div class="element">
+					Email:&nbsp;&nbsp;	@Model.Email
+				</div>
+				<div class="element">
+					Address:&nbsp;&nbsp; @Model.Address
+				</div>
+				<div class="element">
+					Age:&nbsp;&nbsp;@Model.Age
+				</div>
+				<div class="element">
+					Department Name :&nbsp;&nbsp; @Model.DepartmentId
+				</div>
+			</div>
+
+			<a asp-controller="Home" asp-action="Index" class="btn btn-dark">Back</a>
+
+		</div>
+
+
+	</div>
+</body>

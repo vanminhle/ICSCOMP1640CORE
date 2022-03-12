@@ -15,7 +15,20 @@
     {
         @if (User.IsInRole("Coordinator"))
         {
-            
+               <li class="nav-item"><a class="nav-link "asp-action="InforCoordinator" asp-controller="Coordinators">Profile</a></li>
+                <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Coordinators">Edit Profile</a></li>
+        }
+         @if (User.IsInRole("Staff"))
+        {
+
+            <li class="nav-item"><a class="nav-link "asp-action="InforStaff" asp-controller="Staffs">Profile</a></li>
+               <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Staffs">Edit Profile</a></li>
+        }
+         @if (User.IsInRole("Manager"))
+        {
+
+            <li class="nav-item"><a class="nav-link "asp-action="InforManager" asp-controller="Managers">Profile</a></li>
+               <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Managers">Edit Profile</a></li>
         }
 
 
