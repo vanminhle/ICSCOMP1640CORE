@@ -2,32 +2,34 @@
 @{
     ViewBag.Title = "Get Trainee Courses";
 }
-
-<h2 style="margin-bottom: 35px; text-align: center; margin-top: 45px;">Idea From Coordinator Department</h2>
-
-<table class="table table-bordered">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">Idea Name</th>
-            <th scope="col">Author</th>
-            <th scope="col">Category</th>
-            <th scope="col">Submit Date</th>
-            <th scope="col">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in @Model)
-        {
-        <tr>
-            <th>@item.IdeaName</th>
-            <td>@item.User.UserName</td>
-            <td>@item.Category.Name</td>
-            <td>@item.SubmitDate</td>
-            <td>
-	            @Html.ActionLink("Delete", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger mb-3 col-sm-4 fas fa-trash-alt space" })
-			    @Html.ActionLink("View", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-outline-info mb-3 col-sm-4 glyphicon glyphicon-eye-open" })
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
+<h1 style="text-align: center; border-bottom: 1px solid #ccc; line-height: 5rem">Idea From Coordinator Department</h1>
+<main>
+	<br>
+	<table style="text-align: center" class="table table-bordered">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col">Idea Name</th>
+                <th scope="col">Author</th>
+                <th scope="col">Category</th>
+                <th scope="col">Submit Date</th>
+                <th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				 <tr>
+                    <th>@item.IdeaName</th>
+                    <td>@item.User.UserName</td>
+                    <td>@item.Category.Name</td>
+                    <td>@item.SubmitDate</td>
+                    <td>
+	                    @Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger mb-4 mr-1 col-sm-4 fas fa-trash-alt space" })
+			            @Html.ActionLink("", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-outline-info mb-4 mr-1 col-sm-4 fa fa-eye" })
+                    </td>
+                </tr>
+			}
+		</tbody>
+	</table>
+@*    <center><a class="btn btn-outline-primary col-3 fas fa-reply" asp-controller="Coordinators" asp-action="ViewStaffAccount"> Back</a></center>*@
+</main>

@@ -1,9 +1,10 @@
 ﻿@model List<ICSCOMP1640CORE.Models.User>
 
 
-
-<h1>Staff Account</h1>
-
+<div style="display:flex; justify-content: space-between">
+	<h1>Staff Account</h1>
+	<a asp-controller="Coordinators" asp-action="GetIdeaFromCoor">Idea</a>
+</div>
 <main>
 	<table class="table">
 		<thead class="thead-dark">
@@ -24,14 +25,13 @@
 					<td>@item.Department.Name</td>
 					<td>@item.EmailConfirmed</td>
 					<td>
-						@Html.ActionLink("Delete", "DeleteStaffAccount", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-						@Html.ActionLink("Detail", "DetailStaffs", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-success" })
+						@Html.ActionLink("", "DeleteStaffAccount", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink("", "DetailStaffs", "Coordinators", new { Id = item.Id }, new { @class = "btn btn-outline-info fa fa-search-plus" })
 
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
-							@Html.ActionLink("Ideals", "GetIdeaFromCoor", "Coordinators", new { @class = "btn btn-success" })
 	<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Admins" asp-action="Index">Back to previous page</a></center>
 </main>

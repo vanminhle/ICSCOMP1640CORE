@@ -3,14 +3,15 @@
     ViewBag.Title = "Idea Details";
 }
 
-<h2 style="margin-bottom: 35px; text-align: center; margin-top: 45px;">Idea Details</h2>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+
+<div class="card">
+    <h2 style="text-align: center" class="card-header">Idea Details</h2>
+    <div class="card-body">
         <p>Idea Name: @Model.IdeaName</p>
         <p>Content Of Idea: @Model.Content</p>
         <p>Category: @Model.Category.Name</p>
         <p>Submit Date: @Model.SubmitDate.ToString("yyyy-MM-dd")</p>
-    </div>
+    </div> 
 </div>
-<center><a class="btn btn-outline-primary col-3 fas fa-reply" asp-controller="Coordinators" asp-action="GetIdeaFromCoor">   Back</a></center>
+<center><a class="btn btn-outline-primary col-3 fas fa-reply mt-4" asp-controller="Coordinators" asp-action="GetIdeaFromCoor">  Back</a></center>
