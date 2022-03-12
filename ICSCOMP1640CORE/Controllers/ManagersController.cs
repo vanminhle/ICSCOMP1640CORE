@@ -151,5 +151,31 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(info);
         }
+        [HttpGet]
+        public IActionResult ManageIdea()
+        {
+            var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
+
+            return View(ideaInDb);
+        }
+        public IActionResult ViewDetailIdea(int Id)
+        {
+            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
+            return View(idea);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteIdeas(int id)
+        {
+            var IdeasInDb = _db.Ideas.SingleOrDefault(c => c.Id == id);
+            if (IdeasInDb == null)
+            {
+                return NotFound();
+            }
+            _db.Ideas.Remove(IdeasInDb);
+            _db.SaveChanges();
+            _notyf.Success("Ideas is deleted successfully.", 3);
+            return RedirectToAction("ManageIdea", "Managers");
+        }
     }
 }
