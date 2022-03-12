@@ -1,0 +1,44 @@
+﻿@model IEnumerable<ICSCOMP1640CORE.Models.Idea>
+
+
+<h1>Idea List Of Staff Department</h1>
+<head>
+  <link rel="stylesheet" href="~/css/IdeaIndex/IdeaIndex.css">
+</head>
+<main>
+
+	                <a class="nav-link btn btn-outline-success" asp-controller="Staffs" asp-action="CreateIdea">Create</a>
+
+
+	@*<table class="table">
+		<thead class="thead-dark">
+			<tr>
+
+				<th scope="col">ID</th>
+				<th scope="col">Idea Name</th>
+				<th scope="col">Idea Content</th>
+				<th scope="col">Submit Date</th>
+				<th scope="col">Category</th>
+				<th scope="col">Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+
+					<td>@item.IdeaId</td>
+					<td>@item.IdeaName</td>
+					<td>@item.IdeaContent</td>
+					<td>@item.SubmitDate</td>
+					<td>@item.Category.CategoryName</td>
+					<td>
+						@Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.IdeaId }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+						@Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.IdeaId }, new { @class = "btn btn-outline-info fas fa-edit" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>*@
+	<div class = "frame"></div>
+</main>
