@@ -20,13 +20,11 @@ namespace ICSCOMP1640CORE.Data
             base.OnModelCreating(builder);
             UserSeed.Seed(builder);
         }
+        
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<Coordinator> Coordinators { get; set; }
         public DbSet<Department> Departments { get; set; }
-        public DbSet<DepartmentIdea> DepartmentsIdeas { get; set; }
         public DbSet<Idea> Ideas { get; set; }
-        public DbSet<Staff> Staffs { get; set; }
 
     }
 }

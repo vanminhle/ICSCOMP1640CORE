@@ -1,98 +1,79 @@
-﻿using ICSCOMP1640CORE.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
+using ICSCOMP1640CORE.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace ICSCOMP1640CORE.Controllers
 {
     public class StaffsController : Controller
     {
+        private ApplicationDbContext _db;
+        private readonly INotyfService _notyf;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-
-        private ApplicationDbContext _db;
-        public StaffsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
-
+            _notyf = notyf;
         }
-        public IActionResult IdeaIndex()
+        public IActionResult Index()
         {
-            var ideaInDb = _db.Ideas.Include(y => y.Category).ToList();
-
-            return View(ideaInDb);
+            return View();
         }
-
-        [HttpGet]
-        public IActionResult CreateIdea()
+        public ActionResult InforStaff(string id)
         {
-            Idea model = new Idea();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var StaffInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (StaffInDb == null)
             {
-                var category = _db.Categories.ToList();
-                var categoryList = _db.Categories.Select(x => new { x.CategoryId, x.CategoryName }).ToList();
-
-                ViewBag.categoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
+                return NotFound();
             }
-            return View(model);
+            return View(StaffInDb);
+        }
+        [HttpGet]
+        public ActionResult EditProfile(string Id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Id = userId.ToString();
+            var StaffInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
+
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            return View(StaffInDb);
         }
 
         [HttpPost]
-        public IActionResult CreateIdea(Idea idea)
+        public ActionResult EditProfile(Staff staff, string id)
         {
-            var model = new Idea();
+            var StaffInDb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (StaffInDb == null)
             {
-                model.IdeaId = idea.IdeaId;
-                model.CategoryId = idea.CategoryId;
-                model.IdeaName = idea.IdeaName;
-                model.IdeaContent = idea.IdeaContent;
-                model.SubmitDate = idea.SubmitDate;
+                return BadRequest();
             }
-            _db.Ideas.Add(model);
+
+            StaffInDb.FullName = staff.FullName;
+            StaffInDb.Address = staff.Address;
+            StaffInDb.Age = staff.Age;
+            StaffInDb.Gender = staff.Gender;
+            StaffInDb.DepartmentId = staff.DepartmentId;
+            StaffInDb.PhoneNumber = staff.PhoneNumber;
+
+            _db.Update(StaffInDb);
             _db.SaveChanges();
-            return RedirectToAction("IdeaIndex");
-        }
-
-        [HttpGet]
-        public IActionResult DeleteIdea(int id)
-        {
-            var ideaInDb = _db.Ideas.SingleOrDefault(item => item.IdeaId == id);
-            _db.Ideas.Remove(ideaInDb);
-            _db.SaveChanges();
-
-            return RedirectToAction("IdeaIndex");
-        }
-
-        [HttpGet]
-        public IActionResult EditIdea(int id)
-        {
-            var model = _db.Ideas.SingleOrDefault(item => item.IdeaId == id);
-            {
-                var category = _db.Categories.ToList();
-                var categoryList = _db.Categories.Select(x => new { x.CategoryId, x.CategoryName }).ToList();
-
-                ViewBag.categoryList = new SelectList(categoryList, "CategoryId", "CategoryName");
-            }
-            return View(model);
-        }
-        [HttpPost]
-        public IActionResult EditIdea(Idea idea)
-        {
-            var ideainDb = _db.Ideas.Include(x => x.Category)
-                .SingleOrDefault(item => item.IdeaId == idea.IdeaId);
-            {
-                ideainDb.IdeaId = idea.IdeaId;
-                ideainDb.CategoryId = idea.CategoryId;
-                ideainDb.IdeaName = idea.IdeaName;
-                ideainDb.IdeaContent = idea.IdeaContent;
-                ideainDb.SubmitDate = idea.SubmitDate;
-                _db.SaveChanges();
-            }
-            return RedirectToAction("IdeaIndex");
+            _notyf.Success("Manager account is edited successfully.");
+            return RedirectToAction("InforStaff");
         }
     }
 }

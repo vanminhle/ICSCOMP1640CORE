@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICSCOMP1640CORE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220307124153_UpdateDepartmentModel")]
-    partial class UpdateDepartmentModel
+    [Migration("20220311101554_addManager")]
+    partial class addManager
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,76 +23,125 @@ namespace ICSCOMP1640CORE.Migrations
 
             modelBuilder.Entity("ICSCOMP1640CORE.Models.Category", b =>
                 {
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("CategoryId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.Coordinator", b =>
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Comment", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("DepartmentId");
-
-                    b.ToTable("Coordinators");
-                });
-
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.Department", b =>
-                {
-                    b.Property<int>("DepartmentId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DepartmentName")
+                    b.Property<string>("Content")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("DepartmentId");
+                    b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "The Organization senior management",
+                            Name = "Manager"
+                        });
                 });
 
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.Staff", b =>
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Idea", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
-                    b.HasKey("UserId");
+                    b.Property<byte[]>("Document")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("IdeaName")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubmitDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("View")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Staffs");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Ideas");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -124,24 +173,31 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6957eaaf-5ccf-4d5d-8095-f62f79baa402",
-                            ConcurrencyStamp = "47de875b-ae19-45a8-b47c-7ebdcf67db0b",
+                            Id = "fa134c4c-6108-4be8-b19c-a5048c9789bc",
+                            ConcurrencyStamp = "4335663d-4ed5-4a49-a4d4-5edebbfabe34",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "4be3d120-e729-426b-968e-c06b563cedcd",
-                            ConcurrencyStamp = "ca0f7591-f67c-452a-b432-4c7c4090487c",
+                            Id = "28ca41cc-a19a-472e-a078-c73fdd8f8e0d",
+                            ConcurrencyStamp = "eebaba1e-b111-4451-91d1-9117f5f4436c",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "55d76a9a-a81d-49a5-b063-02bb8aa079e1",
-                            ConcurrencyStamp = "c7043d96-e2b4-4e77-8e95-4aa3dc6423e9",
+                            Id = "e8db632c-969b-4070-98b6-5ee765f9e992",
+                            ConcurrencyStamp = "57917223-eb57-428c-9d2d-c229eb620685",
                             Name = "Coordinator",
                             NormalizedName = "COORDINATOR"
+                        },
+                        new
+                        {
+                            Id = "12053685-2a12-48ac-a4a0-c2cae90dca8c",
+                            ConcurrencyStamp = "5289ed7a-398d-4b04-bb30-8c0c57a82041",
+                            Name = "Manager",
+                            NormalizedName = "MANAGER"
                         });
                 });
 
@@ -303,13 +359,18 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "af5997e3-f7b9-4580-84cd-37e4567859a7",
-                            RoleId = "6957eaaf-5ccf-4d5d-8095-f62f79baa402"
+                            UserId = "770f02dd-bde3-445a-ad23-2c5f81b4af40",
+                            RoleId = "fa134c4c-6108-4be8-b19c-a5048c9789bc"
                         },
                         new
                         {
-                            UserId = "cdc27f1c-3b0b-4dab-a7f4-4f00ae8b598c",
-                            RoleId = "55d76a9a-a81d-49a5-b063-02bb8aa079e1"
+                            UserId = "670e7ffd-bf7b-488b-8ae9-4f99038a7f71",
+                            RoleId = "e8db632c-969b-4070-98b6-5ee765f9e992"
+                        },
+                        new
+                        {
+                            UserId = "9fa80f58-8c41-4d91-bb95-4ba3ec8444ca",
+                            RoleId = "12053685-2a12-48ac-a4a0-c2cae90dca8c"
                         });
                 });
 
@@ -343,84 +404,109 @@ namespace ICSCOMP1640CORE.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Gender")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("DepartmentId");
 
                     b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            Id = "af5997e3-f7b9-4580-84cd-37e4567859a7",
+                            Id = "770f02dd-bde3-445a-ad23-2c5f81b4af40",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f21f6587-e740-4048-84d3-4ced590ac877",
+                            ConcurrencyStamp = "23a3be17-9651-41b9-83eb-14bbf84b4089",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIVd6PgwqwiUngGZBcgnO2SWbABAQvh0lPKsqOPzysyrTbdW87kc8O705JJR3Rr/hw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEpJfST9it8Z3I+RCVFR3aO+5OoNeE3Q8iEBS1EQQ30R7fxQKRZe2fxmRhFBPlH86g==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6e21e384-4edb-4df3-bab6-8caa179cfe83",
+                            SecurityStamp = "51883a6c-b480-4b17-9d92-55b67a31bc86",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com",
                             Age = 0,
+                            DepartmentId = 1,
                             FullName = "Administrator"
                         },
                         new
                         {
-                            Id = "cdc27f1c-3b0b-4dab-a7f4-4f00ae8b598c",
+                            Id = "670e7ffd-bf7b-488b-8ae9-4f99038a7f71",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "925bf353-6391-46bc-83db-c383640aed42",
+                            ConcurrencyStamp = "d3cc6380-c0a6-4783-b5dd-abb4726246ab",
                             Email = "coordinator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "COORDINATOR@GMAIL.COM",
                             NormalizedUserName = "COORDINATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEErH1vR4PjSfiyxgkuWLTF525waEpi3xxHpEeC+Hsk2CPiwZODyATfSX5s8QOkn2Ug==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGOUsFRnVEU41IsS1blCBsYAIgx98oIyFYqIjVAcUAVT1EC9UmxMsEozpi8znq3DWQ==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "3cabf58b-d2df-4492-968d-1d4164e98d42",
+                            SecurityStamp = "4bbbe7c7-6c3b-403d-93c6-32575fefa6cd",
                             TwoFactorEnabled = false,
                             UserName = "coordinator@gmail.com",
                             Age = 0,
+                            DepartmentId = 1,
                             FullName = "Coordinator"
+                        },
+                        new
+                        {
+                            Id = "9fa80f58-8c41-4d91-bb95-4ba3ec8444ca",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "84ab2f4b-330c-46ba-b18f-08853ed9f641",
+                            Email = "manager@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MANAGER@GMAIL.COM",
+                            NormalizedUserName = "MANAGER@GMAIL.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMYd27Dog2NitR44Ubv6QCthyU3zLa2yqIxRUV7+EFV51uwU1UVbJIivz2CZMoaukw==",
+                            PhoneNumberConfirmed = true,
+                            SecurityStamp = "662a0cc1-ca9f-4568-8fec-d435c6962149",
+                            TwoFactorEnabled = false,
+                            UserName = "manager@gmail.com",
+                            Age = 0,
+                            DepartmentId = 1,
+                            FullName = "Manager"
                         });
                 });
 
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.Coordinator", b =>
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Comment", b =>
                 {
-                    b.HasOne("ICSCOMP1640CORE.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ICSCOMP1640CORE.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Department");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ICSCOMP1640CORE.Models.Staff", b =>
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Idea", b =>
                 {
-                    b.HasOne("ICSCOMP1640CORE.Models.Department", "Department")
+                    b.HasOne("ICSCOMP1640CORE.Models.Category", "Category")
                         .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ICSCOMP1640CORE.Models.Department", "Department")
+                        .WithMany("Ideas")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ICSCOMP1640CORE.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Category");
 
                     b.Navigation("Department");
 
@@ -476,6 +562,24 @@ namespace ICSCOMP1640CORE.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.User", b =>
+                {
+                    b.HasOne("ICSCOMP1640CORE.Models.Department", "Department")
+                        .WithMany("Users")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("ICSCOMP1640CORE.Models.Department", b =>
+                {
+                    b.Navigation("Ideas");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
