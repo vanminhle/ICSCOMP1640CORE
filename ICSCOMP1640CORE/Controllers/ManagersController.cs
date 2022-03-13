@@ -31,14 +31,31 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
         //Manage Idea Category
         [HttpGet]
-        public IActionResult ManageCategories(string searchCategory)
+        public IActionResult ManageCategories(string searchCategory, int pg)
         {
             var categoryInDb = _db.Categories.ToList();
             if (!String.IsNullOrEmpty(searchCategory))
             {
                 categoryInDb = categoryInDb.FindAll(s => s.Name.Contains(searchCategory));
             }
-            return View(categoryInDb);
+            //return View(categoryInDb);
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = categoryInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = categoryInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
 
         [HttpGet]
@@ -126,7 +143,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
         //Coordinator
         [HttpGet]
-        public IActionResult ManageCoordinators(string searchString)
+        public IActionResult ManageCoordinators(string searchString, int pg = 1)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
@@ -140,8 +157,24 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 _db.Entry(user).Reference(x => x.Department).Load();
             }
+            //return View(data);
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
         [HttpGet]
         public ActionResult InforCoordinator(string id)

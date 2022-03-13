@@ -1,48 +1,96 @@
-﻿@model IEnumerable<ICSCOMP1640CORE.Models.User>
+﻿@using ICSCOMP1640CORE.Utilities
+@model IEnumerable<ICSCOMP1640CORE.Models.User>
 @{
-    ViewBag.Title = "Coordinators Index";
+	ViewBag.Title = "Coordinators Index";
+
+	Pager pager = new Pager();
+
+	int pageNo = 0;
+
+	if (ViewBag.Pager != null)
+	{
+		pager = ViewBag.Pager;
+		pageNo = pager.CurrentPage;
+	}
 }
 
 @using (Html.BeginForm("ManageCoordinators", "Managers", FormMethod.Get))
 {
-    <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
-        <h2 class="flex-row text-center mt-2">Coordnators Index</h2>
-        <div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
-            @Html.TextBox("searchString", null, new { @class = "form-control", @placeholder = "Find By Name" })
-            <button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
-        </div>
-    </div>
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+		<h2 class="flex-row text-center mt-2">Coordnators Index</h2>
+		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
+			@Html.TextBox("searchString", null, new { @class = "form-control", @placeholder = "Find By Name" })
+			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
+		</div>
+	</div>
 }
 
 <div class="table-responsive">
-    <table class="table table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col" class="col-5">Full Name</th>
-                <th scope="col" class="col-5">Email</th>
-                <th scope="col" class="col-1">Gender</th>
-                <th scope="col" class="col-1">Department</th>
-                <th scope="col" class="col-1">Verified</th>
-                <th scope="col" class="col-1">Info</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <th class="align-middle" scope="row">@item.FullName</th>
-                    <td class="align-middle" scope="row">@item.Email</td>
-                    <td class="align-middle" scope="row">@item.Gender</td>
-                    <td class="align-middle" scope="row">@item.Department.Name</td>
-                    <th class="align-middle" scope="row">@item.EmailConfirmed</th>
-                    <td class="align-middle">
-                        @Html.ActionLink("", "InforCoordinator", "Managers", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title = "Info" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+	<table class="table table-bordered">
+		<thead class="thead-dark">
+			<tr>
+				<th scope="col" class="col-5">Full Name</th>
+				<th scope="col" class="col-5">Email</th>
+				<th scope="col" class="col-1">Gender</th>
+				<th scope="col" class="col-1">Department</th>
+				<th scope="col" class="col-1">Verified</th>
+				<th scope="col" class="col-1">Info</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<th class="align-middle" scope="row">@item.FullName</th>
+					<td class="align-middle" scope="row">@item.Email</td>
+					<td class="align-middle" scope="row">@item.Gender</td>
+					<td class="align-middle" scope="row">@item.Department.Name</td>
+					<th class="align-middle" scope="row">@item.EmailConfirmed</th>
+					<td class="align-middle">
+						@Html.ActionLink("", "InforCoordinator", "Managers", new { id = item.Id }, new { @class = "btn btn-info fa fa-info-circle", @title = "Info" })
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 </div>
+
+<div class="d-flex justify-content-center mt-3">
+	@if (pager.TotalPages > 1)
+	{
+		<ul class="pagination justify-content-end">
+
+			@if (pager.CurrentPage > 0)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="1">First</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+				</li>
+			}
+
+			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+			{
+				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@pge">@pge</a>
+				</li>
+			}
+
+			@if (pager.CurrentPage < pager.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
+				</li>
+			}
+
+		</ul>
+	}
+</div>
+
 
 
 

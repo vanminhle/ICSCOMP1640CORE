@@ -32,7 +32,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
         // Staff
         [HttpGet]
-        public async Task<IActionResult> ManageStaffs(string searchString)
+        public async Task<IActionResult> ManageStaffs(string searchString, int pg = 1)
         {
 
             /*var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department)
@@ -54,8 +54,24 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             {
                 _db.Entry(user).Reference(x => x.Department).Load();
             }
+            //return View(data);
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
         [HttpGet]
         public ActionResult InforStaff(string id)
