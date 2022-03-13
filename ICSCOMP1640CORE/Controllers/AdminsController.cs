@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,6 @@ namespace ICSCOMP1640CORE.Controllers
         private readonly INotyfService _notyf;
         private readonly IEmailSender _emailSender;
 
-
         private ApplicationDbContext _db;
 
         public AdminsController(ApplicationDbContext db, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, INotyfService notyf, IEmailSender emailSender)
@@ -35,17 +35,33 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf = notyf;
             _emailSender = emailSender;
         }
-
-        public IActionResult DepartmentIndex(string searchString)
+        //Department
+        public IActionResult DepartmentsIndex(string searchString, int pg = 1)
         {
             var departments = _db.Departments.ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
                 departments = departments
-                    .Where(s => s.Name.ToLower().Contains(searchString.ToLower()))
+                    .Where(s => s.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
                 .ToList();
             }
-            return View(departments);
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = departments.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = departments.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         [HttpGet]
@@ -62,22 +78,22 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(model);
             }
 
-            var existDepartment = _db.Departments.Any(x => x.Name == model.Name);
+            var existDepartment = _db.Departments.Any(x => x.Name == model.Name.Trim());
             if (existDepartment == true)
             {
                 /*ModelState.AddModelError("", "Department Already Exists.");*/
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Department is already exists.");
                 return View(model);
             }
             var newDepartment = new Department()
             {
-                Name = model.Name,
+                Name = model.Name.Trim(),
                 Description = model.Description,
             };
             _notyf.Success("Department is created successfully.");
             _db.Departments.Add(newDepartment);
             _db.SaveChanges();
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         [HttpGet]
@@ -93,7 +109,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Departments.Remove(departmentsInDb);
             _db.SaveChanges();
 
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         [HttpGet]
@@ -118,19 +134,19 @@ namespace ICSCOMP1640CORE.Controllers
                 return View(department);
             }
             var departmentInDb = _db.Departments.SingleOrDefault(x => x.Id == department.Id);
-            var existDepartment = _db.Departments.Any(x => x.Name == department.Name);
+            var existDepartment = _db.Departments.Any(x => x.Name == department.Name.Trim());
 
             if (existDepartment == true)
             {
-                _notyf.Warning("Department Already Exists.");
+                _notyf.Warning("Department is already exists.");
                 return View(department);
             }
-            _notyf.Success("Department is edit successfully.");
-            departmentInDb.Name = department.Name;
+            _notyf.Success("Department is edited successfully.");
+            departmentInDb.Name = department.Name.Trim();
             departmentInDb.Description = department.Description;
             _db.SaveChanges();
 
-            return RedirectToAction("DepartmentIndex");
+            return RedirectToAction("DepartmentsIndex");
         }
 
         //Coordinator
@@ -150,10 +166,11 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCoordinator(Coordinator coordinator)
         {
-
             if (_userManager.FindByEmailAsync(coordinator.Email).GetAwaiter().GetResult() != null)
             {
-                TempData["Danger"] = "The email address is already registered";
+                //TempData["Danger"] = "The email address is already registered";
+                _notyf.Error("This email address is already registered! Please try again!");
+
                 return RedirectToAction("CreateCoordinator");
             }
 
@@ -170,6 +187,7 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorProfile.Age = user.Age;
             coordinatorProfile.Address = user.Address;
             coordinatorProfile.PhoneNumber = user.PhoneNumber;*/
+
             var user = coordinator;
             user.UserName = user.Email;
             IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
@@ -179,6 +197,7 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (result.Succeeded)
             {
+
                 _userManager.AddToRoleAsync(coordinator, "Coordinator").GetAwaiter().GetResult();
 
                 var userId = await _userManager.GetUserIdAsync(coordinator);
@@ -188,38 +207,60 @@ namespace ICSCOMP1640CORE.Controllers
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmail",
                     pageHandler: null,
-                    values: new { userId = userId, code = code },
+                    new { area = "Identity", userId = user.Id, code = code },
                     protocol: Request.Scheme);
                 await _emailSender.SendEmailAsync(
                     coordinator.Email,
                     "Confirm your email",
                     $"Hi, {coordinator.FullName} Please confirm your email account {coordinator.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             }
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is created successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
-        public IActionResult ManageCoordinator()
+        public IActionResult ManageCoordinators(string searchString, int pg = 1)
         {
             //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
             var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
             foreach (var user in data)
             {
                 _db.Entry(user).Reference(x => x.Department).Load();
-
             }
 
-            return View(data);
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
         }
 
         [HttpGet]
-        public IActionResult Delete(string Id)
+        public IActionResult DeleteCondinator(string Id)
         {
             var coordinatorindb = _db.Users.SingleOrDefault(item => item.Id == Id);
             _db.Users.Remove(coordinatorindb);
             _db.SaveChanges();
 
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is deleted successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
@@ -248,7 +289,7 @@ namespace ICSCOMP1640CORE.Controllers
             coordinatorinDb.Address = coordinator.Address;
             coordinatorinDb.Age = coordinator.Age;
             coordinatorinDb.Gender = coordinator.Gender;
-            coordinatorinDb.Department = coordinator.Department;
+            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
             coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
 
             /*coordinatorinDb.DepartmentId = coordinator.DepartmentId;*/
@@ -256,14 +297,205 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Update(coordinatorinDb);
             _db.SaveChanges();
 
-            return RedirectToAction("ManageCoordinator");
+            _notyf.Success("Coordinator account is edited successfully.");
+            return RedirectToAction("ManageCoordinators");
         }
 
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return View(info);
+        }
 
+        //Manager
+        [HttpGet]
+        public IActionResult CreateManager()
+        {
+            Manager model = new Manager();
+
+            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            var department = _db.Departments.ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateManager(Manager manager)
+        {
+            if (_userManager.FindByEmailAsync(manager.Email).GetAwaiter().GetResult() != null)
+            {
+                //TempData["Danger"] = "The email address is already registered";
+                _notyf.Error("This email address is already registered! Please try again!");
+
+                return RedirectToAction("CreateManager");
+            }
+
+            if (!ModelState.IsValid) return View(manager);
+
+            var user = manager;
+            user.UserName = user.Email;
+            manager.DepartmentId = 1;
+            IdentityResult result = _userManager.CreateAsync(manager, manager.PasswordHash).GetAwaiter().GetResult();
+
+            _db.SaveChanges();
+
+            if (result.Succeeded)
+            {
+                _userManager.AddToRoleAsync(manager, "Manager").GetAwaiter().GetResult();
+
+                var userId = await _userManager.GetUserIdAsync(manager);
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(manager);
+
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Page(
+                    "/Account/ConfirmEmail",
+                    pageHandler: null,
+                    values: new{ area = "Identity", userId = user.Id, code = code },
+                    protocol: Request.Scheme);
+                await _emailSender.SendEmailAsync(
+                    manager.Email,
+                    "Confirm your email",
+                    $"Hi, {manager.FullName} Please confirm your email account {manager.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            }
+            _notyf.Success("Manager account is created successfully.");
+            return RedirectToAction("ManageManagers");
+        }
+        [HttpGet]
+        public IActionResult ManageManagers(string searchString, int pg = 1)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Manager").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteManager(string Id)
+        {
+            var managerindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            _db.Users.Remove(managerindb);
+            _db.SaveChanges();
+
+            _notyf.Success("Coordinator account is deleted successfully.");
+            return RedirectToAction("ManageManagers");
+        }
+
+        [HttpGet]
+        public ActionResult EditManager(string Id)
+        {
+            var managerindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            var user = _db.Users.ToList();
+
+            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
+
+            return View(managerindb);
+        }
+
+        [HttpPost]
+        public ActionResult EditManager(string id, Manager manager)
+        {
+            var managerindb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (managerindb == null)
+            {
+                return BadRequest();
+            }
+
+            managerindb.FullName = manager.FullName;
+            managerindb.Address = manager.Address;
+            managerindb.Age = manager.Age;
+            managerindb.Gender = manager.Gender;
+            managerindb.PhoneNumber = manager.PhoneNumber;
+
+            _db.Update(managerindb);
+            _db.SaveChanges();
+
+            _notyf.Success("Manager account is edited successfully.");
+            return RedirectToAction("ManageManagers");
+        }
+
+        [HttpGet]
+        public ActionResult InforManager(string id)
+        {
             var info = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return View(info);
+        }
+
+        //Staff
+        [HttpGet]
+        public IActionResult ManageStaffs(string searchString, int pg = 1)
+        {
+            //var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department).Where(m=> m.).ToList();
+            var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
+        }
+
+        [HttpGet]
+        public ActionResult InforStaff(string id)
+        {
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
             if (info == null)
             {
                 return NotFound();

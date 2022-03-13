@@ -5,10 +5,12 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -28,18 +30,77 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf = notyf;
         }
 
-        // Coordinator Profile
+        // Staff
         [HttpGet]
-        public ActionResult InforCoordinator(string id)
+        public async Task<IActionResult> ManageStaffs(string searchString, int pg = 1)
         {
-            /*var userId = _userManager.GetUserId(User);
-            var coordinatorInDb = _db.Users.Include(x => x.UserName)
-                .SingleOrDefault(t => t.UserName == userId);
-            if (coordinatorInDb == null)
+
+            /*var coordinatorInDb = _db.Users.OfType<User>().Include(x => x.Department)
+                .Where(m => m.DepartmentId == currentDepartmentId)
+                .ToList();*/
+
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var currentDepartmentId = currentUser.DepartmentId;
+            var dataStaff = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
+            var data = dataStaff.Where(x =>x.DepartmentId == currentDepartmentId);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                data = data
+                    .Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
+            foreach (var user in data)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+            }
+            //return View(data);
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = data.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = data.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(pageData);
+        }
+        [HttpGet]
+        public ActionResult InforStaff(string id)
+        {
+            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
+            if (info == null)
             {
                 return NotFound();
             }
-            return View(coordinatorInDb);*/
+            return View(info);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteStaff(string Id)
+        {
+            var staffindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            if (staffindb == null)
+            {
+                return NotFound();
+            }
+            _db.Users.Remove(staffindb);
+            _db.SaveChanges();
+
+            _notyf.Success("Staff account is deleted successfully.");
+            return RedirectToAction("ManageStaffs");
+        }
+        [HttpGet]
+        public ActionResult InforCoordinator(string id)
+        {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             id = userId.ToString();
             var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
@@ -49,168 +110,41 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(CoordinatorInDb);
         }
-
-        //Coordinator Manage Idea Category
         [HttpGet]
-        public IActionResult ManageCategory(string searchCategory)
+        public ActionResult EditProfile(string Id)
         {
-            var categoryInDb = _db.Categories.ToList();
-            if (!String.IsNullOrEmpty(searchCategory))
-            {
-                categoryInDb = categoryInDb.FindAll(s => s.Name.Contains(searchCategory));
-            }
-            return View(categoryInDb);
-        }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
 
-        [HttpGet]
-        public IActionResult CreateCategory()
-        {
-            return View();
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            return View(CoordinatorInDb);
         }
 
         [HttpPost]
-        public IActionResult CreateCategory(Category category)
+        public ActionResult EditProfile(Coordinator coordinator, string id)
         {
-            if (!ModelState.IsValid)
+            var coordinatorinDb = _db.Users.OfType<User>().FirstOrDefault(t => t.Id == id);
+
+            if (coordinatorinDb == null)
             {
-                return View("CreateCategory");
+                return BadRequest();
             }
-            var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
-            if (check)
-            {
-                _notyf.Warning("Department Already Exists.", 3);
-                return View(category);
-            }
-            var newCategoryInDb = new Category
-            {
-                Name = category.Name,
-                Description = category.Description,
-            };
-            _db.Categories.Add(newCategoryInDb);
+
+            coordinatorinDb.FullName = coordinator.FullName;
+            coordinatorinDb.Address = coordinator.Address;
+            coordinatorinDb.Age = coordinator.Age;
+            coordinatorinDb.Gender = coordinator.Gender;
+            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
+            coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
+
+            _db.Update(coordinatorinDb);
             _db.SaveChanges();
-            _notyf.Success("Department is created successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
+            _notyf.Success("Coordinator account is edited successfully.");
+            return RedirectToAction("InforCoordinator");
         }
 
-        [HttpGet]
-        public IActionResult DeleteCategory(int id)
-        {
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            _notyf.Success("Category is deleted successfully.", 3);
-            _db.Categories.Remove(categoryInDb);
-            _db.SaveChanges();
-            return RedirectToAction("ManageCategory", "Coordinators");
-        }
-
-        [HttpGet]
-        public IActionResult EditCategory(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            return View(categoryInDb);
-        }
-
-        [HttpPost]
-        public IActionResult EditCategory(Category category)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(category);
-            }
-            var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == category.Id);
-            if (categoryInDb == null)
-            {
-                return NotFound();
-            }
-            var check = _db.Categories.Any(c => c.Name.Equals(category.Name));
-            if (check)
-            {
-                _notyf.Warning("Category Already Exists.");
-                return View(category);
-            }
-            categoryInDb.Name = category.Name;
-            categoryInDb.Description = category.Description;
-            _db.SaveChanges();
-            _notyf.Success("Category is edited successfully.", 3);
-            return RedirectToAction("ManageCategory", "Coordinators");
-        }
-        [HttpGet]
-        public IActionResult ViewStaffAccount()
-        {
-            var data = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
-            foreach (var user in data)
-            {
-                _db.Entry(user).Reference(x => x.Department).Load();
-
-            }
-            return View(data);
-        }
-        [HttpGet]
-        public IActionResult DetailStaffs()
-        {
-
-            return ViewStaffAccount();
-        }
-
-        [HttpGet]
-        public IActionResult DeleteStaffAccount(string id)
-        {
-            var staffsInDb = _db.Users.SingleOrDefault(x => x.Id == id);
-
-            if (staffsInDb == null)
-            {
-                return NotFound();
-            }
-            _notyf.Success("Staff account is deleted successfully.", 3);
-            _db.Users.Remove(staffsInDb);
-            _db.SaveChanges();
-
-            return RedirectToAction("ViewStaffAccount");
-        }
-
-        [HttpGet]
-        public IActionResult GetIdeaFromCoor()
-        {
-
-            var ideaInDb = _db.Ideas
-                .Include(x => x.Department)
-                .Include(x => x.Category)
-                .Include(x => x.User)
-                .Where(x => x.DepartmentId == 2)
-                .ToList();
-
-
-            return View(ideaInDb);
-        }
-        [HttpGet]
-        public IActionResult ViewIdea(int id)
-        {
-            var ideaInDb = _db.Ideas.Include(x => x.Category).SingleOrDefault(x => x.Id == id);
-            return View(ideaInDb);
-        }
-        [HttpGet]
-        public IActionResult DeleteIdea(int id)
-        {
-            var ideaInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
-            if (ideaInDb == null)
-            {
-                return NotFound();
-            }
-            _notyf.Success("Idea is deleted successfully.", 3);
-            _db.Ideas.Remove(ideaInDb);
-            _db.SaveChanges();
-            return RedirectToAction("GetIdeaFromCoor", "Coordinators");
-        }
     }
+
 }

@@ -1,6 +1,5 @@
 ﻿@model ICSCOMP1640CORE.Models.User
 
-
 <link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
 <!---<title> Responsive Registration Form | CodingLab </title>--->
 
@@ -24,14 +23,19 @@
 					Age:&nbsp;&nbsp;@Model.Age
 				</div>
 				<div class="element">
-					Department Name :&nbsp;&nbsp; @Model.DepartmentId
+					Department Name :&nbsp;&nbsp; @Model.Department.Name
+				</div>
+				<div class="element">
+					Gender Name :&nbsp;&nbsp; @Model.Gender
 				</div>
 			</div>
 
-			<a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-dark">Back</a>
+			<a asp-controller="Managers" asp-action="ManageCoordinators" class="btn btn-dark">Back</a>
 
 		</div>
 
 
 	</div>
 </body>
+
+

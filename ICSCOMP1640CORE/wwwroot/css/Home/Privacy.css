@@ -1,0 +1,30 @@
+﻿.title {
+    padding: 0 20px 0 20px;
+}
+
+.rule{
+    list-style:none;
+    width: 50%;
+    margin: 0 auto;
+    padding: 0 20px 0 20px;
+    font-weight: 400;
+    text-align: center;
+}
+
+
+@media (max-width: 991px) {
+    .rule {
+        width: 70%;
+        margin: 0 auto;
+        padding: 0 20px 0 20px;
+    }
+
+}
+
+@media (max-width: 519px) {
+    .rule {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0 20px 0 20px;
+    }
+}

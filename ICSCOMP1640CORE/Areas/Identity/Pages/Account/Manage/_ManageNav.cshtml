@@ -15,14 +15,23 @@
     {
         @if (User.IsInRole("Coordinator"))
         {
-
-            <li class="nav-item"><a class="nav-link "asp-action="InforCoordinator" asp-controller="Coordinators">Profile</a></li>
+               <li class="nav-item"><a class="nav-link "asp-action="InforCoordinator" asp-controller="Coordinators">Profile</a></li>
+                <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Coordinators">Edit Profile</a></li>
         }
          @if (User.IsInRole("Staff"))
         {
 
             <li class="nav-item"><a class="nav-link "asp-action="InforStaff" asp-controller="Staffs">Profile</a></li>
+               <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Staffs">Edit Profile</a></li>
         }
+         @if (User.IsInRole("Manager"))
+        {
+
+            <li class="nav-item"><a class="nav-link "asp-action="InforManager" asp-controller="Managers">Profile</a></li>
+               <li class="nav-item"><a class="nav-link "asp-action="EditProfile" asp-controller="Managers">Edit Profile</a></li>
+        }
+
+
     }
     <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
@@ -31,7 +40,6 @@
         <li id="external-logins" class="nav-item"><a id="external-login" class="nav-link @ManageNavPages.ExternalLoginsNavClass(ViewContext)" asp-page="./ExternalLogins">External logins</a></li>
     }
     <li class="nav-item"><a class="nav-link @ManageNavPages.TwoFactorAuthenticationNavClass(ViewContext)" id="two-factor" asp-page="./TwoFactorAuthentication">Two-factor authentication</a></li>*@
-    <li class="nav-item">
-        <a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a>
-    </li>
+    <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
 </ul>
+

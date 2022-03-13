@@ -1,4 +1,5 @@
-﻿using ICSCOMP1640CORE.Models;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,14 +19,17 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly INotyfService _notyf;
 
         public LoginModel(SignInManager<User> signInManager,
             ILogger<LoginModel> logger,
-            UserManager<User> userManager)
+            UserManager<User> userManager,
+            INotyfService notyf)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _notyf = notyf;
         }
 
         [BindProperty]
@@ -50,6 +54,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -86,6 +91,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    _notyf.Information("Logging In!", 2);
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -95,11 +101,13 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
+                    _notyf.Information("Logging Out!", 2);
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Account not found, wrong or hasn't confirmed!");
+                    /*ModelState.AddModelError(string.Empty, "Account not found, wrong or hasn't confirmed!");*/
+                    _notyf.Error("Account not found!, wrong or email has not confirmed!", 3);
                     return Page();
                 }
             }

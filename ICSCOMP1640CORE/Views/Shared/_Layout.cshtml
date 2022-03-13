@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<link rel="shortcut icon" href="~/img/favicon-32x32.png.ico" />
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - ICSCOMP1640CORE</title>
@@ -13,7 +14,10 @@
 	<header>
 		<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mt-2">
 			<div class="container">
-				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ICSCOMP1640CORE</a>
+				<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+					    <img src="~/img/Logo.ico" width="30" height="30" alt="">
+				</a>
+
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
 						aria-expanded="false" aria-label="Toggle navigation">
 					<span class="navbar-toggler-icon"></span>
@@ -24,14 +28,19 @@
 						{
 							if (User.IsInRole(Role.Admin))
 							{
-								<li>@Html.ActionLink("Departments", "DepartmentIndex", "Admins")</li>
-								<li>@Html.ActionLink("Coordinator", "ManageCoordinator", "Admins")</li>
-
+								<li>@Html.ActionLink("Managers", "ManageManagers", "Admins")</li>
+								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Admins")</li>
+								<li>@Html.ActionLink("Departments", "DepartmentsIndex", "Admins")</li>
+								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Admins")</li>
+							}
+							if (User.IsInRole(Role.Manager))
+							{
+								<li>@Html.ActionLink("Categories", "ManageCategories", "Managers")</li>
+								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Managers")</li>
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{
-								<li>@Html.ActionLink("Categories", "ManageCategory", "Coordinators")</li>
-								<li>@Html.ActionLink("Staff Account", "ViewStaffAccount", "Coordinators")</li>
+								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Coordinators")</li>
 							}
 							if (User.IsInRole(Role.Staff))
 							{
@@ -53,8 +62,11 @@
 
 	<footer class="footer text-muted align-content-center">
 		<div class="container text-center" style="padding: 10px 0 10px 0;">
-			&copy; 2022 - ICSCOMP1640CORE @*<a asp-area="" asp-controller="home" asp-action="privacy">privacy*</a>*@
+			&copy; 2022 - ICSCOMP1640CORE
 		</div>
+		@*<div class="container text-center" style="padding: 10px 0 10px 0;">
+			&copy; 2022 - ICSCOMP1640CORE <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+		</div>*@
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

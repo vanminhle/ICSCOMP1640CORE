@@ -52,6 +52,9 @@ namespace ICSCOMP1640CORE.Models
 
         public int Rating { get; set; }
 
-
+        public Idea()
+        {
+            SubmitDate = DateTime.Now;
+        }
     }
 }
