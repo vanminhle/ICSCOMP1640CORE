@@ -49,7 +49,8 @@ namespace ICSCOMP1640CORE.Controllers
         public async Task<IActionResult> CreateIdea(Idea idea)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userInDb = _db.Users.SingleOrDefault(x => x.Id == userId);
+            //var userInDb = _db.Users.SingleOrDefault(x => x.Id == userId);
+            var currentUser = await _userManager.GetUserAsync(User);
             if (idea.CategoryId == 0)
             {
                 _notyf.Warning("Please choose Category for idea!.");
@@ -63,7 +64,8 @@ namespace ICSCOMP1640CORE.Controllers
                 model.IdeaName = idea.IdeaName;
                 model.Content = idea.Content;
                 model.SubmitDate = idea.SubmitDate;
-                model.DepartmentId = idea.DepartmentId;
+                //model.DepartmentId = idea.DepartmentId;
+                model.DepartmentId = currentUser.DepartmentId;
                 model.IsAnonymous = idea.IsAnonymous;
             }
             _db.Ideas.Add(model);

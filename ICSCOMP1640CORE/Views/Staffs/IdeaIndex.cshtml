@@ -28,10 +28,15 @@
             @foreach (var item in Model)
             {
                 <tr>
-
                     <td>@item.Id</td>
+                    @*@if (item.IsAnonymous == true) {
+                        <td>Anonymous</td>
+                    } else
+                    {
+                        <td>@item.User.FullName</td>
+                    }*@
+                    <td>@item.Creator</td>
                     <td>@item.User.FullName</td>
-                    <td>@item.IdeaName</td>
                     <td>@item.Content</td>
                     <td>@item.SubmitDate</td>
                     <td>@item.Category.Name</td>
