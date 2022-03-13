@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ICSCOMP1640CORE.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220311101554_addManager")]
-    partial class addManager
+    [Migration("20220312104959_AddDatabase")]
+    partial class AddDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -173,29 +173,29 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "fa134c4c-6108-4be8-b19c-a5048c9789bc",
-                            ConcurrencyStamp = "4335663d-4ed5-4a49-a4d4-5edebbfabe34",
+                            Id = "2b44bff6-5d2d-4e3a-81ff-c5ea175ec3f1",
+                            ConcurrencyStamp = "38eef8b9-4bd7-4b1e-bc7c-34c74e7f142f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "28ca41cc-a19a-472e-a078-c73fdd8f8e0d",
-                            ConcurrencyStamp = "eebaba1e-b111-4451-91d1-9117f5f4436c",
+                            Id = "50be00ce-dc4d-48ae-ae7a-8b397524b7f9",
+                            ConcurrencyStamp = "444c64d1-04d4-440e-a159-a553a633899e",
                             Name = "Staff",
                             NormalizedName = "STAFF"
                         },
                         new
                         {
-                            Id = "e8db632c-969b-4070-98b6-5ee765f9e992",
-                            ConcurrencyStamp = "57917223-eb57-428c-9d2d-c229eb620685",
+                            Id = "93338e14-064f-4b56-8b38-220c8c2ef486",
+                            ConcurrencyStamp = "65a9ecb6-0022-459f-9d83-f374d90d89e8",
                             Name = "Coordinator",
                             NormalizedName = "COORDINATOR"
                         },
                         new
                         {
-                            Id = "12053685-2a12-48ac-a4a0-c2cae90dca8c",
-                            ConcurrencyStamp = "5289ed7a-398d-4b04-bb30-8c0c57a82041",
+                            Id = "64e05f80-b965-40f5-bfb9-fb6694edd457",
+                            ConcurrencyStamp = "e3b56da4-78c7-4759-b61f-41434fea5fa5",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         });
@@ -359,18 +359,18 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "770f02dd-bde3-445a-ad23-2c5f81b4af40",
-                            RoleId = "fa134c4c-6108-4be8-b19c-a5048c9789bc"
+                            UserId = "43368fac-0595-4505-815f-6ff0076a2ef1",
+                            RoleId = "2b44bff6-5d2d-4e3a-81ff-c5ea175ec3f1"
                         },
                         new
                         {
-                            UserId = "670e7ffd-bf7b-488b-8ae9-4f99038a7f71",
-                            RoleId = "e8db632c-969b-4070-98b6-5ee765f9e992"
+                            UserId = "b171a751-321c-402a-b8d3-9afe9961eeba",
+                            RoleId = "93338e14-064f-4b56-8b38-220c8c2ef486"
                         },
                         new
                         {
-                            UserId = "9fa80f58-8c41-4d91-bb95-4ba3ec8444ca",
-                            RoleId = "12053685-2a12-48ac-a4a0-c2cae90dca8c"
+                            UserId = "5e4c31d6-8558-4f11-b49c-bb5e84adb9d5",
+                            RoleId = "64e05f80-b965-40f5-bfb9-fb6694edd457"
                         });
                 });
 
@@ -422,17 +422,17 @@ namespace ICSCOMP1640CORE.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "770f02dd-bde3-445a-ad23-2c5f81b4af40",
+                            Id = "43368fac-0595-4505-815f-6ff0076a2ef1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "23a3be17-9651-41b9-83eb-14bbf84b4089",
+                            ConcurrencyStamp = "d4af559b-d783-43cb-85c1-81ab31da88f0",
                             Email = "admin@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@GMAIL.COM",
                             NormalizedUserName = "ADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEpJfST9it8Z3I+RCVFR3aO+5OoNeE3Q8iEBS1EQQ30R7fxQKRZe2fxmRhFBPlH86g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENZuojCbrAXqPMMk+rmiNR2NtIHyzxOa9spvnX5apLNwv2dKDklHwQlhnWT6qgwy3g==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "51883a6c-b480-4b17-9d92-55b67a31bc86",
+                            SecurityStamp = "38ddc3ed-e9fd-49ce-ae00-ac7223f70189",
                             TwoFactorEnabled = false,
                             UserName = "admin@gmail.com",
                             Age = 0,
@@ -441,17 +441,17 @@ namespace ICSCOMP1640CORE.Migrations
                         },
                         new
                         {
-                            Id = "670e7ffd-bf7b-488b-8ae9-4f99038a7f71",
+                            Id = "b171a751-321c-402a-b8d3-9afe9961eeba",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d3cc6380-c0a6-4783-b5dd-abb4726246ab",
+                            ConcurrencyStamp = "401b09f5-0207-4f57-8655-23593e7564d6",
                             Email = "coordinator@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "COORDINATOR@GMAIL.COM",
                             NormalizedUserName = "COORDINATOR@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGOUsFRnVEU41IsS1blCBsYAIgx98oIyFYqIjVAcUAVT1EC9UmxMsEozpi8znq3DWQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBetad344IdHBwzpjvg1yED95I20ECTWFFgMh2D8/lb8JYcSAArn/2xM3wzYsCQT6g==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "4bbbe7c7-6c3b-403d-93c6-32575fefa6cd",
+                            SecurityStamp = "f06c3592-f236-4e8a-a381-f3ef1098fa8f",
                             TwoFactorEnabled = false,
                             UserName = "coordinator@gmail.com",
                             Age = 0,
@@ -460,17 +460,17 @@ namespace ICSCOMP1640CORE.Migrations
                         },
                         new
                         {
-                            Id = "9fa80f58-8c41-4d91-bb95-4ba3ec8444ca",
+                            Id = "5e4c31d6-8558-4f11-b49c-bb5e84adb9d5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "84ab2f4b-330c-46ba-b18f-08853ed9f641",
+                            ConcurrencyStamp = "6490cb37-84d8-40a6-a6d5-08d433086011",
                             Email = "manager@gmail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "MANAGER@GMAIL.COM",
                             NormalizedUserName = "MANAGER@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMYd27Dog2NitR44Ubv6QCthyU3zLa2yqIxRUV7+EFV51uwU1UVbJIivz2CZMoaukw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAxDcaNXJuo0Ep+SzvWMZtjeSWVr/OF2fymWeMhK+7rkY4ZEo+sQ/WBFlPVncDvtOA==",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "662a0cc1-ca9f-4568-8fec-d435c6962149",
+                            SecurityStamp = "f0af9601-24ae-40b8-8fac-d3fc6ff2cbf1",
                             TwoFactorEnabled = false,
                             UserName = "manager@gmail.com",
                             Age = 0,

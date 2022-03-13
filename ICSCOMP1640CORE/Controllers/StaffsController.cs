@@ -1,18 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Controllers
 {
+    [Authorize(Roles = Role.Staff)]
     public class StaffsController : Controller
     {
         private ApplicationDbContext _db;
@@ -26,9 +27,103 @@ namespace ICSCOMP1640CORE.Controllers
             _roleManager = roleManager;
             _notyf = notyf;
         }
-        public IActionResult Index()
+
+        public IActionResult IdeaIndex()
         {
-            return View();
+            var ideaInDb = _db.Ideas.Include(y => y.Category).Include(y => y.Department).Include(y => y.User).ToList();
+
+            return View(ideaInDb);
+        }
+
+        [HttpGet]
+        public IActionResult CreateIdea()
+        {
+            Idea model = new Idea();
+            var categoryList = _db.Categories.Select(x => new { x.Id, x.Name }).ToList();
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.categoryList = new SelectList(categoryList, "Id", "Name");
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateIdea(Idea idea)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (idea.CategoryId == 0)
+            {
+                _notyf.Warning("Please choose Category for idea!.");
+                return RedirectToAction("CreateIdea");
+            }
+            if (idea.DepartmentId == 0)
+            {
+                _notyf.Warning("Please choose Department for idea!.");
+                return RedirectToAction("CreateIdea");
+            }
+            var model = new Idea();
+            {
+                model.UserId = userId;
+                model.Id = idea.Id;
+                model.CategoryId = idea.CategoryId;
+                model.IdeaName = idea.IdeaName;
+                model.Content = idea.Content;
+                model.SubmitDate = idea.SubmitDate;
+                model.DepartmentId = idea.DepartmentId;
+            }
+            _db.Ideas.Add(model);
+            _db.SaveChanges();
+            _notyf.Success("Idea is created successfully.");
+            return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteIdea(int id)
+        {
+            var ideaInDb = _db.Ideas.SingleOrDefault(item => item.Id == id);
+            _db.Ideas.Remove(ideaInDb);
+            _db.SaveChanges();
+            _notyf.Success("Idea is deleted successfully.");
+            return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult EditIdea(int id)
+        {
+            var model = _db.Ideas.SingleOrDefault(item => item.Id == id);
+            {
+                var category = _db.Categories.ToList();
+                var categoryList = _db.Categories.Select(x => new { x.Id, x.Name }).ToList();
+                var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+                ViewBag.categoryList = new SelectList(categoryList, "Id", "Name");
+                ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult EditIdea(Idea idea)
+        {
+            if (idea.CategoryId == 0)
+            {
+                _notyf.Warning("Please choose Category for idea!.");
+                return RedirectToAction("CreateIdea");
+            }
+            if (idea.DepartmentId == 0)
+            {
+                _notyf.Warning("Please choose Department for idea!.");
+                return RedirectToAction("CreateIdea");
+            }
+            var ideainDb = _db.Ideas.Include(x => x.Category)
+                .SingleOrDefault(item => item.Id == idea.Id);
+            ideainDb.Id = idea.Id;
+            ideainDb.CategoryId = idea.CategoryId;
+            ideainDb.IdeaName = idea.IdeaName;
+            ideainDb.Content = idea.Content;
+            ideainDb.SubmitDate = idea.SubmitDate;
+            ideainDb.DepartmentId = idea.DepartmentId;
+            _db.SaveChanges();
+            _notyf.Success("Idea is edited successfully.");
+            return RedirectToAction("IdeaIndex");
         }
         public ActionResult InforStaff(string id)
         {
