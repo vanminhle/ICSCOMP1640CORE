@@ -52,6 +52,7 @@ namespace ICSCOMP1640CORE.Models
 
         public int Rating { get; set; }
 
+        public Boolean IsAnonymous { get; set; }
 
     }
 }

@@ -31,7 +31,6 @@ namespace ICSCOMP1640CORE.Controllers
         public IActionResult IdeaIndex()
         {
             var ideaInDb = _db.Ideas.Include(y => y.Category).Include(y => y.Department).Include(y => y.User).ToList();
-
             return View(ideaInDb);
         }
 
@@ -50,14 +49,10 @@ namespace ICSCOMP1640CORE.Controllers
         public async Task<IActionResult> CreateIdea(Idea idea)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userInDb = _db.Users.SingleOrDefault(x => x.Id == userId);
             if (idea.CategoryId == 0)
             {
                 _notyf.Warning("Please choose Category for idea!.");
-                return RedirectToAction("CreateIdea");
-            }
-            if (idea.DepartmentId == 0)
-            {
-                _notyf.Warning("Please choose Department for idea!.");
                 return RedirectToAction("CreateIdea");
             }
             var model = new Idea();
@@ -69,6 +64,7 @@ namespace ICSCOMP1640CORE.Controllers
                 model.Content = idea.Content;
                 model.SubmitDate = idea.SubmitDate;
                 model.DepartmentId = idea.DepartmentId;
+                model.IsAnonymous = idea.IsAnonymous;
             }
             _db.Ideas.Add(model);
             _db.SaveChanges();
@@ -108,11 +104,6 @@ namespace ICSCOMP1640CORE.Controllers
                 _notyf.Warning("Please choose Category for idea!.");
                 return RedirectToAction("CreateIdea");
             }
-            if (idea.DepartmentId == 0)
-            {
-                _notyf.Warning("Please choose Department for idea!.");
-                return RedirectToAction("CreateIdea");
-            }
             var ideainDb = _db.Ideas.Include(x => x.Category)
                 .SingleOrDefault(item => item.Id == idea.Id);
             ideainDb.Id = idea.Id;
@@ -120,7 +111,6 @@ namespace ICSCOMP1640CORE.Controllers
             ideainDb.IdeaName = idea.IdeaName;
             ideainDb.Content = idea.Content;
             ideainDb.SubmitDate = idea.SubmitDate;
-            ideainDb.DepartmentId = idea.DepartmentId;
             _db.SaveChanges();
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");
