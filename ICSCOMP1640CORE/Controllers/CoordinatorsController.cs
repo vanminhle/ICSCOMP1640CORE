@@ -43,7 +43,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             var currentUser = await _userManager.GetUserAsync(User);
             var currentDepartmentId = currentUser.DepartmentId;
             var dataStaff = _userManager.GetUsersInRoleAsync("Staff").Result.ToList();
-            var data = dataStaff.Where(x =>x.DepartmentId == currentDepartmentId);
+            var data = dataStaff.Where(x => x.DepartmentId == currentDepartmentId);
             if (!String.IsNullOrEmpty(searchString))
             {
                 data = data
@@ -145,6 +145,55 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             return RedirectToAction("InforCoordinator");
         }
 
+        [HttpGet]
+        public IActionResult GetIdeaFromCoor(string searchString, int pg = 1)
+        {
+            var ideaInDb = _db.Ideas.Include(x => x.Department)
+                .Include(x => x.Category)
+                .Include(x => x.User)
+                .Where(x => x.DepartmentId == 2)
+                .ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ideaInDb = ideaInDb
+                    .Where(s => s.IdeaName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
+            //Pagination
+            const int pageSize = 3;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = ideaInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var pageData = ideaInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+            return View(pageData);
+        }
+        [HttpGet]
+        public IActionResult ViewIdea(int id)
+        {
+            var ideaInDb = _db.Ideas.Include(x => x.Category).SingleOrDefault(x => x.Id == id);
+            return View(ideaInDb);
+        }
+        [HttpGet]
+        public IActionResult DeleteIdea(int id)
+        {
+            var ideaInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
+            if (ideaInDb == null)
+            {
+                return NotFound();
+            }
+            _notyf.Success("Idea is deleted successfully.", 3);
+            _db.Ideas.Remove(ideaInDb);
+            _db.SaveChanges();
+            return RedirectToAction("GetIdeaFromCoor", "Coordinators");
+        }
     }
 
 }

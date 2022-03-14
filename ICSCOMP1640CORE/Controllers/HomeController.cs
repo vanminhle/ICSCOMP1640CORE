@@ -1,11 +1,8 @@
-﻿using ICSCOMP1640CORE.Models;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Controllers
 {
@@ -13,9 +10,12 @@ namespace ICSCOMP1640CORE.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly INotyfService _notfy;
+
+        public HomeController(ILogger<HomeController> logger, INotyfService notfy)
         {
             _logger = logger;
+            _notfy = notfy;
         }
 
         public IActionResult Index()
