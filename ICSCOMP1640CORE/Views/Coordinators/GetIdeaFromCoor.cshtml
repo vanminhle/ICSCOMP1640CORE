@@ -47,10 +47,10 @@
 						<td class="align-middle" scope="row">@item.Category.Name</td>
 						<td class="align-middle" scope="row">@item.SubmitDate</td>
 						<td class="align-middle" scope="row">
-							@Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-danger fas fa-trash-alt space" })
+							@Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-danger fas fa-trash-alt space", @title = "Delete" })
 						</td>
 						<td class="align-middle" scope="row">
-							@Html.ActionLink("", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-info fa fa-eye" })
+							@Html.ActionLink("", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-info fa fa-eye", @title = "Info" })
 						</td>
 					</tr>
                 }

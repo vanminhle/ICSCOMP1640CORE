@@ -3,8 +3,7 @@
     ViewBag.Title = "Idea Details";
 }
 
-
-
+@*
 <div class="card">
     <h2 style="text-align: center" class="card-header">Idea Details</h2>
     <div class="card-body">
@@ -14,4 +13,31 @@
         <p>Submit Date: @Model.SubmitDate.ToString("yyyy-MM-dd")</p>
     </div> 
 </div>
-<center><a class="btn btn-primary col-2 fas fa-reply mt-4" asp-controller="Coordinators" asp-action="GetIdeaFromCoor"></a></center>
+<center><a class="btn btn-primary col-2 fas fa-reply mt-4" asp-controller="Coordinators" asp-action="GetIdeaFromCoor"></a></center>*@
+
+<div style="text-align:center;">
+    <h1>Idea Details</h1>
+    <div>
+        <p>Author: @Model.User.UserName</p>
+        <p>Submit Date: @Model.SubmitDate.ToString("yyyy-MM-dd")</p>
+    </div>
+    <div class="row" style="margin-left:auto; margin-right:auto">
+        <a class="btn btn-info btn-outline-warning col-4">DOCUMENT - CLICK TO DOWNLOAD</a>
+        <p class="col-6"></p>
+        
+    </div>
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-body">
+            <h5 class="card-title"> Idea Name: @Model.IdeaName </h5>
+            <h5 class="card-title"> Content Of Idea: @Model.Content </h5>         
+            <p class="card-text"></p>
+        </div>
+    </div>
+    <div class="card text-white bg-secondary mb-3">
+        <div class="card-body">
+            <p class="card-text">Comment</p>
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-info btn-outline-warning col-2 fas fa-reply mt-4" asp-controller="Coordinators" asp-action="GetIdeaFromCoor"></a> 
