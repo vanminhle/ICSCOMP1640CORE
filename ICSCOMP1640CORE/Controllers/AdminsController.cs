@@ -502,5 +502,19 @@ namespace ICSCOMP1640CORE.Controllers
             }
             return View(info);
         }
+
+        //Idea
+        [HttpGet]
+        public IActionResult ManageIdeas()
+        {
+            var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
+
+            return View(ideaInDb);
+        }
+        public IActionResult DetailIdea(int Id)
+        {
+            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
+            return View(idea);
+        }
     }
 }
