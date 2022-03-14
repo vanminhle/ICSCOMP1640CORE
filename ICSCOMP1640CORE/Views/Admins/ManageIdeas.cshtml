@@ -19,7 +19,7 @@
                     <p class="card-text col">Author: @item.User.FullName</p>
                     @Html.ActionLink("View", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-info btn-outline-warning col-1", @title = "Info" })
                 </div>
-                <p>Category : @item.Category </p>
+                <p>Category : @item.Category.Name </p>
             </div>
         </div>
     }

@@ -162,7 +162,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
                 .ToList();
             }
             //Pagination
-            const int pageSize = 3;
+            const int pageSize = 5;
             if (pg < 1)
                 pg = 1;
 

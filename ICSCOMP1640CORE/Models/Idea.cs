@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -51,6 +52,9 @@ namespace ICSCOMP1640CORE.Models
         public int View { get; set; }
 
         public int Rating { get; set; }
+
+        public List<Comment> Comments { get; set; }
+
 
         public Idea()
         {
