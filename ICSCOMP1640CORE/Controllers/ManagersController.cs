@@ -186,7 +186,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(info);
         }
-        
+
         [HttpGet]
         public ActionResult InforStaff(string id)
         {
@@ -197,7 +197,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(info);
         }
-        
+
         [HttpGet]
         public ActionResult InforManager(string id)
         {
@@ -210,7 +210,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(ManagerInDb);
         }
-        
+
         [HttpGet]
         public ActionResult EditProfile(string Id)
         {
@@ -244,15 +244,16 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _db.SaveChanges();
             _notyf.Success("Manager account is edited successfully.");
             return RedirectToAction("InforManager");
-            
-        [HttpGet]  
+        }
+
+        [HttpGet]
         public IActionResult ManageIdea()
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
 
             return View(ideaInDb);
         }
-        
+
         [HttpGet]
         public IActionResult ViewDetailIdea(int Id)
         {

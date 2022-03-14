@@ -37,7 +37,7 @@ namespace ICSCOMP1640CORE.Models
 
         //Data
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM / dd / yyyy hh: mm}")]
         public DateTime SubmitDate { get; set; }
 
         [Required(ErrorMessage = "Idea Name is required")]
@@ -56,7 +56,7 @@ namespace ICSCOMP1640CORE.Models
         {
             SubmitDate = DateTime.Now;
         }
-        
+
         public Boolean IsAnonymous { get; set; }
 
         [NotMapped]

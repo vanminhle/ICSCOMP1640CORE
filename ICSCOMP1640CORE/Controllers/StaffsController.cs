@@ -63,7 +63,6 @@ namespace ICSCOMP1640CORE.Controllers
                 model.IdeaName = idea.IdeaName;
                 model.Content = idea.Content;
                 model.SubmitDate = idea.SubmitDate;
-                //model.DepartmentId = idea.DepartmentId;
                 model.DepartmentId = currentUser.DepartmentId;
                 model.IsAnonymous = idea.IsAnonymous;
             }

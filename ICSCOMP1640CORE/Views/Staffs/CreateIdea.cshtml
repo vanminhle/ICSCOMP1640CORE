@@ -1,6 +1,10 @@
 ﻿@model ICSCOMP1640CORE.Models.Idea
+@{
+	ViewData["Title"] = "Create Idea";
+}
 
-<h1>Create a new Idea</h1>
+<h1 class="mt-2 mb-3">Create New Idea</h1>
+
 @if (TempData["Danger"] != null)
 {
     <div class="alert alert-danger alert-dismissable">
@@ -13,34 +17,28 @@
         <input required type="text" class="form-control" placeholder="Input Idea Name" asp-for="IdeaName">
         <span asp-validation-for="IdeaName" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label>Idea Content</label>
-        <input required type="text" class="form-control" placeholder="Input Content" asp-for="Content">
-        <span asp-validation-for="Content" class="text-danger"></span>
+    <label for="IdeaContent">Content</label>
+    <textarea  class="form-control" id="IdeaContent" rows="5" type="text" class="form-control" asp-for="Content" required></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label>Submit Date</label>
-        @Html.TextBoxFor(model => model.SubmitDate, "", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(model => model.SubmitDate, "",
-          new { @class = "text-danger" }
-        )
+
     <div class="form-group">
         <label>Category</label>
         @Html.DropDownListFor(model => model.CategoryId, ViewBag.CategoryList as SelectList,
                   "Select Category", new { @class = "form-control" })
     </div>
-@*    <div class="form-group">
-        <label>Department</label>us
-        @Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentList as SelectList,
-                  "Select Department", new { @class = "form-control" })
-    </div>*@
-    <div class="form-group form-check">
-    <label class="form-check-label">
-        <input class="form-check-input" asp-for="IsAnonymous" /> Submit as Anonymous
-    </label>
-    </div>
-    <button type="submit" class="btn btn-outline-success">Create</button>
 
+    <div class="form-group form-check mb-2 mt-3">
+        <input class="form-check-input" asp-for="IsAnonymous" /> Submit as Anonymous
+    </div>
+    <div class="form-group form-check">
+        <input class="form-check-input" asp-for="IsAnonymous" required/> I agree with
+            <a asp-area="" asp-controller="Home" asp-action="Privacy">Term and Conditions</a> before submit
+    </div>
+
+    <button type="submit" class="btn btn-outline-success">Create</button>
+    <a class="btn btn-outline-primary" asp-controller="Staffs" asp-action="IdeaIndex">Cancel</a>
 </form>
 
-<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Staffs" asp-action="Index">   Back to previous page</a></center>

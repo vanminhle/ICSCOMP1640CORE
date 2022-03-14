@@ -14,21 +14,19 @@
         <thead class="thead-dark">
             <tr>
 
-                <th scope="col">ID</th>
                 <th scope="col">Author</th>
+                <th scope="col">Created In</th>
                 <th scope="col">Idea Name</th>
                 <th scope="col">Idea Content</th>
-                <th scope="col">Submit Date</th>
                 <th scope="col">Category</th>
                 <th scope="col">Department</th>
-                <th scope="col">Action</th>
+                <th scope="col">Edit</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Id</td>
                     @*@if (item.IsAnonymous == true) {
                         <td>Anonymous</td>
                     } else
@@ -36,13 +34,13 @@
                         <td>@item.User.FullName</td>
                     }*@
                     <td>@item.Creator</td>
+                    <td>@item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</td>
                     <td>@item.IdeaName</td>
                     <td>@item.Content</td>
-                    <td>@item.SubmitDate</td>
                     <td>@item.Category.Name</td>
                     <td>@item.Department.Name</td>
                     <td>
-                        @Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+                        @*@Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })*@
                         @Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
                     </td>
                 </tr>

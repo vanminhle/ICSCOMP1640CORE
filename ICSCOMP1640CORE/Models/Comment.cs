@@ -17,7 +17,7 @@ namespace ICSCOMP1640CORE.Models
 
 
         [DataType(DataType.Date)]
-        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy}")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy hh:mm}")]
         public DateTime CreatedAt { get; set; }
 
         [Required(ErrorMessage = "You should provide comment of the idea")]
