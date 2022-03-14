@@ -3,13 +3,13 @@
 <div style="text-align:center;">
     <h1>IDEAS NAME</h1>
     <div>
-        <p>Author: @*@Model.User.FullName*@</p>
-        <p>Submit at @*@Model.SubmitDate*@</p>
+        <p>Author: @Model.User.FullName</p>
+        <p>Submit at @Model.SubmitDate</p>
     </div>
     <div class="row" style="margin-left:auto; margin-right:auto">
         <a class="btn btn-info btn-outline-warning col-4">DOCUMENT - CLICK TO DOWNLOAD</a>
         <p class="col-6"></p>
-        <a class="btn btn-info btn-outline-warning col-2">DELETE IDEA</a>
+        @Html.ActionLink("DELETE IDEA", "DeleteIdea", "Admins", new { id = @Model.Id }, new { @class = "btn btn-info btn-outline-warning col-2 far fa-trash-alt", @title = "Delete" })
     </div>
     <div class="card text-white bg-secondary mb-3">
         <div class="card-body">

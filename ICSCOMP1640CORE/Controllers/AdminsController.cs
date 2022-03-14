@@ -508,9 +508,11 @@ namespace ICSCOMP1640CORE.Controllers
         public IActionResult ManageIdeas()
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
-
+            var categoryInDb = _db.Categories.ToList();
             return View(ideaInDb);
         }
+        
+        [HttpGet]
         public IActionResult DetailIdea(int Id)
         {
             var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
