@@ -49,7 +49,6 @@ namespace ICSCOMP1640CORE.Controllers
         public async Task<IActionResult> CreateIdea(Idea idea)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //var userInDb = _db.Users.SingleOrDefault(x => x.Id == userId);
             var currentUser = await _userManager.GetUserAsync(User);
             if (idea.CategoryId == 0)
             {
