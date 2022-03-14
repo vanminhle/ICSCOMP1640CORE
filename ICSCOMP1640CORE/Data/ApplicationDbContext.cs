@@ -2,9 +2,6 @@
 using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ICSCOMP1640CORE.Data
 {
@@ -20,7 +17,7 @@ namespace ICSCOMP1640CORE.Data
             base.OnModelCreating(builder);
             UserSeed.Seed(builder);
         }
-        
+        //public DbSet<User> User { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Department> Departments { get; set; }

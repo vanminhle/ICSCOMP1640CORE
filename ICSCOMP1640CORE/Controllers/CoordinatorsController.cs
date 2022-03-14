@@ -146,12 +146,14 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
 
         [HttpGet]
-        public IActionResult GetIdeaFromCoor(string searchString, int pg = 1)
+        public async Task<IActionResult> GetIdeaFromCoor(string searchString, int pg = 1)
         {
+
+            var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas.Include(x => x.Department)
                 .Include(x => x.Category)
                 .Include(x => x.User)
-                .Where(x => x.DepartmentId == 2)
+                .Where(x => x.DepartmentId == currentUser.DepartmentId)
                 .ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -178,7 +180,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public IActionResult ViewIdea(int id)
         {
-            var ideaInDb = _db.Ideas.Include(x => x.Category).SingleOrDefault(x => x.Id == id);
+            var ideaInDb = _db.Ideas.Include(x => x.User).SingleOrDefault(x => x.Id == id);
             return View(ideaInDb);
         }
         [HttpGet]
