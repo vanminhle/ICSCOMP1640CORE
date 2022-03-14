@@ -1,0 +1,40 @@
+﻿@model ICSCOMP1640CORE.Models.Idea
+
+
+<link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
+<!---<title> Responsive Registration Form | CodingLab </title>--->
+
+<body>
+	<div class="infor">
+		<div class="title">
+			<div class="title-Infor" style="font-size:40px;text-align: center;border-bottom:1px solid black; padding-bottom:20px;">
+				Information Coordinator
+			</div>
+			<div class="containerInfor">
+				<div class="element">
+					Idea Name :&nbsp;&nbsp; @Model.IdeaName
+				</div>
+				<div class="element">
+					Author :&nbsp;&nbsp; @Model.Creator
+				</div>
+				<div class="element">
+					Content :&nbsp;&nbsp;	@Model.Content
+				</div>
+				<div class="element">
+					Category :&nbsp;&nbsp; @Model.Category.Name
+				</div>
+				<div class="element">
+					Department :&nbsp;&nbsp;@Model.Department.Name
+				</div>
+				<div class="element">
+					Submit Date :&nbsp;&nbsp; @Model.SubmitDate
+				</div>
+			</div>
+
+			<a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Staffs" asp-action="IdeaIndex"> Back </a>
+
+		</div>
+
+
+	</div>
+</body>

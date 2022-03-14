@@ -28,9 +28,26 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf = notyf;
         }
 
-        public IActionResult IdeaIndex()
+        public async Task<IActionResult> IdeaIndex()
         {
-            var ideaInDb = _db.Ideas.Include(y => y.Category).Include(y => y.Department).Include(y => y.User).ToList();
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas
+                .Include(y => y.Category)
+                .Include(y => y.Department)
+                .Include(y => y.User)
+                .Where(y => y.DepartmentId == currentUser.DepartmentId)
+                .ToList();
+            return View(ideaInDb);
+        }
+        public async Task<IActionResult> IdeaDetail(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas
+               .Include(y => y.Category)
+               .Include(y => y.Department)
+               .Include(y => y.User)
+               .Where(y => y.DepartmentId == currentUser.DepartmentId)
+               .SingleOrDefault(y => y.Id == id);
             return View(ideaInDb);
         }
 
