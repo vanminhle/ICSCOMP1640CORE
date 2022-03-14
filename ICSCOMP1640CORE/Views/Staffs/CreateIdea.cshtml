@@ -1,0 +1,46 @@
+﻿@model ICSCOMP1640CORE.Models.Idea
+
+<h1>Create a new Idea</h1>
+@if (TempData["Danger"] != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <strong>@TempData["Danger"]</strong>
+    </div>
+}
+<form asp-controller="Staffs" asp-action="CreateIdea" method="post">
+    <div class="form-group">
+        <label>Idea Name</label>
+        <input required type="text" class="form-control" placeholder="Input Idea Name" asp-for="IdeaName">
+        <span asp-validation-for="IdeaName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Idea Content</label>
+        <input required type="text" class="form-control" placeholder="Input Content" asp-for="Content">
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label>Submit Date</label>
+        @Html.TextBoxFor(model => model.SubmitDate, "", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(model => model.SubmitDate, "",
+          new { @class = "text-danger" }
+        )
+    <div class="form-group">
+        <label>Category</label>
+        @Html.DropDownListFor(model => model.CategoryId, ViewBag.CategoryList as SelectList,
+                  "Select Category", new { @class = "form-control" })
+    </div>
+@*    <div class="form-group">
+        <label>Department</label>us
+        @Html.DropDownListFor(model => model.DepartmentId, ViewBag.DepartmentList as SelectList,
+                  "Select Department", new { @class = "form-control" })
+    </div>*@
+    <div class="form-group form-check">
+    <label class="form-check-label">
+        <input class="form-check-input" asp-for="IsAnonymous" /> Submit as Anonymous
+    </label>
+    </div>
+    <button type="submit" class="btn btn-outline-success">Create</button>
+
+</form>
+
+<center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Staffs" asp-action="Index">   Back to previous page</a></center>
