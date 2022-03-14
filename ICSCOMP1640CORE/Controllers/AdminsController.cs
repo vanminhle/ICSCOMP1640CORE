@@ -511,7 +511,7 @@ namespace ICSCOMP1640CORE.Controllers
             var categoryInDb = _db.Categories.ToList();
             return View(ideaInDb);
         }
-        
+
         [HttpGet]
         public IActionResult DetailIdea(int Id)
         {
