@@ -4,7 +4,7 @@
 <h1>IDEAS LIST</h1>
 
 <main>
-
+     @Html.ActionLink("DELETE All IDEA", "DeleteAllIdea", "Managers", new { @class = "nav-link btn btn-outline-primary col-3 fas fa-reply", @title = "Delete" })
     @foreach (var item in Model)
     {
         <div class="card text-white bg-secondary mb-3 rounded">
@@ -12,34 +12,20 @@
                 <div class="row">
                     <h4 class="card-title col">Idea name : @item.IdeaName</h4>
                     <p class="col-5"></p>
-                    <p class="card-text col" style="top: 5px;">Submit date : @*@item.SubmitDate*@</p>
+                    <p class="card-text col" style="top: 5px;">Submit date : @item.SubmitDate</p>
                 </div>
 
                 <div class="row">
-                    <p class="card-text col">Author: @*@item.User.FullName*@</p>
-                    <a class="btn btn-info btn-outline-warning col-1" asp-controller="Managers" asp-action="ViewDetailIdea">View</a>
-                        @Html.ActionLink("Delete", "DeleteIdeas","Managers", new { Id = item.Id }, new { @class = "btn btn-outline-danger mb-3 col-sm-4 fas fa-trash-alt space" })           
+                    <p class="card-text col">Author: @item.User.FullName</p>
+                  
+                    @Html.ActionLink("View", "ViewDetailIdea", "Managers", new { id = item.Id }, new { @class = "btn btn-info btn-outline-warning col-1", @title = "Info" })
+                        
                 </div>
-                <p>Category : @*@item.Category*@ </p>
+                <p>Category : @item.Category.Name </p>
             </div>
         </div>
     }
-    <div class="card text-white bg-secondary mb-3 rounded">
-        <div class="card-body ">
-            <div class="row">
-                <h4 class="card-title col">Idea name : @*@item.IdeaName*@</h4>
-                <p class="col-5"></p>
-                <p class="card-text col" style="top: 5px;">Submit date : @*@item.SubmitDate*@</p>
-            </div>
 
-            <div class="row">
-                <p class="card-text col">Author: @*@item.User.FullName*@</p>
-                <a class="btn btn-info btn-outline-warning col-1" asp-controller="Managers" asp-action="ViewDetailIdea">View</a>
-                 
-            </div>
-            <p>Category : @*@item.Category*@ </p>
-        </div>
-    </div>
 
     <center><a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Home" asp-action="Index">   Back to previous page</a></center>
 </main> 

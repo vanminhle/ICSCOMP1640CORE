@@ -250,15 +250,46 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult ManageIdea()
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
-
+            var categoryInDb= _db.Categories.ToList();
             return View(ideaInDb);
         }
 
         [HttpGet]
         public IActionResult ViewDetailIdea(int Id)
         {
-            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
-            return View(idea);
+            var ideaInDb = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
+        /*    var idea = _db.Ideas.Include(x => x.User).FirstOrDefault(item => item.Id == Id);*/
+            return View(ideaInDb);
+        }
+       /* [HttpGet]
+        public IActionResult DeleteIdea(int id)
+        {
+            var IdeasInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
+
+            if (IdeasInDb == null)
+            {
+                return NotFound();
+            }
+            _notyf.Success("Ideas is deleted successfully.");
+            _db.Ideas.Remove(IdeasInDb);
+            _db.SaveChanges();
+
+            return RedirectToAction("ManageIdea");
+        }*/
+
+
+        [HttpGet]
+        public IActionResult DeleteAllIdea()
+        {
+            var ideaInDb = _db.Ideas;
+            if (ideaInDb == null)
+            {
+                return NotFound();
+            }
+            _db.Ideas.RemoveRange(ideaInDb);
+            _db.SaveChanges();
+            _notyf.Success("All Ideals is deleted successfully.", 3);
+            return RedirectToAction("ManageIdea", "Managers");
         }
     }
 }
