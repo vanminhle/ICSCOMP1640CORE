@@ -39,6 +39,17 @@ namespace ICSCOMP1640CORE.Controllers
                 .ToList();
             return View(ideaInDb);
         }
+        public async Task<IActionResult> IdeaDetail(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas
+               .Include(y => y.Category)
+               .Include(y => y.Department)
+               .Include(y => y.User)
+               .Where(y => y.DepartmentId == currentUser.DepartmentId)
+               .SingleOrDefault(y => y.Id == id);
+            return View(ideaInDb);
+        }
 
         [HttpGet]
         public IActionResult CreateIdea()

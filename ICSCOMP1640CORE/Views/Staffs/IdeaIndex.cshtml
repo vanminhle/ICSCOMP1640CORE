@@ -44,6 +44,7 @@
                     <td>
                         @Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
                         @Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
+                        @Html.ActionLink(" View", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info 	fa fa-info-circle" })
                     </td>
                 </tr>
             }
