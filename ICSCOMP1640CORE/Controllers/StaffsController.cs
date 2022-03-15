@@ -92,7 +92,15 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult DeleteIdea(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var ideaInDb = _db.Ideas.SingleOrDefault(item => item.Id == id);
+
+            if (ideaInDb.UserId != userId)
+            {
+                _notyf.Error("You do not have permission to delete idea of other person!");
+                return RedirectToAction("IdeaIndex");
+            }
+
             _db.Ideas.Remove(ideaInDb);
             _db.SaveChanges();
             _notyf.Success("Idea is deleted successfully.");
@@ -102,14 +110,20 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult EditIdea(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var model = _db.Ideas.SingleOrDefault(item => item.Id == id);
+
+            if (model.UserId != userId)
             {
-                var category = _db.Categories.ToList();
-                var categoryList = _db.Categories.Select(x => new { x.Id, x.Name }).ToList();
-                var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-                ViewBag.categoryList = new SelectList(categoryList, "Id", "Name");
-                ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+                _notyf.Error("You do not have permission to edit idea of other person!");
+                return RedirectToAction("IdeaIndex");
             }
+
+            var category = _db.Categories.ToList();
+            var categoryList = _db.Categories.Select(x => new { x.Id, x.Name }).ToList();
+            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.categoryList = new SelectList(categoryList, "Id", "Name");
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
             return View(model);
         }
 
