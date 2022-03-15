@@ -179,12 +179,14 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
-            var info = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
-            if (info == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            id = userId.ToString();
+            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            if (CoordinatorInDb == null)
             {
                 return NotFound();
             }
-            return View(info);
+            return View(CoordinatorInDb);
         }
 
         [HttpGet]
@@ -218,8 +220,6 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             Id = userId.ToString();
             var ManagerInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
             return View(ManagerInDb);
         }
 
@@ -237,7 +237,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             ManagerInDb.Address = manager.Address;
             ManagerInDb.Age = manager.Age;
             ManagerInDb.Gender = manager.Gender;
-            ManagerInDb.DepartmentId = manager.DepartmentId;
+            ManagerInDb.DepartmentId = 1;
             ManagerInDb.PhoneNumber = manager.PhoneNumber;
 
             _db.Update(ManagerInDb);

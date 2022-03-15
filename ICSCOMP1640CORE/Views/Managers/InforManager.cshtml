@@ -1,34 +1,41 @@
 ﻿@model ICSCOMP1640CORE.Models.User
+@{
+    ViewData["Title"] = "My Profile";
+}
 
-
-<link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
-<!---<title> Responsive Registration Form | CodingLab </title>--->
+<h4 style="text-align: center; margin: 25px 0 10px 0;">@ViewData["Title"]</h4>
 
 <body>
 	<div class="infor">
 		<div class="title">
-			<div class="title-Infor" style="font-size:40px;text-align: center;border-bottom:1px solid black; padding-bottom:20px;">
-				Information Coordinator
+			<div class="title-Infor" style="font-size:35px;text-align: center; padding-bottom:10px;">
+				@Model.FullName
 			</div>
-			<div class="containerInfor">
+			<hr style="width: 20%;"/>
+			<div style="text-align:center; font-size: 19px; display:flex; flex-direction: column; gap: 15px; margin-top: 30px;">
 				<div class="element">
-					FullName :&nbsp;&nbsp; @Model.FullName
+					FullName :&nbsp;&nbsp;@Model.FullName
 				</div>
 				<div class="element">
-					Email:&nbsp;&nbsp;	@Model.Email
+					Email:&nbsp;&nbsp;@Model.Email
 				</div>
 				<div class="element">
-					Address:&nbsp;&nbsp; @Model.Address
+					Gender:&nbsp;&nbsp;@Model.Gender
 				</div>
 				<div class="element">
 					Age:&nbsp;&nbsp;@Model.Age
 				</div>
 				<div class="element">
-					Department Name :&nbsp;&nbsp; @Model.DepartmentId
+					Phone Number:&nbsp;&nbsp;@Model.PhoneNumber
+				</div>
+				<div class="element">
+					Address:&nbsp;&nbsp;@Model.Address
 				</div>
 			</div>
-
-			<a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-dark">Back</a>
+			<div style="text-align: center; margin-top: 50px;">
+				<a asp-area="Identity" asp-page="/Account/Manage/Index" class="btn btn-dark">Back</a>
+				<a  class="btn btn-primary" asp-action="EditProfile" asp-controller="Managers">Edit Profile</a>
+			</div>
 
 		</div>
 

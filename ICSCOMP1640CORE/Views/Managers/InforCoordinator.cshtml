@@ -1,36 +1,41 @@
 ﻿@model ICSCOMP1640CORE.Models.User
+@{
+	ViewData["Title"] = "Coordinator Profile";
+}
 
-<link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
-<!---<title> Responsive Registration Form | CodingLab </title>--->
+<h4 style="text-align: center; margin: 25px 0 10px 0;">@ViewData["Title"]</h4>
 
 <body>
 	<div class="infor">
 		<div class="title">
-			<div class="title-Infor" style="font-size:40px;text-align: center;border-bottom:1px solid black; padding-bottom:20px;">
-				Information Coordinator
+			<div class="title-Infor" style="font-size:35px;text-align: center; padding-bottom:10px;">
+				@Model.FullName
 			</div>
-			<div class="containerInfor">
+			<hr style="width: 20%;"/>
+			<div style="text-align:center; font-size: 19px; display:flex; flex-direction: column; gap: 15px; margin-top: 30px;">
 				<div class="element">
-					FullName :&nbsp;&nbsp; @Model.FullName
+					Email:&nbsp;&nbsp;@Model.Email
 				</div>
 				<div class="element">
-					Email:&nbsp;&nbsp;	@Model.Email
-				</div>
-				<div class="element">
-					Address:&nbsp;&nbsp; @Model.Address
+					Gender:&nbsp;&nbsp;@Model.Gender
 				</div>
 				<div class="element">
 					Age:&nbsp;&nbsp;@Model.Age
 				</div>
 				<div class="element">
-					Department Name :&nbsp;&nbsp; @Model.Department.Name
+					Phone Number:&nbsp;&nbsp;@Model.PhoneNumber
 				</div>
 				<div class="element">
-					Gender Name :&nbsp;&nbsp; @Model.Gender
+					Address:&nbsp;&nbsp;@Model.Address
+				</div>
+				<div class="element">
+					Department:&nbsp;&nbsp;@Model.Department.Name
 				</div>
 			</div>
 
-			<a asp-controller="Managers" asp-action="ManageCoordinators" class="btn btn-dark">Back</a>
+			<div style="text-align: center; margin-top: 50px;">
+				<a asp-controller="Managers" asp-action="ManageCoordinators" class="btn btn-dark">Back</a>
+			</div>
 
 		</div>
 

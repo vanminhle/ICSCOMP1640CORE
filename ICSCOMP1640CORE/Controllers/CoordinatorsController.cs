@@ -103,7 +103,8 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             id = userId.ToString();
-            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            var CoordinatorInDb = _db.Users.Include("Department").SingleOrDefault(i => i.Id == id);
+
             if (CoordinatorInDb == null)
             {
                 return NotFound();
@@ -117,8 +118,6 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             Id = userId.ToString();
             var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
             return View(CoordinatorInDb);
         }
 
@@ -136,7 +135,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             coordinatorinDb.Address = coordinator.Address;
             coordinatorinDb.Age = coordinator.Age;
             coordinatorinDb.Gender = coordinator.Gender;
-            coordinatorinDb.DepartmentId = coordinator.DepartmentId;
+            coordinatorinDb.DepartmentId = coordinatorinDb.DepartmentId;
             coordinatorinDb.PhoneNumber = coordinator.PhoneNumber;
 
             _db.Update(coordinatorinDb);

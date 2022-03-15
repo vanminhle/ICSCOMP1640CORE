@@ -136,7 +136,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             id = userId.ToString();
-            var StaffInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            var StaffInDb = _db.Users.Include("Department").SingleOrDefault(i => i.Id == id);
             if (StaffInDb == null)
             {
                 return NotFound();
