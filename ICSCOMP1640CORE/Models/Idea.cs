@@ -42,7 +42,7 @@ namespace ICSCOMP1640CORE.Models
         public DateTime SubmitDate { get; set; }
 
         [Required(ErrorMessage = "Idea Name is required")]
-        [StringLength(20)]
+        [StringLength(30)]
         public string IdeaName { get; set; }
 
         [Required(ErrorMessage = "You should provide content of the idea")]

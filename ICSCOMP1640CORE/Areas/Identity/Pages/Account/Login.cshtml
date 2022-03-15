@@ -19,12 +19,12 @@
 
 		<div class="form-floating" >
 			<label>Email</label>
-			<input asp-for="Input.Email" placeholder="Email" class="form-control" autocomplete="username" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
+			<input type="email" asp-for="Input.Email" placeholder="Email" class="form-control" autocomplete="username" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
 			<span asp-validation-for="Input.Email" class="text-danger" style="font-size: 13px; padding-top: 5px;"></span>
 		</div>
 		<div class="form-floating">
 			<label>Password</label>
-			<input asp-for="Input.Password" placeholder="Password" class="form-control" autocomplete="current-password" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
+			<input type="password" asp-for="Input.Password" placeholder="Password" class="form-control" autocomplete="current-password" aria-required="true" style="box-sizing: content-box !important; height: 15px;" />
 			<span asp-validation-for="Input.Password" class="text-danger" style="font-size: 13px; padding-top: 5px;"></span>
 		</div>
 

@@ -1,0 +1,143 @@
+﻿* {
+    box-sizing: content-box;
+}
+
+body {
+    /*background-image: linear-gradient(transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px), linear-gradient(90deg, transparent 11px, rgba(220,220,200,.8) 12px, transparent 12px);
+    background-size: 100% 12px, 12px 100%;*/
+}
+
+.container {
+    z-index: -1 !important;
+}
+
+.navbar {
+    display: none;
+}
+
+.form-register {
+    background-color: #fff;
+    padding: 35px;
+    margin: 50px auto;
+    border-radius: 1.5%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10 !important;
+}
+
+.title {
+    margin-bottom: 10px;
+}
+
+.h2, h2 {
+    font-size: 2.1rem;
+}
+
+.form-control {
+    padding: 15px 0 15px 0;
+    text-indent: 10px;
+}
+
+
+.form-floating {
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.checkbox-remember {
+    margin-left: 20px;
+}
+
+.remember-forgot {
+    display: flex;
+    justify-content: space-between;
+}
+
+.remember-password {
+    margin-top: 20px
+}
+
+.register {
+    display: flex;
+}
+
+.button-register {
+    padding: 10px 90px 10px 90px;
+    border: 1px solid white;
+    border-radius: 4px;
+    color: black;
+    background-image: linear-gradient(to right, #32be8f, #32be8f, #32be8f);
+    margin: 0 auto;
+}
+
+    .button-register:hover {
+        background-image: linear-gradient(to right, #0b7d57, #0b7d57, #0b7d57);
+    }
+
+.manage {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 16px;
+}
+
+@media (max-width: 1198px) {
+    .form-register {
+        width: 34%;
+    }
+}
+
+
+@media (max-width: 992px) {
+    .form-register {
+        width: 47%;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-register {
+        width: 50%;
+    }
+}
+
+@media (max-width: 485px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .form-register {
+        margin: 25px auto;
+        width: 64%;
+    }
+}
+
+@media (max-width: 416px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+        box-shadow: 0px rgba(0,0,0,0);
+    }
+
+    .form-register {
+        margin: 30px auto;
+        width: 70%;
+    }
+}
+
+@media (max-width: 360px) {
+    .container {
+        width: 100%;
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    .form-register {
+        margin: 30px auto;
+        width: 81%;
+        box-shadow: none;
+    }
+}

@@ -29,10 +29,10 @@
 		<table class="table table-bordered">
 			<thead class="thead-dark">
 				<tr>
-					<th scope="col" class="col-5">Full Name</th>
-					<th scope="col" class="col-5">Email</th>
+					<th scope="col" class="col-4">Full Name</th>
+					<th scope="col" class="col-4">Email</th>
 					<th scope="col" class="col-1">Gender</th>
-					<th scope="col" class="col-1">Department</th>
+					<th scope="col" class="col-2">Department</th>
 					<th scope="col" class="col-1">Verified</th>
 					<th scope="col" class="col-1">Edit</th>
 					<th scope="col" class="col-1">Info</th>
@@ -43,7 +43,7 @@
 				@foreach (var item in Model)
 				{
 					<tr>
-						<th class="align-middle" scope="row">@item.FullName</th>
+						<td class="align-middle" scope="row">@item.FullName</td>
 						<td class="align-middle" scope="row">@item.Email</td>
 						<td class="align-middle" scope="row">@item.Gender</td>
 						<td class="align-middle" scope="row">@item.Department.Name</td>

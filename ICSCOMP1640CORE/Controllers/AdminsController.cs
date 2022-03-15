@@ -505,10 +505,17 @@ namespace ICSCOMP1640CORE.Controllers
 
         //Idea
         [HttpGet]
-        public IActionResult ManageIdeas()
+        public IActionResult ManageIdeas(string searchString)
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
             var categoryInDb = _db.Categories.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ideaInDb = ideaInDb
+                    .Where(s => s.IdeaName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            }
             return View(ideaInDb);
         }
 
@@ -517,35 +524,6 @@ namespace ICSCOMP1640CORE.Controllers
         {
             var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
             return View(idea);
-        }
-
-        [HttpGet]
-        public IActionResult DeleteIdea(int id)
-        {
-            var IdeasInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
-
-            if (IdeasInDb == null)
-            {
-                return NotFound();
-            }
-            _notyf.Success("Ideas is deleted successfully.");
-            _db.Ideas.Remove(IdeasInDb);
-            _db.SaveChanges();
-
-            return RedirectToAction("ManageIdeas");
-        }
-        [HttpGet]
-        public IActionResult DeleteAllIdea()
-        {
-            var ideaInDb = _db.Ideas;
-            if (ideaInDb == null)
-            {
-                return NotFound();
-            }
-            _db.Ideas.RemoveRange(ideaInDb);
-            _db.SaveChanges();
-            _notyf.Success("All Ideals is deleted successfully.", 3);
-            return RedirectToAction("ManageIdeas", "Admins");
         }
     }
 }

@@ -1,28 +1,28 @@
 ﻿@{
-    if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
-    {
-        Layout = (string)parentLayout;
-    }
-    else
-    {
-        Layout = "/Areas/Identity/Pages/_Layout.cshtml";
-    }
+	if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
+	{
+		Layout = (string)parentLayout;
+	}
+	else
+	{
+		Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+	}
 }
 
-<h2 style="text-align:center">Manage your account</h2>
+<h2 class="mt-2 mb-4">Manage your account</h2>
+
 
 <div>
-    <hr />
-    <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
-    </div>
+	<div class="row flex-sm-nowrap" style="row-gap: 30px">
+		<div class="col-md-3">
+			<partial name="_ManageNav" />
+		</div>
+		<div class="col-md-9" style="margin-left: 2px;">
+			@RenderBody()
+		</div>
+	</div>
 </div>
 
 @section Scripts {
-    @RenderSection("Scripts", required: false)
+	@RenderSection("Scripts", required: false)
 }

@@ -9,11 +9,10 @@ namespace ICSCOMP1640CORE.Models
 
         [Required(ErrorMessage = "Category Name is required")]
         [Display(Name = "Category Name")]
-        [StringLength(20)]
+        [StringLength(30)]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Description is required")]
-        [StringLength(20)]
         [Display(Name = "Category Description")]
 
         public string Description { get; set; }

@@ -32,22 +32,22 @@
 								<li>@Html.ActionLink("Managers", "ManageManagers", "Admins")</li>
 								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Admins")</li>
 								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Admins")</li>
-								<li>@Html.ActionLink("Idea", "ManageIdeas", "Admins")</li>
+								<li>@Html.ActionLink("Ideas", "ManageIdeas", "Admins")</li>
 							}
 							if (User.IsInRole(Role.Manager))
 							{
 								<li>@Html.ActionLink("Categories", "ManageCategories", "Managers")</li>
 								<li>@Html.ActionLink("Coordinators", "ManageCoordinators", "Managers")</li>
-								 <li>@Html.ActionLink("Idea", "ManageIdea", "Managers")</li>
+								 <li>@Html.ActionLink("Ideas", "ManageIdea", "Managers")</li>
 							}
 							if (User.IsInRole(Role.Coordinator))
 							{
 								<li>@Html.ActionLink("Staffs", "ManageStaffs", "Coordinators")</li>
-								<li>@Html.ActionLink("Ideas", "GetIdeaFromCoor", "Coordinators")</li>
+								<li>@Html.ActionLink("Ideass", "GetIdeaFromCoor", "Coordinators")</li>
 							}
 							if (User.IsInRole(Role.Staff))
 							{
-								<li>@Html.ActionLink("Idea", "IdeaIndex", "Staffs")</li>
+								<li>@Html.ActionLink("Ideas", "IdeaIndex", "Staffs")</li>
 							}
 
 						}

@@ -11,7 +11,7 @@ namespace ICSCOMP1640CORE.Models
 
 
         [Required(ErrorMessage = "Department Name is required")]
-        [StringLength(20)]
+        [StringLength(30)]
         public string Name { get; set; }
 
 

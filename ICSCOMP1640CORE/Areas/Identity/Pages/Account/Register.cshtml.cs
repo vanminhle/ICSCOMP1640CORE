@@ -1,4 +1,5 @@
-﻿using ICSCOMP1640CORE.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -26,6 +27,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
         private readonly UserManager<User> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly INotyfService _notyf;
 
         private readonly ApplicationDbContext _context;
 
@@ -34,13 +36,15 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            INotyfService notyf)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _notyf = notyf;
         }
 
         [BindProperty]
@@ -64,7 +68,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
             public string Address { get; set; }
 
             [Required]
-            [Range(25, 60)]
+            [Range(23, 60)]
             [Display(Name = "Age")]
             public int Age { get; set; }
 
@@ -124,7 +128,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                     Gender = Input.Gender,
                     Age = Input.Age,
                    DepartmentId = Input.DepartmentId,
-                 
+
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 _userManager.AddToRoleAsync(user, "Staff").GetAwaiter().GetResult();
@@ -145,7 +149,9 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        _notyf.Success("Account Successfully Created. Please check your email to confirm your account!", 5);
+                        //return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+                        return RedirectToAction("Index", "Home");
                     }
                     else
                     {
@@ -155,7 +161,8 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    _notyf.Error(error.Description, 3);
+                    //ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 

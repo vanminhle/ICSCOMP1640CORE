@@ -5,15 +5,15 @@
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h4>@ViewData["Title"]</h4>
+<h4 style="text-align: center">@ViewData["Title"]</h4>
 
-<div class="alert alert-warning" role="alert">
+<div class="alert alert-warning mt-4" role="alert">
     <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+        <strong>Deleting this data will permanently remove your account, and this cannot be recovered</strong>
     </p>
 </div>
 
-<div>
+<div class="d-flex justify-content-center">
     <form id="delete-user" method="post" class="form-group">
         <div asp-validation-summary="All" class="text-danger"></div>
         @if (Model.RequirePassword)
@@ -26,6 +26,7 @@
         }
         <button class="btn btn-danger" type="submit">Delete data and close my account</button>
     </form>
+</div>
 </div>
 
 @section Scripts {
