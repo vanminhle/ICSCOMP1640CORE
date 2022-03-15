@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ICSCOMP1640CORE.Models.Idea>
+﻿@using System.Security.Claims
+@model IEnumerable<ICSCOMP1640CORE.Models.Idea>
 
 
 <h1>Idea List Of Staff Department</h1>
@@ -40,8 +41,12 @@
                     <td>@item.Category.Name</td>
                     <td>@item.Department.Name</td>
                     <td>
-                        @*@Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })*@
-                        @Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
+                        @if(User.FindFirstValue(ClaimTypes.NameIdentifier) == item.UserId)
+                        {
+                            @Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
+                            @Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
+                        }
+                        
                         @Html.ActionLink(" View", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info 	fa fa-info-circle" })
                     </td>
                 </tr>
