@@ -45,6 +45,7 @@ namespace ICSCOMP1640CORE.Controllers
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)
+               .Include(y=>y.Comments)
                .Include(y => y.User)
                .Where(y => y.DepartmentId == currentUser.DepartmentId)
                .SingleOrDefault(y => y.Id == id);
@@ -190,6 +191,46 @@ namespace ICSCOMP1640CORE.Controllers
             _db.SaveChanges();
             _notyf.Success("Manager account is edited successfully.");
             return RedirectToAction("InforStaff");
+        }
+        // COMMENTS
+        public async Task<IActionResult> ViewCommentsAsync()
+        {
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var CommentInDb = _db.Comments
+                .Include(y => y.User)
+                .ToList();
+            return View(CommentInDb);
+        }
+        [HttpGet]
+        public IActionResult CreateComments(int id)
+        {
+            Comment model = new();
+            var Comment = _db.Comments.Select(x => new { x.Id }).ToList();
+            var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
+            var Ideal = _db.Ideas.Select(x => new { x.Id }).ToList();
+            ViewBag.Comment = new SelectList(Comment, "Id", "Name");
+            ViewBag.Ideal = new SelectList(Ideal, "Id", "Name");
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateCommentsAsync(Comment comment, int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
+            var currentUser = await _userManager.GetUserAsync(User);
+            var model = new Comment();
+            {
+
+                model.IdeaId = infoIdea.Id;
+                model.UserId = userId;
+                model.Content = comment.Content;
+                model.CreatedAt = comment.CreatedAt;
+            }
+            _db.Comments.Add(model);
+            _db.SaveChanges();
+            _notyf.Success("Comment is created successfully.");
+            return RedirectToAction("IdeaIndex");
         }
     }
 }
