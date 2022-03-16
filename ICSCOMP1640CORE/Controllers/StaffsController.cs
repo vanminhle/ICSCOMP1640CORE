@@ -166,13 +166,36 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditIdea(Idea idea)
+        public IActionResult EditIdea(Idea idea, IFormFile file)
         {
             if (idea.CategoryId == 0)
             {
                 _notyf.Warning("Please choose Category for idea!.");
                 return RedirectToAction("CreateIdea");
             }
+
+            //File
+
+            if (file != null && file.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    var extensionCheck = Path.GetExtension(file.FileName);
+                    if (extensionCheck != ".pdf")
+                    {
+                        _notyf.Warning("Your document need to submit in .pdf");
+                        return RedirectToAction("CreateIdea");
+                    }
+                    else
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        idea.Document = fileBytes;
+                        // act on the Base64 data
+                    }
+                }
+            }
+
             var ideainDb = _db.Ideas.Include(x => x.Category)
                 .SingleOrDefault(item => item.Id == idea.Id);
             ideainDb.Id = idea.Id;
@@ -180,6 +203,8 @@ namespace ICSCOMP1640CORE.Controllers
             ideainDb.IdeaName = idea.IdeaName;
             ideainDb.Content = idea.Content;
             ideainDb.SubmitDate = idea.SubmitDate;
+            ideainDb.Document = idea.Document;
+
             _db.SaveChanges();
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");

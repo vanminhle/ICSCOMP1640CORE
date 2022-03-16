@@ -12,7 +12,7 @@
         <strong>@TempData["Danger"]</strong>
     </div>
 }
-<form asp-controller="Staffs" asp-action="EditIdea" method="post">
+<form asp-controller="Staffs" asp-action="EditIdea" method="post" enctype="multipart/form-data">
     @Html.HiddenFor(m => m.Id)
     <div class="form-group">
         <label>Idea Name</label>
@@ -31,6 +31,11 @@
         @Html.DropDownListFor(model => model.CategoryId, ViewBag.CategoryList as SelectList,
                   "Select Department", new { @class = "form-control" })
     </div>
+
+    <div class="form-group">
+		<label class="form-label mt-2" for="customFile">Upload Related Document (Only accept .pdf file)</label><br />
+		<input type="file" id="customFile" name="file" accept="application/pdf" class="mt-1"/>
+	</div>
 
     <button type="submit" class="btn btn-outline-success">Edit</button>
     <a class="btn btn-outline-primary" asp-controller="Staffs" asp-action="IdeaIndex">Cancel</a>
