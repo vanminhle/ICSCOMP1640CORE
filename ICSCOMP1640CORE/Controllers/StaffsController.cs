@@ -3,10 +3,13 @@ using ICSCOMP1640CORE.Data;
 using ICSCOMP1640CORE.Models;
 using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -28,6 +31,7 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf = notyf;
         }
 
+
         public async Task<IActionResult> IdeaIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -39,6 +43,8 @@ namespace ICSCOMP1640CORE.Controllers
                 .ToList();
             return View(ideaInDb);
         }
+
+        [HttpGet]
         public async Task<IActionResult> IdeaDetail(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -48,7 +54,27 @@ namespace ICSCOMP1640CORE.Controllers
                .Include(y => y.User)
                .Where(y => y.DepartmentId == currentUser.DepartmentId)
                .SingleOrDefault(y => y.Id == id);
+
             return View(ideaInDb);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadDocumentIdea(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas.SingleOrDefault(y => y.Id == id);
+
+            if (ideaInDb.Document != null)
+            {
+                byte[] fileBytes = ideaInDb.Document;
+
+                return File(
+                    fileBytes,         /*byte []*/
+                    "application/pdf", /*mime type*/
+                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+            }
+
+            return RedirectToAction("IdeaDetail","Staffs");
         }
 
         [HttpGet]
@@ -63,8 +89,9 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateIdea(Idea idea)
+        public async Task<IActionResult> CreateIdea(Idea idea, IFormFile file)
         {
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentUser = await _userManager.GetUserAsync(User);
             if (idea.CategoryId == 0)
@@ -72,6 +99,29 @@ namespace ICSCOMP1640CORE.Controllers
                 _notyf.Warning("Please choose Category for idea!.");
                 return RedirectToAction("CreateIdea");
             }
+
+            //File
+
+            if (file != null && file.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    var extensionCheck = Path.GetExtension(file.FileName);
+                    if (extensionCheck != ".pdf")
+                    {
+                        _notyf.Warning("Your document need to submit in .pdf");
+                        return RedirectToAction("CreateIdea");
+                    }
+                    else
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        idea.Document = fileBytes;
+                        // act on the Base64 data
+                    }
+                }
+            }
+
             var model = new Idea();
             {
                 model.UserId = userId;
@@ -82,7 +132,9 @@ namespace ICSCOMP1640CORE.Controllers
                 model.SubmitDate = idea.SubmitDate;
                 model.DepartmentId = currentUser.DepartmentId;
                 model.IsAnonymous = idea.IsAnonymous;
+                model.Document = idea.Document;
             }
+
             _db.Ideas.Add(model);
             _db.SaveChanges();
             _notyf.Success("Idea is created successfully.");

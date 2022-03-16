@@ -15,6 +15,10 @@ namespace ICSCOMP1640CORE.Models
         public User User { get; set; }
 
 
+        [ForeignKey("Idea")]
+        public int IdeaId { get; set; }
+        public Idea Idea { get; set; }
+
 
         [DataType(DataType.Date)]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:MM/dd/yyyy hh:mm}")]

@@ -89,9 +89,11 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 Name = model.Name.Trim(),
                 Description = model.Description,
+                IsAssignedCoordinator = false
             };
             _notyf.Success("Department is created successfully.");
             _db.Departments.Add(newDepartment);
+
             _db.SaveChanges();
             return RedirectToAction("DepartmentsIndex");
         }
@@ -156,7 +158,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             Coordinator model = new Coordinator();
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            var departmentList = _db.Departments.Where(x => x.IsAssignedCoordinator == false).Select(x => new { x.Id, x.Name }).ToList();
             var department = _db.Departments.ToList();
             ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
 
@@ -172,6 +174,18 @@ namespace ICSCOMP1640CORE.Controllers
                 _notyf.Error("This email address is already registered! Please try again!");
 
                 return RedirectToAction("CreateCoordinator");
+            }
+
+            var data = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+
+            foreach (var item in data)
+            {
+                _db.Entry(item).Reference(x => x.Department).Load();
+                if (item.DepartmentId == coordinator.DepartmentId)
+                {
+                    _notyf.Error("This department is already have Coordinator! Please try again!");
+                    return RedirectToAction("CreateCoordinator");
+                }
             }
 
             if (!ModelState.IsValid) return View(coordinator);
@@ -191,6 +205,11 @@ namespace ICSCOMP1640CORE.Controllers
             var user = coordinator;
             user.UserName = user.Email;
             IdentityResult result = _userManager.CreateAsync(coordinator, coordinator.PasswordHash).GetAwaiter().GetResult();
+
+            var Department = _db.Departments.SingleOrDefault(x => x.Id == user.DepartmentId);
+            Department.IsAssignedCoordinator = true;
+            _db.Departments.Update(Department);
+
             //_db.Users.Add(coordinatorProfile);
 
             _db.SaveChanges();

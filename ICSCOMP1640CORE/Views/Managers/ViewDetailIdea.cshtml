@@ -18,6 +18,14 @@
             <p class="card-text"></p>
         </div>
     </div>
+    </div>
+		<div class="element">
+			@if (@Model.Document == null){
+				<p>THIS IDEA DOES NOT HAVE DOCUMENT</p>
+			} else {
+				@Html.ActionLink("Download Document", "DownloadDocumentIdea","Staffs", new{id = @Model.Id}, htmlAttributes:null)
+			}
+	</div>
     <div class="card text-white bg-secondary mb-3">
         <div class="card-body">
             <p class="card-text">Comment</p>
