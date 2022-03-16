@@ -79,10 +79,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
 
             public string Gender { get; set; }
 
-
             public int DepartmentId { get; set; }
-
-
 
             [Required]
             [EmailAddress]
@@ -105,7 +102,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            var listDepartment  = _context.Departments.ToList();
+            var listDepartment  = _context.Departments.Where(x => x.Name != "Manager").ToList();
             Departments = listDepartment.Select(x=> new SelectListItem() { Value=x.Id.ToString(), Text=x.Name }).ToList();
 
             ReturnUrl = returnUrl;
@@ -127,7 +124,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                     Address = Input.Address,
                     Gender = Input.Gender,
                     Age = Input.Age,
-                   DepartmentId = Input.DepartmentId,
+                    DepartmentId = Input.DepartmentId,
 
                 };
                 var result = await _userManager.CreateAsync(user, Input.Password);

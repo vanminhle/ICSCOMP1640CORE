@@ -24,6 +24,9 @@ namespace ICSCOMP1640CORE.Models
         public List<Idea> Ideas { get; set; }
         public List<User> Users { get; set; }
 
-
+        public bool IsAssignedCoordinator
+        {
+            get; set;
+        }
     }
 }
