@@ -102,14 +102,23 @@ namespace ICSCOMP1640CORE.Controllers
 
             //File
 
-            if (file.Length > 0)
+            if (file != null && file.Length > 0)
             {
                 using (var ms = new MemoryStream())
                 {
-                    file.CopyTo(ms);
-                    var fileBytes = ms.ToArray();
-                    idea.Document = fileBytes;
-                    // act on the Base64 data
+                    var extensionCheck = Path.GetExtension(file.FileName);
+                    if (extensionCheck != ".pdf")
+                    {
+                        _notyf.Warning("Your document need to submit in .pdf");
+                        return RedirectToAction("CreateIdea");
+                    }
+                    else
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        idea.Document = fileBytes;
+                        // act on the Base64 data
+                    }
                 }
             }
 
