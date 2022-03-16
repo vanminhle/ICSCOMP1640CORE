@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ICSCOMP1640CORE.Migrations
 {
-    public partial class DatabaseUpdateFixEntity : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -76,8 +76,8 @@ namespace ICSCOMP1640CORE.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FullName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    FullName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(40)", maxLength: 40, nullable: true),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Age = table.Column<int>(type: "int", nullable: true),
                     DepartmentId = table.Column<int>(type: "int", nullable: true),
@@ -202,11 +202,13 @@ namespace ICSCOMP1640CORE.Migrations
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     SubmitDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IdeaName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    IdeaName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Document = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     View = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
+                    ThumbUp = table.Column<int>(type: "int", nullable: false),
+                    ThumbDown = table.Column<int>(type: "int", nullable: false),
                     IsAnonymous = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -239,9 +241,9 @@ namespace ICSCOMP1640CORE.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdeaId = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IdeaId = table.Column<int>(type: "int", nullable: true)
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,7 +259,7 @@ namespace ICSCOMP1640CORE.Migrations
                         column: x => x.IdeaId,
                         principalTable: "Ideas",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -265,10 +267,10 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "dd6a246a-5866-473e-b2f2-26717bb5a868", "ad8a8213-e433-4142-a55d-7c745cced57c", "Admin", "ADMIN" },
-                    { "0b0966ae-1638-4805-bcec-03df748c031a", "6ff9917c-db58-44cc-8c03-36c7f431361f", "Staff", "STAFF" },
-                    { "fa849b6e-d6b3-4ec4-9e7a-c0be7ba9ca26", "939a755b-6474-4c85-9e0d-9b51f7903125", "Coordinator", "COORDINATOR" },
-                    { "c19c500e-fa61-4cd1-95e2-16d779b559e5", "111611d0-adb7-4297-ae92-3e31b2db59d4", "Manager", "MANAGER" }
+                    { "8d11bfae-758f-474d-850d-427d79820236", "77d8f61c-2bd6-4dc3-bc73-18fda5fa6041", "Admin", "ADMIN" },
+                    { "90b2aba2-4b9b-4159-8272-77540e629f81", "45ea082c-dd6c-4b82-9e0c-edecdcf61333", "Staff", "STAFF" },
+                    { "e13e969f-4d1d-4a4a-ae5a-b774825636a2", "75b416f6-2a60-4a60-b06f-22e10ff6f6bf", "Coordinator", "COORDINATOR" },
+                    { "31be4f07-c799-485a-bbf5-142bd3525b50", "5129707f-df4c-4183-aca9-1326a58570a3", "Manager", "MANAGER" }
                 });
 
             migrationBuilder.InsertData(
@@ -279,32 +281,32 @@ namespace ICSCOMP1640CORE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "4febf72f-9a98-439e-8b6a-6ea693f4e12b", 0, null, 0, "64c43a31-2aad-4762-98d7-63437c662660", 1, "User", "admin@gmail.com", true, "Administrator", null, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEBaVlkIXZSWdQFom+D/cQuOVejolaHPStCtKtzNNoRrq+mm0Bf7KSe/+cmPqxXle8w==", null, true, "5789eb98-fef0-47bb-8559-a6f82381e967", false, "admin@gmail.com" });
+                values: new object[] { "78e225e7-8bc8-4542-a36c-ddb2528aa001", 0, null, 0, "7d2ca63f-e52d-474c-9583-e37fee78fd71", 1, "User", "admin@gmail.com", true, "Administrator", null, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEH3UXW8zB2LeFy8cF0aOxrwNef7CjTlf4gt3fgJkZ0cVnzYvZlmRY6896TvkNSIC3w==", null, true, "76b8e1a8-be35-4584-8d87-294896b31605", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "9a0a34fb-8026-47f3-94d5-ad25a1d57f83", 0, null, 0, "361b68eb-9ccc-4fdf-91dd-39d379ca48a6", 1, "User", "coordinator@gmail.com", true, "Coordinator", null, false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEJLEAZY0Xyyjvc1rcofr6bbNJ5k2u4ZzScX/KXysVMYFhUzIGEUYw3g17uJSVFgyNA==", null, true, "5c95fe70-7abd-4819-8b46-5b91652e77da", false, "coordinator@gmail.com" });
+                values: new object[] { "a2e53d80-7497-40f4-80e9-a4518266db40", 0, null, 0, "1550d562-23f7-4d7e-a836-228f4ded9644", 1, "User", "coordinator@gmail.com", true, "Coordinator", null, false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEOtKqLozKHdu+JtxBK2NcenKJdgKp9R4tjluXz08TDJlmM5cDp/HuyVpbqONH2S0vA==", null, true, "f1d80995-c9ee-4e2e-9a04-623eb17ae4db", false, "coordinator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "9c3211e0-b34e-4c17-8d9e-e78aa8ea5e1e", 0, null, 0, "2d708b74-8b12-4980-a24d-22060355d8a4", 1, "User", "manager@gmail.com", true, "Manager", null, false, null, "MANAGER@GMAIL.COM", "MANAGER@GMAIL.COM", "AQAAAAEAACcQAAAAECgSu82jETy1zr7s9Znrt0OZkZiHwl+sSUpmA6ydBi/J/kExY4KUI88QmXk2TbIyJg==", null, true, "af72aa4b-717f-456b-93d9-957f1c695335", false, "manager@gmail.com" });
+                values: new object[] { "b41a5d2d-4daf-4fb1-b10a-5e4e3fc2f9e5", 0, null, 0, "25b34310-84e2-41a0-9c8c-fe8e290408bb", 1, "User", "manager@gmail.com", true, "Manager", null, false, null, "MANAGER@GMAIL.COM", "MANAGER@GMAIL.COM", "AQAAAAEAACcQAAAAEFyXrdGoBPUPSxxi9IyYdJQgW7t8H0Rtb2L4Sf3YrPqcUvaOI2i5TIjk8Y/fA10czQ==", null, true, "8617e889-2f49-4f92-b4cf-bc5ac121b32c", false, "manager@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "dd6a246a-5866-473e-b2f2-26717bb5a868", "4febf72f-9a98-439e-8b6a-6ea693f4e12b" });
+                values: new object[] { "8d11bfae-758f-474d-850d-427d79820236", "78e225e7-8bc8-4542-a36c-ddb2528aa001" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "fa849b6e-d6b3-4ec4-9e7a-c0be7ba9ca26", "9a0a34fb-8026-47f3-94d5-ad25a1d57f83" });
+                values: new object[] { "e13e969f-4d1d-4a4a-ae5a-b774825636a2", "a2e53d80-7497-40f4-80e9-a4518266db40" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "c19c500e-fa61-4cd1-95e2-16d779b559e5", "9c3211e0-b34e-4c17-8d9e-e78aa8ea5e1e" });
+                values: new object[] { "31be4f07-c799-485a-bbf5-142bd3525b50", "b41a5d2d-4daf-4fb1-b10a-5e4e3fc2f9e5" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

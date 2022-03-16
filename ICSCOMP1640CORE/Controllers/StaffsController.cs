@@ -27,7 +27,7 @@ namespace ICSCOMP1640CORE.Controllers
             _roleManager = roleManager;
             _notyf = notyf;
         }
-
+        //Idea
         public async Task<IActionResult> IdeaIndex()
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -41,6 +41,8 @@ namespace ICSCOMP1640CORE.Controllers
         }
         public async Task<IActionResult> IdeaDetail(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.id = userId;
             var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
@@ -147,6 +149,7 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");
         }
+        //Staff
         public ActionResult InforStaff(string id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -230,6 +233,53 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Comments.Add(model);
             _db.SaveChanges();
             _notyf.Success("Comment is created successfully.");
+            return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult DeleteComment(int id)
+        {
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            _db.Comments.Remove(commentInDb);
+            _db.SaveChanges();
+            _notyf.Success("Comment is deleted successfully.", 3);
+            return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            return View(commentInDb);
+        }
+
+        [HttpPost]
+        public IActionResult EditComment(Comment comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(comment);
+            }
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == comment.Id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            commentInDb.Content = comment.Content;
+            _db.SaveChanges();
+            _notyf.Success("Comment is edited successfully.", 3);
             return RedirectToAction("IdeaIndex");
         }
     }
