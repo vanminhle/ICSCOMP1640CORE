@@ -53,6 +53,10 @@ namespace ICSCOMP1640CORE.Models
 
         public int Rating { get; set; }
 
+        public int ThumbUp { get; set; }
+
+        public int ThumbDown { get; set; }
+
         public List<Comment> Comments { get; set; }
 
 
