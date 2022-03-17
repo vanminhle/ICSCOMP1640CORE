@@ -64,6 +64,9 @@
 					</blockquote>
 				  </div>
 				</div>
+				<div class="element">
+					Rating :&nbsp;&nbsp; @Model.Rating
+				</div>
 			 }
 
 			<div style="text-align: center; margin-top: 50px; margin-bottom: 4px;">
@@ -72,6 +75,9 @@
 				<a href="#" class="btn btn-danger fa fa-thumbs-down" style="font-size: 22px;"></a>
 				@Html.ActionLink("Comment", "CreateComments", "Staffs", new { id = @Model.Id }, new { @class = "btn btn-primary ", @title = "Give Comment" })
 			</div>
+			 Like @Html.ActionLink("", "LikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "like fa-solid fa-thumbs-up likereaction", type="button" })
+			 DisLike @Html.ActionLink("", "DislikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "dislike fa-solid fa-thumbs-down"})
+			
 
 
 		</div>

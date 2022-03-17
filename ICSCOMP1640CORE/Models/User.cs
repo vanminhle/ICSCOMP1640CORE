@@ -21,6 +21,7 @@ namespace ICSCOMP1640CORE.Models
         public int DepartmentId { get; set; }
         public Department Department { get; set; }
 
+
     }
 
     public enum Gender
