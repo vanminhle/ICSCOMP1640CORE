@@ -44,6 +44,21 @@
 			  </div>
 			</div>
 
+			@foreach(var item in Model.Comments)
+			 {
+				<div class="card mt-3">
+				  <div class="card-header">
+					@item.User.FullName (@item.User.Email) said
+				  </div>
+				  <div class="card-body">
+					<blockquote class="blockquote mb-0">
+					  <p style="font-size: 18px;">@item.Content</p>
+					  <footer class="blockquote-footer" style="font-size: 16px;">@item.CreatedAt.ToString("dd/mm/yyyy hh:mm tt")</footer>
+					</blockquote>
+				  </div>
+				</div>
+			 }
+
 			<div style="text-align: center; margin-top: 50px; margin-bottom: 20px;">
 				<a asp-controller="Coordinators" asp-action="GetIdeaFromCoor" class="btn btn-dark">Back</a>
 			</div>

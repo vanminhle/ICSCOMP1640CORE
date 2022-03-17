@@ -568,15 +568,15 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpGet]
-        public IActionResult DetailIdea(int Id)
+        public IActionResult DetailIdea(int id)
         {
-            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)
                .Include(y => y.Comments)
                .Include(y => y.User)
-               .SingleOrDefault(y => y.Id == Id);
+               .SingleOrDefault(y => y.Id == id);
             return View(ideaInDb);
         }
 

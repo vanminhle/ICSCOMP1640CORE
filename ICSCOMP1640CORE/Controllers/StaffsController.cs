@@ -47,6 +47,7 @@ namespace ICSCOMP1640CORE.Controllers
                 .Include(y => y.Category)
                 .Include(y => y.Department)
                 .Include(y => y.User)
+                .Include(y => y.Comments)
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
 
@@ -82,15 +83,17 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public async Task<IActionResult> IdeaDetail(int id)
         {
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)
-               .Include(y=>y.Comments)
+               .Include(y => y.Comments)
                .Include(y => y.User)
                .Where(y => y.DepartmentId == currentUser.DepartmentId)
                .SingleOrDefault(y => y.Id == id);
-            ideaInDb.View += 1;
+            ideaInDb.View++;
+            _db.SaveChanges();
             return View(ideaInDb);
         }
 
@@ -279,6 +282,7 @@ namespace ICSCOMP1640CORE.Controllers
             var currentIdeaInDb = _db.Ideas.Include("User")
                 .Include("Department")
                 .Include("Category")
+                .Include(y => y.Comments)
                 .FirstOrDefault(x => x.Id == id);
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
@@ -286,7 +290,7 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (isAction == false)
             {
-                currentIdeaInDb.Rating++;
+                currentIdeaInDb.ThumbUp++;
 
                 var ideaLike = new UserActionOnIdea()
                 {
@@ -307,7 +311,8 @@ namespace ICSCOMP1640CORE.Controllers
             }
             else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
             {
-                currentIdeaInDb.Rating += 2;
+                currentIdeaInDb.ThumbUp++;
+                currentIdeaInDb.ThumbDown--;
                 currentActionOnDb.IsLike = true;
                 currentActionOnDb.IsDisLike = false;
 
@@ -324,14 +329,14 @@ namespace ICSCOMP1640CORE.Controllers
             var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
             var currentIdeaInDb = _db.Ideas.Include("User")
                     .Include("Department")
+                    .Include(y => y.Comments)
                     .Include("Category")
                     .FirstOrDefault(x => x.Id == id);
             var isAction = _db.UserActionOnIdeas.Any(x => x.IdeaId == id && x.UserId == userId);
 
             if (isAction == false)
             {
-
-                currentIdeaInDb.Rating--;
+                currentIdeaInDb.ThumbDown++;
 
                 var ideaDisLike = new UserActionOnIdea()
                 {
@@ -353,7 +358,9 @@ namespace ICSCOMP1640CORE.Controllers
             }
             else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
             {
-                currentIdeaInDb.Rating -= 2;
+                currentIdeaInDb.ThumbDown++;
+                currentIdeaInDb.ThumbUp--;
+
                 currentActionOnDb.IsDisLike = true;
                 currentActionOnDb.IsLike = false;
                 _db.SaveChanges();
@@ -426,14 +433,18 @@ namespace ICSCOMP1640CORE.Controllers
             var Comment = _db.Comments.Select(x => new { x.Id }).ToList();
             var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
             var Ideal = _db.Ideas.Select(x => new { x.Id }).ToList();
-            ViewBag.Comment = new SelectList(Comment, "Id", "Name");
-            ViewBag.Ideal = new SelectList(Ideal, "Id", "Name");
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateComments(Comment comment, int id)
         {
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                .Include("Department")
+                .Include("Category")
+                .Include(y => y.Comments)
+                .FirstOrDefault(x => x.Id == id);
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
             var currentUser = await _userManager.GetUserAsync(User);
@@ -454,7 +465,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Comments.Add(model);
             _db.SaveChanges();
             _notyf.Success("Comment is created successfully.");
-            return RedirectToAction("IdeaIndex");
+            return RedirectToAction("IdeaDetail", currentIdeaInDb);
         }
 
         [HttpGet]

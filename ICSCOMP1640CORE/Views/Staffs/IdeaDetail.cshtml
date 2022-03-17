@@ -30,7 +30,7 @@
 
 			<div class="card text-center">
 			  <div class="card-header">
-				  ThumbUp: @Model.ThumbUp / ThumbDown: @Model.ThumbDown / Viewer: @Model.View / Rating: @Model.Rating / Comments: 0
+				  ThumbUp: @Model.ThumbUp / ThumbDown: @Model.ThumbDown / Viewer: @Model.View / Rating: @Model.Rating / Comments: @Model.Comments.Count
 			  </div>
 			  <div class="card-body text-left">
 				<p style="margin-bottom: 0; white-space: pre-line">@Model.Content</p>
@@ -64,20 +64,15 @@
 					</blockquote>
 				  </div>
 				</div>
-				<div class="element">
-					Rating :&nbsp;&nbsp; @Model.Rating
-				</div>
 			 }
 
 			<div style="text-align: center; margin-top: 50px; margin-bottom: 4px;">
 				<a asp-controller="Staffs" asp-action="IdeaIndex" class="btn btn-dark">Back</a>
-				<a href="#" class="btn btn-success fa fa-thumbs-up" style="font-size: 22px;"></a>
-				<a href="#" class="btn btn-danger fa fa-thumbs-down" style="font-size: 22px;"></a>
+				@Html.ActionLink("", "LikeIdea", "Staffs", new { id = @Model.Id }, new { @class="btn btn-success fa fa-thumbs-up", type="button", style="font-size: 25px" })
+				@Html.ActionLink("", "DislikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "btn btn-danger fa fa-thumbs-down", type="button", style="font-size: 25px" })
 				@Html.ActionLink("Comment", "CreateComments", "Staffs", new { id = @Model.Id }, new { @class = "btn btn-primary ", @title = "Give Comment" })
 			</div>
-			 Like @Html.ActionLink("", "LikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "like fa-solid fa-thumbs-up likereaction", type="button" })
-			 DisLike @Html.ActionLink("", "DislikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "dislike fa-solid fa-thumbs-down"})
-			
+
 
 
 		</div>

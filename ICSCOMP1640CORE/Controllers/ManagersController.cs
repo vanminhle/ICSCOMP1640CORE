@@ -192,9 +192,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            id = userId.ToString();
-            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            var CoordinatorInDb = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
             if (CoordinatorInDb == null)
             {
                 return NotFound();
@@ -293,7 +291,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public IActionResult ViewDetailIdea(int Id)
         {
-            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)

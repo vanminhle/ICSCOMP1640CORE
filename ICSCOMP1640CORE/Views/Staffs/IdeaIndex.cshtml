@@ -1,4 +1,5 @@
 ﻿@using ICSCOMP1640CORE.Utilities
+@using System.Security.Claims
 @model IEnumerable<ICSCOMP1640CORE.Models.Idea>
 
 @{
@@ -50,11 +51,15 @@
 					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
 				</div>
 				<div class="button">
-					@Html.ActionLink("", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-primary fas fa-edit" })
+					@if(User.FindFirstValue(ClaimTypes.NameIdentifier) == item.UserId)
+						{
+							@Html.ActionLink("", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-primary fas fa-edit" })
+						}
 					@Html.ActionLink("", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
+
 				</div>
 				<div class="category">
-					<p>Viewer: @item.View / Comment: @item.Rating / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
+					<p>Viewer: @item.View / Comment: @item.Comments.Count / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
 				</div>
 			</div>
 		</div>

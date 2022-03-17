@@ -5,7 +5,7 @@
 }
 
 <h1 class="mt-5 mb-4">Give Comment</h1>
-
+@Html.HiddenFor(x=> x.Idea.Id)
 <form asp-controller="Staffs" asp-action="CreateComments" method="post">
 	<div class="mw-100 mb-5">
 		<div class="form-group">
@@ -17,7 +17,7 @@
 
 		<div class="mt-4">
 		<button type="submit" class="btn btn-success">Send</button>
-		<a class="btn btn-primary" asp-controller="Staffs" asp-action="IdeaDetail">Cancel</a>
+		<a href="##" class="btn btn-primary" onClick="history.go(-1); return false;">Cancel</a>
 		</div>
 	</div>
 </form>

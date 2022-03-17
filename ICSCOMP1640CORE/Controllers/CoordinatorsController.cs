@@ -201,7 +201,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public IActionResult ViewIdea(int id)
         {
-            var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == id);
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)
@@ -246,7 +246,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             int noCommentCount = 0;
             foreach (var item in ideaList)
             {
-                if(item.Comments == null)
+                if(item.Comments != null)
                 {
                     noCommentCount++;
                 }
