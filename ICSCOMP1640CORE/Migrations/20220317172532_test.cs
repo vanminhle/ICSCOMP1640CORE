@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ICSCOMP1640CORE.Migrations
 {
-    public partial class DatabaseUpdateFixEntity_Finished : Migration
+    public partial class test : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -296,10 +296,10 @@ namespace ICSCOMP1640CORE.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "7223d96f-f65a-4852-942b-307653ede746", "468f4bde-51dc-4cd3-a0f1-07a79d9b5434", "Admin", "ADMIN" },
-                    { "cda1a551-d77e-4f45-b522-a006b29db5b1", "9622d0d0-41e1-4be4-bcc2-d93209b5a9b7", "Staff", "STAFF" },
-                    { "f293ed23-357d-4195-be3f-23b3d4a5d063", "7e5e4454-feac-4aed-a0ce-d9f70d6cd259", "Coordinator", "COORDINATOR" },
-                    { "fe652f19-1455-4a3f-a494-136adbb22959", "aa7a9e84-d54a-4f5c-9c31-61c7900aafac", "Manager", "MANAGER" }
+                    { "e4acd826-fc60-4914-8f54-fb6100064a9c", "5672c405-7155-4164-9259-7598799c39e1", "Admin", "ADMIN" },
+                    { "782e69e8-7e43-4b27-b729-723201477b81", "d2f5558c-c29d-41f5-9c50-05e34429f7bc", "Staff", "STAFF" },
+                    { "5f5a8481-e84a-4604-b2c6-e70789ef7409", "bd8ef0d7-c5bf-4d55-aa2e-d9a10715e966", "Coordinator", "COORDINATOR" },
+                    { "eb12257e-724c-4c56-9cb2-72e0360614d3", "3c0ba8fe-39a9-41fa-9bfd-4e497d079fa0", "Manager", "MANAGER" }
                 });
 
             migrationBuilder.InsertData(
@@ -310,32 +310,32 @@ namespace ICSCOMP1640CORE.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "45451b94-ee0e-4a69-b596-073780e39d07", 0, null, 0, "d326c35d-4dbc-4af6-8d1c-af349a7a6e75", 1, "User", "admin@gmail.com", true, "Administrator", null, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEOMdXp7G3E9+9Eq5vVQVRwcW9nf9QYtgWeGAKC1MPDfXRQzz5cH8GKlAmP3lMEjaMA==", null, true, "6b20df94-84e0-434f-abe4-f126fe206caf", false, "admin@gmail.com" });
+                values: new object[] { "5036c857-b837-49ad-9ab5-079177b7ead7", 0, null, 0, "5f35b60b-8cc0-46a5-8156-41278ec9f38c", 1, "User", "admin@gmail.com", true, "Administrator", null, false, null, "ADMIN@GMAIL.COM", "ADMIN@GMAIL.COM", "AQAAAAEAACcQAAAAEHAcBxCHzDI9pAFtnrh8RQ3PH92+UvC0jmKEHDt5aY8ZVPnMUlctARP2LUsJXsFwvw==", null, true, "3f16408b-a515-42df-a40c-484655e6550f", false, "admin@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "06b7de2b-db59-4495-818c-c9cc47463119", 0, null, 0, "070eafda-6302-44a4-a85b-924f40dc895e", 1, "User", "coordinator@gmail.com", true, "Coordinator", null, false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEKdhL91qp6YwNhD+Qpx6OdpJm1be6GcMF/P3cQD2iLvhubLUpzPyVn8V079YExqOFQ==", null, true, "486e6b8c-9b7e-4945-a850-7796d3c510dd", false, "coordinator@gmail.com" });
+                values: new object[] { "646bc091-af4c-4a25-a9f6-742fc312ea1c", 0, null, 0, "383f252c-9ef1-4aa0-ba41-477f76006467", 1, "User", "coordinator@gmail.com", true, "Coordinator", null, false, null, "COORDINATOR@GMAIL.COM", "COORDINATOR@GMAIL.COM", "AQAAAAEAACcQAAAAEETSrNaNizysqBhHIQDpNXKhs5/sBNhMCoZiC+qyM3CM/maTFuL1Ijj8AZu7JOfeLg==", null, true, "ad4b77d3-d22b-4974-80f4-441147d3d6d0", false, "coordinator@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Address", "Age", "ConcurrencyStamp", "DepartmentId", "Discriminator", "Email", "EmailConfirmed", "FullName", "Gender", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "5438cc47-bbca-4550-a858-ed52998237b8", 0, null, 0, "e918652b-f50c-41c9-89ce-278adf1191f9", 1, "User", "manager@gmail.com", true, "Manager", null, false, null, "MANAGER@GMAIL.COM", "MANAGER@GMAIL.COM", "AQAAAAEAACcQAAAAEOcgjI6b3rlcE+OzVDm6b9VB4wwkzh5DZrtJKEVfDMaVV24YyxTH6CO38w9YRsu2Cw==", null, true, "dd23e8fe-e08e-4d1d-9726-9e69b85a1ea7", false, "manager@gmail.com" });
+                values: new object[] { "ad6d0254-83ae-40eb-bc2d-7bb10b7746e0", 0, null, 0, "24feb21b-6755-42ec-b8a9-7d1f1b4aca6f", 1, "User", "manager@gmail.com", true, "Manager", null, false, null, "MANAGER@GMAIL.COM", "MANAGER@GMAIL.COM", "AQAAAAEAACcQAAAAEDtA+E26jX6iGL42XCVnm73EcCQRRyRDCXHizGoa7EBJrLRNxf0/UbbiTDiqPP3Edg==", null, true, "64ff3b68-042c-403a-b1fe-2e85a358d7c2", false, "manager@gmail.com" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "7223d96f-f65a-4852-942b-307653ede746", "45451b94-ee0e-4a69-b596-073780e39d07" });
+                values: new object[] { "e4acd826-fc60-4914-8f54-fb6100064a9c", "5036c857-b837-49ad-9ab5-079177b7ead7" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "f293ed23-357d-4195-be3f-23b3d4a5d063", "06b7de2b-db59-4495-818c-c9cc47463119" });
+                values: new object[] { "5f5a8481-e84a-4604-b2c6-e70789ef7409", "646bc091-af4c-4a25-a9f6-742fc312ea1c" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "fe652f19-1455-4a3f-a494-136adbb22959", "5438cc47-bbca-4550-a858-ed52998237b8" });
+                values: new object[] { "eb12257e-724c-4c56-9cb2-72e0360614d3", "ad6d0254-83ae-40eb-bc2d-7bb10b7746e0" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

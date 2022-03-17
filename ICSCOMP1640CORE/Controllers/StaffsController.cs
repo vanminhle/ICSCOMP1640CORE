@@ -83,6 +83,8 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public async Task<IActionResult> IdeaDetail(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            ViewBag.id = userId;
             var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas
