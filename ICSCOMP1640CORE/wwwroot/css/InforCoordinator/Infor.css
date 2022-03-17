@@ -1,5 +1,28 @@
 ﻿/*@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');*/
+/*.like:before{
+    color: red;
+}
+.like:hover:before {
+    color: darkblue;
+}
+.dislike::before {
+    background-color: white;
+}
+.like:after {
+    color: darkblue;
+}
 
+.dislike::after {
+    background-color: darkblue;
+}*/
+
+/*.btn-like.like:checked + label {
+    color: red
+}*/
+
+.like:focus{
+    color: red
+}
 * {
     margin: 0;
     padding: 0;

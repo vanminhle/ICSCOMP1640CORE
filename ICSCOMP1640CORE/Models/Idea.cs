@@ -53,6 +53,7 @@ namespace ICSCOMP1640CORE.Models
 
         public int Rating { get; set; }
 
+        public int Count { get; set; }
         public List<Comment> Comments { get; set; }
 
 

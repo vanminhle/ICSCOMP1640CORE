@@ -39,6 +39,7 @@ namespace ICSCOMP1640CORE.Controllers
                 .ToList();
             return View(ideaInDb);
         }
+        [HttpGet]
         public async Task<IActionResult> IdeaDetail(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -48,6 +49,7 @@ namespace ICSCOMP1640CORE.Controllers
                .Include(y => y.User)
                .Where(y => y.DepartmentId == currentUser.DepartmentId)
                .SingleOrDefault(y => y.Id == id);
+            ideaInDb.View += 1;
             return View(ideaInDb);
         }
 
@@ -145,6 +147,95 @@ namespace ICSCOMP1640CORE.Controllers
             _db.SaveChanges();
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult LikeIdea(int id)
+        {
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                .Include("Department")
+                .Include("Category")
+                .FirstOrDefault(x => x.Id == id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
+            var isAction = _db.UserActionOnIdeas.Any(x => x.IdeaId == id && x.UserId == userId);
+
+            if (isAction == false)
+            {
+                currentIdeaInDb.Rating++;
+
+                var ideaLike = new UserActionOnIdea()
+                {
+                    UserId = userId,
+                    IdeaId = id,
+                    IsLike = true,
+                    IsDisLike = false,
+                };
+                _db.UserActionOnIdeas.Add(ideaLike);
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
+            {
+                _notyf.Error("You already Like this Idea!");
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
+            {
+                currentIdeaInDb.Rating += 2;
+                currentActionOnDb.IsLike = true;
+                currentActionOnDb.IsDisLike = false;
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            return View("IdeaDetail", currentIdeaInDb);
+        }
+
+        [HttpGet]
+        public IActionResult DisLikeIdea(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                    .Include("Department")
+                    .Include("Category")
+                    .FirstOrDefault(x => x.Id == id);
+            var isAction = _db.UserActionOnIdeas.Any(x => x.IdeaId == id && x.UserId == userId);
+
+            if (isAction == false)
+            {
+
+                currentIdeaInDb.Rating--;
+
+                var ideaDisLike = new UserActionOnIdea()
+                {
+                    UserId = userId,
+                    IdeaId = id,
+                    IsLike = false,
+                    IsDisLike = true,
+                };
+                _db.UserActionOnIdeas.Add(ideaDisLike);
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
+            {
+
+                _notyf.Error("You already DisLike this Idea!");
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
+            {
+                currentIdeaInDb.Rating -= 2;
+                currentActionOnDb.IsDisLike = true;
+                currentActionOnDb.IsLike = false;
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            return View("IdeaDetail", currentIdeaInDb);
         }
         public ActionResult InforStaff(string id)
         {

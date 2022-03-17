@@ -1,9 +1,7 @@
 ﻿@model ICSCOMP1640CORE.Models.Idea
 
-
 <link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
 <!---<title> Responsive Registration Form | CodingLab </title>--->
-
 <body>
 	<div class="infor">
 		<div class="title">
@@ -29,7 +27,13 @@
 				<div class="element">
 					Submit Date :&nbsp;&nbsp; @Model.SubmitDate
 				</div>
+				<div class="element">
+					Rating :&nbsp;&nbsp; @Model.Rating
+				</div>
 			</div>
+			 Like @Html.ActionLink("", "LikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "like fa-solid fa-thumbs-up likereaction", type="button" })
+			 DisLike @Html.ActionLink("", "DislikeIdea", "Staffs", new { id = @Model.Id }, new { @class = "dislike fa-solid fa-thumbs-down"})
+			
 
 			<a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Staffs" asp-action="IdeaIndex"> Back </a>
 
