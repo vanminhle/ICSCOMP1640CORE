@@ -1,44 +1,56 @@
 ﻿@model ICSCOMP1640CORE.Models.Idea
+@{
+	ViewData["Title"] = "Idea";
+}
 
+<head>
+  <link rel="stylesheet" href="~/css/Idea/IdeaDetail.css">
+</head>
 
-<link rel="stylesheet" href="~/css/InforCoordinator/Infor.css" />
-<!---<title> Responsive Registration Form | CodingLab </title>--->
+<h4 style="text-align: center; margin: 15px 0 10px 0;">Idea by</h4>
 
 <body>
 	<div class="infor">
 		<div class="title">
-			<div class="title-Infor" style="font-size:40px;text-align: center;border-bottom:1px solid black; padding-bottom:20px;">
-				Information Coordinator
+			<div class="title-Infor" style="font-size:35px;text-align: center; padding-bottom:10px;">
+				@Model.NameCreator
 			</div>
-			<div class="containerInfor">
-				<div class="element">
-					Idea Name :&nbsp;&nbsp; @Model.IdeaName
-				</div>
-				<div class="element">
-					Author :&nbsp;&nbsp; @Model.Creator
-				</div>
-				<div class="element">
-					Content :&nbsp;&nbsp;	@Model.Content
-				</div>
-				<div class="element">
-					Category :&nbsp;&nbsp; @Model.Category.Name
-				</div>
-				<div class="element">
-					Department :&nbsp;&nbsp;@Model.Department.Name
-				</div>
-				<div class="element">
-					Submit Date :&nbsp;&nbsp; @Model.SubmitDate
-				</div>
-				<div class="element">
-					@if (@Model.Document == null){
-						<p>THIS IDEA DOES NOT HAVE DOCUMENT</p>
-					} else {
-						@Html.ActionLink("Download Document", "DownloadDocumentIdea","Staffs", new{id = @Model.Id}, htmlAttributes:null)
-					}
-				</div>
+			<div style="font-size:23px;text-align: center; padding-bottom:18px;">
+				@Model.IdeaName
+			</div>
+			<div style="text-align: center; display: flex; flex-direction: column; gap: 10px;">
+				<p style="margin-bottom: 0px;">Email: @Model.EmailCreator</p>
+				<p style="margin-bottom: 0px;">Submit At: @Model.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+				<p style="margin-bottom: 0px;">Category: @Model.Category.Name</p>
+				<p style="margin-bottom: 0px;">Department: @Model.Department.Name</p>
+
 			</div>
 
-			<a class="nav-link btn btn-outline-primary col-3 fas fa-reply" asp-controller="Staffs" asp-action="IdeaIndex"> Back </a>
+			<br />
+
+			<div class="card text-center">
+			  <div class="card-header">
+				  ThumbUp: @Model.ThumbUp - ThumbDown: @Model.ThumbDown - Viewer: @Model.View - Rating: @Model.Rating - Comments: XXX
+			  </div>
+			  <div class="card-body text-left">
+				<p style="margin-bottom: 0; white-space: pre-line">@Model.Content</p>
+			  </div>
+			  <div class="card-footer">
+				@if (@Model.Document == null){
+						<p style="margin-bottom: 0">THIS IDEA DOES NOT HAVE DOCUMENT</p>
+					} else {
+						@Html.ActionLink("DOWNLOAD DOCUMENT", "DownloadDocumentIdea","Staffs", new{id = @Model.Id}, htmlAttributes:null)
+					}
+			  </div>
+			</div>
+
+			<div style="text-align: center; margin-top: 50px; margin-bottom: 4px;">
+				<a asp-controller="Staffs" asp-action="IdeaIndex" class="btn btn-dark">Back</a>
+				<a href="#" class="btn btn-success fa fa-thumbs-up" style="font-size: 22px;"></a>
+				<a href="#" class="btn btn-danger fa fa-thumbs-down" style="font-size: 22px;"></a>
+				<a href="#" class="btn btn-primary">Comment</a>
+
+			</div>
 
 		</div>
 

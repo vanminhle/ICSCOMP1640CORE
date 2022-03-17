@@ -32,16 +32,44 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
 
-        public async Task<IActionResult> IdeaIndex()
+        public async Task<IActionResult> IdeaIndex(string searchString, int pg = 1)
         {
             var currentUser = await _userManager.GetUserAsync(User);
+
             var ideaInDb = _db.Ideas
                 .Include(y => y.Category)
                 .Include(y => y.Department)
                 .Include(y => y.User)
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
-            return View(ideaInDb);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ideaInDb = ideaInDb
+                    .Where(s => s.IdeaName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                    s.User.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                    )
+                .ToList();
+            }
+
+            //Pagination
+            const int pageSize = 5;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = ideaInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = ideaInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
+
+            //return View(ideaInDb);
         }
 
         [HttpGet]
@@ -180,13 +208,36 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
         [HttpPost]
-        public IActionResult EditIdea(Idea idea)
+        public IActionResult EditIdea(Idea idea, IFormFile file)
         {
             if (idea.CategoryId == 0)
             {
                 _notyf.Warning("Please choose Category for idea!.");
                 return RedirectToAction("CreateIdea");
             }
+
+            //File
+
+            if (file != null && file.Length > 0)
+            {
+                using (var ms = new MemoryStream())
+                {
+                    var extensionCheck = Path.GetExtension(file.FileName);
+                    if (extensionCheck != ".pdf")
+                    {
+                        _notyf.Warning("Your document need to submit in .pdf");
+                        return RedirectToAction("CreateIdea");
+                    }
+                    else
+                    {
+                        file.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        idea.Document = fileBytes;
+                        // act on the Base64 data
+                    }
+                }
+            }
+
             var ideainDb = _db.Ideas.Include(x => x.Category)
                 .SingleOrDefault(item => item.Id == idea.Id);
             ideainDb.Id = idea.Id;
@@ -194,6 +245,8 @@ namespace ICSCOMP1640CORE.Controllers
             ideainDb.IdeaName = idea.IdeaName;
             ideainDb.Content = idea.Content;
             ideainDb.SubmitDate = idea.SubmitDate;
+            ideainDb.Document = idea.Document;
+
             _db.SaveChanges();
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");

@@ -1,57 +1,107 @@
-﻿@using System.Security.Claims
+﻿@using ICSCOMP1640CORE.Utilities
 @model IEnumerable<ICSCOMP1640CORE.Models.Idea>
 
+@{
+	ViewBag.Title = "All Ideas";
 
-<h1>Idea List Of Staff Department</h1>
+	Pager pager = new Pager();
+
+	int pageNo = 0;
+
+	if (ViewBag.Pager != null)
+	{
+		pager = ViewBag.Pager;
+		pageNo = pager.CurrentPage;
+	}
+}
+
 <head>
-  <link rel="stylesheet" href="~/css/IdeaIndex/IdeaIndex.css">
+  <link rel="stylesheet" href="~/css/Idea/IdeaIndex.css">
 </head>
+
+
 <main>
+	@using (Html.BeginForm("IdeaIndex", "Staffs", FormMethod.Get))
+	{
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+		<h2 class="flex-row text-center mt-2">All Ideas</h2>
+		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
+			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
+			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
+		</div>
+	</div>
+	}
 
-                    <a class="nav-link btn btn-outline-success" asp-controller="Staffs" asp-action="CreateIdea">Create</a>
+
+	@foreach (var item in Model)
+	{
+		<div class="idea-section">
+			<div class="idea-info">
+				<div class="user-idea">
+					<h4>@item.IdeaName</h4>
+					<p>AUTHOR: @item.NameCreator / @item.EmailCreator</p>
+				</div>
+				<div class="category">
+					<p>IN CATEGORY: @item.Category.Name</p>
+				</div>
+			</div>
+			<div class="idea-data">
+				<div class="date-idea">
+					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+				</div>
+				<div class="button">
+					@Html.ActionLink("", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-primary fas fa-edit" })
+					@Html.ActionLink("", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
+				</div>
+				<div class="category">
+					<p>Viewer: @item.View - Rating: @item.Rating - COMMENT: XXX</p>
+				</div>
+			</div>
+		</div>
+		<br />
+	}
 
 
-    <table class="table">
-        <thead class="thead-dark">
-            <tr>
 
-                <th scope="col">Author</th>
-                <th scope="col">Created In</th>
-                <th scope="col">Idea Name</th>
-                <th scope="col">Idea Content</th>
-                <th scope="col">Category</th>
-                <th scope="col">Department</th>
-                <th scope="col">Edit</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    @*@if (item.IsAnonymous == true) {
-                        <td>Anonymous</td>
-                    } else
-                    {
-                        <td>@item.User.FullName</td>
-                    }*@
-                    <td>@item.Creator</td>
-                    <td>@item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</td>
-                    <td>@item.IdeaName</td>
-                    <td>@item.Content</td>
-                    <td>@item.Category.Name</td>
-                    <td>@item.Department.Name</td>
-                    <td>
-                        @if(User.FindFirstValue(ClaimTypes.NameIdentifier) == item.UserId)
-                        {
-                            @Html.ActionLink(" Delete", "DeleteIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-danger fas fa-trash-alt" })
-                            @Html.ActionLink(" Edit", "EditIdea", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fas fa-edit" })
-                        }
-                        
-                        @Html.ActionLink(" View", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info 	fa fa-info-circle" })
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class = "frame"></div>
+
+
+	<div class="d-flex align-items-start justify-content-between mt-3 mb-4">
+	<a class="btn btn-success"  asp-controller="Staffs" asp-action="CreateIdea">Give an Idea</a>
+	@if (pager.TotalPages > 1)
+	{
+		<ul class="pagination justify-content-end">
+
+			@if (pager.CurrentPage > 0)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="1">First</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+				</li>
+			}
+
+			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+			{
+				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@pge">@pge</a>
+				</li>
+			}
+
+			@if (pager.CurrentPage < pager.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
+				</li>
+			}
+
+		</ul>
+	}
+	</div>
+
+
 </main>
+
