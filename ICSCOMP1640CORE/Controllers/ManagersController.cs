@@ -92,10 +92,22 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult DeleteCategory(int id)
         {
             var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
+            var ideaInDb = _db.Ideas.ToList();
+
             if (categoryInDb == null)
             {
                 return NotFound();
             }
+
+            foreach (var idea in ideaInDb)
+            {
+                if(idea.CategoryId == id)
+                {
+                    _notyf.Error("Category is already used in Idea!", 3);
+                    return RedirectToAction("ManageCategories", "Managers");
+                }
+            }
+
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
             _notyf.Success("Category is deleted successfully.", 3);
@@ -282,13 +294,15 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult DeleteAllIdea()
         {
             var ideaInDb = _db.Ideas;
+            var commentInDb = _db.Comments;
             if (ideaInDb == null)
             {
                 return NotFound();
             }
             _db.Ideas.RemoveRange(ideaInDb);
+            _db.Comments.RemoveRange(commentInDb);
             _db.SaveChanges();
-            _notyf.Success("All Ideals is deleted successfully.", 3);
+            _notyf.Success("All idea is deleted successfully.", 3);
             return RedirectToAction("ManageIdea", "Managers");
         }
     }

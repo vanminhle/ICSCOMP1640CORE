@@ -102,11 +102,22 @@ namespace ICSCOMP1640CORE.Controllers
         public IActionResult DeleteDepartment(int id)
         {
             var departmentsInDb = _db.Departments.SingleOrDefault(x => x.Id == id);
+            var usersInDb = _db.Users.OfType<User>().ToList();
 
             if (departmentsInDb == null)
             {
                 return NotFound();
             }
+
+            foreach (var user in usersInDb)
+            {
+                if (user.DepartmentId == id)
+                {
+                    _notyf.Error("Department is already assign with another User!", 3);
+                    return RedirectToAction("DepartmentsIndex", "Admins");
+                }
+            }
+
             _notyf.Success("Department is deleted successfully.");
             _db.Departments.Remove(departmentsInDb);
             _db.SaveChanges();

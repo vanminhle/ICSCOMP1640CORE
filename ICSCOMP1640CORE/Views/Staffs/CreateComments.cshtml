@@ -1,0 +1,12 @@
+﻿@model ICSCOMP1640CORE.Models.Comment
+
+<form asp-controller="Staffs" asp-action="CreateComments" method="post">
+    <div class="form-group">
+    <label for="IdeaContent">Content</label>
+    <textarea  class="form-control" id="IdeaContent" rows="5" type="text" class="form-control" asp-for="@Model.Content" required></textarea>
+    <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    
+    <button type="submit" class="btn btn-outline-success">Create</button>
+        <a class="btn btn-outline-primary" asp-controller="Staffs" asp-action="IdeaDetail">Cancel</a>
+    </form>

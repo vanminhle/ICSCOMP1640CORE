@@ -195,6 +195,50 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _db.SaveChanges();
             return RedirectToAction("GetIdeaFromCoor", "Coordinators");
         }
+        [HttpGet]
+        public async Task<IActionResult> DataSatisticsAsync()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);        
+            var currentDepartmentId = currentUser.DepartmentId;
+
+            // check idea
+            var idea = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).ToList().Count();
+            ViewBag.number = idea;
+
+            // check anony
+            var ideaAnonymous = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).Where(x => x.IsAnonymous == true).ToList().Count();
+            ViewBag.IsAnonymous = ideaAnonymous;
+
+            // check nocmt idea
+            var ideaList = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).ToList();
+
+            int noCommentCount = 0;
+            foreach (var item in ideaList)
+            {
+                if(item.Comments == null)
+                {
+                    noCommentCount++;
+                }
+            }       
+            ViewBag.noCmt = noCommentCount;
+
+            // check how many user give idea
+            int userIdeaCount = 0;
+            string currentUserId = "";
+            foreach (var item in ideaList)
+            {
+                if (item.UserId != currentUserId)
+                {
+                    userIdeaCount++;
+                    currentUserId = item.UserId;
+                }
+            }
+
+            ViewBag.userGiveIdea = userIdeaCount;
+
+            return View();
+        }
+
     }
 
 }
