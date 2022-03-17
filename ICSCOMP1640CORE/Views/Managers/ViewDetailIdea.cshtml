@@ -1,36 +1,70 @@
 ﻿@model ICSCOMP1640CORE.Models.Idea
+@{
+	ViewData["Title"] = "Idea";
+}
 
-<div style="text-align:center;">
-    <h1>IDEAS NAME</h1>
-    <div>
-        <p>Author: @Model.User.FullName</p>
-        <p>Submit at @Model.SubmitDate</p>
-    </div>
-    <div class="row" style="margin-left:auto; margin-right:auto">
-        <a class="btn btn-info btn-outline-warning col-4">DOCUMENT - CLICK TO DOWNLOAD</a>
-        <p class="col-6"></p>
+<head>
+  <link rel="stylesheet" href="~/css/Idea/IdeaDetail.css">
+</head>
 
-    </div>
-    <div class="card text-white bg-secondary mb-3">
-        <div class="card-body">
-              <h5 class="card-title"> Idea Name : @Model.IdeaName </h5>
-            <h5 class="card-title"> Content : @Model.Content </h5>
-            <p class="card-text"></p>
-        </div>
-    </div>
-    </div>
-		<div class="element">
-			@if (@Model.Document == null){
-				<p>THIS IDEA DOES NOT HAVE DOCUMENT</p>
-			} else {
-				@Html.ActionLink("Download Document", "DownloadDocumentIdea","Staffs", new{id = @Model.Id}, htmlAttributes:null)
-			}
+<h4 style="text-align: center; margin: 15px 0 10px 0;">Idea by</h4>
+
+<body>
+	<div class="infor">
+		<div class="title">
+			<div class="title-Infor" style="font-size:35px;text-align: center; padding-bottom:10px;">
+				@Model.NameCreator
+			</div>
+			<div style="font-size:23px;text-align: center; padding-bottom:18px;">
+				@Model.IdeaName
+			</div>
+			<div style="text-align: center; display: flex; flex-direction: column; gap: 10px;">
+				<p style="margin-bottom: 0px;">Email: @Model.EmailCreator</p>
+				<p style="margin-bottom: 0px;">Submit At: @Model.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+				<p style="margin-bottom: 0px;">Category: @Model.Category.Name</p>
+				<p style="margin-bottom: 0px;">Department: @Model.Department.Name</p>
+
+			</div>
+
+			<br />
+
+			<div class="card text-center">
+			  <div class="card-header">
+				  ThumbUp: @Model.ThumbUp / ThumbDown: @Model.ThumbDown / Viewer: @Model.View / Rating: @Model.Rating / Comments: 0
+			  </div>
+			  <div class="card-body text-left">
+				<p style="margin-bottom: 0; white-space: pre-line">@Model.Content</p>
+			  </div>
+			  <div class="card-footer">
+				@if (@Model.Document == null){
+						<p style="margin-bottom: 0">THIS IDEA DOES NOT HAVE DOCUMENT</p>
+					} else {
+						@Html.ActionLink("DOWNLOAD DOCUMENT", "DownloadDocumentIdea","Managers", new{id = @Model.Id}, htmlAttributes:null)
+					}
+			  </div>
+			</div>
+
+			@foreach(var item in Model.Comments)
+			 {
+				<div class="card mt-3">
+				  <div class="card-header">
+					@item.User.FullName (@item.User.Email) said
+				  </div>
+				  <div class="card-body">
+					<blockquote class="blockquote mb-0">
+					  <p style="font-size: 18px;">@item.Content</p>
+					  <footer class="blockquote-footer" style="font-size: 16px;">@item.CreatedAt.ToString("dd/mm/yyyy hh:mm tt")</footer>
+					</blockquote>
+				  </div>
+				</div>
+			 }
+
+			<div style="text-align: center; margin-top: 50px; margin-bottom: 20px;">
+				<a asp-controller="Managers" asp-action="ManageIdea" class="btn btn-dark">Back</a>
+			</div>
+
+		</div>
+
+
 	</div>
-    <div class="card text-white bg-secondary mb-3">
-        <div class="card-body">
-            <p class="card-text">Comment</p>
-        </div>
-    </div>
-</div>
-
-<a class="btn btn-info btn-outline-warning col-3 fas fa-reply" asp-controller="Managers" asp-action="ManageIdea"> Back to previous pageD</a>
+</body>

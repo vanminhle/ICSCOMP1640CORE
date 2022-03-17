@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace ICSCOMP1640CORE.Models
 {
@@ -51,7 +52,7 @@ namespace ICSCOMP1640CORE.Models
 
         public int View { get; set; }
 
-        public int Rating { get; set; }
+        public int Rating { get { return ThumbUp - ThumbDown; } set { } }
 
         public int ThumbUp { get; set; }
 
@@ -90,6 +91,7 @@ namespace ICSCOMP1640CORE.Models
                 return User?.FullName;
             }
         }
+
 
     }
 }

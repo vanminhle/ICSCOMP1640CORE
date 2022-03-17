@@ -1,0 +1,23 @@
+﻿@model ICSCOMP1640CORE.Models.Comment
+
+@{
+	ViewBag.Title = "Give Comment";
+}
+
+<h1 class="mt-5 mb-4">Give Comment</h1>
+@Html.HiddenFor(x=> x.Idea.Id)
+<form asp-controller="Staffs" asp-action="CreateComments" method="post">
+	<div class="mw-100 mb-5">
+		<div class="form-group">
+			<label for="IdeaContent">Content</label>
+			<textarea  class="form-control" id="IdeaContent" rows="10" type="text" class="form-control" asp-for="@Model.Content" required></textarea>
+			<span asp-validation-for="Content" class="text-danger"></span>
+		</div>
+
+
+		<div class="mt-4">
+		<button type="submit" class="btn btn-success">Send</button>
+		<a href="##" class="btn btn-primary" onClick="history.go(-1); return false;">Cancel</a>
+		</div>
+	</div>
+</form>

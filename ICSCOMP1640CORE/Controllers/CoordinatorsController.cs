@@ -98,6 +98,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _notyf.Success("Staff account is deleted successfully.");
             return RedirectToAction("ManageStaffs");
         }
+
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
@@ -111,6 +112,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             return View(CoordinatorInDb);
         }
+
         [HttpGet]
         public ActionResult EditProfile(string Id)
         {
@@ -176,12 +178,39 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             this.ViewBag.Pager = pager;
             return View(pageData);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadDocumentIdea(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas.SingleOrDefault(y => y.Id == id);
+
+            if (ideaInDb.Document != null)
+            {
+                byte[] fileBytes = ideaInDb.Document;
+
+                return File(
+                    fileBytes,         /*byte []*/
+                    "application/pdf", /*mime type*/
+                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+            }
+
+            return RedirectToAction("DetailIdea", "Admins");
+        }
+
         [HttpGet]
         public IActionResult ViewIdea(int id)
         {
-            var ideaInDb = _db.Ideas.Include(x => x.User).SingleOrDefault(x => x.Id == id);
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
+            var ideaInDb = _db.Ideas
+               .Include(y => y.Category)
+               .Include(y => y.Department)
+               .Include(y => y.Comments)
+               .Include(y => y.User)
+               .SingleOrDefault(y => y.Id == id);
             return View(ideaInDb);
         }
+
         [HttpGet]
         public IActionResult DeleteIdea(int id)
         {
@@ -195,6 +224,52 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             _db.SaveChanges();
             return RedirectToAction("GetIdeaFromCoor", "Coordinators");
         }
+
+        //Statistics
+        [HttpGet]
+        public async Task<IActionResult> DataStatistics()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var currentDepartmentId = currentUser.DepartmentId;
+
+            // check idea
+            var idea = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).ToList().Count();
+            ViewBag.number = idea;
+
+            // check anony
+            var ideaAnonymous = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).Where(x => x.IsAnonymous == true).ToList().Count();
+            ViewBag.IsAnonymous = ideaAnonymous;
+
+            // check nocmt idea
+            var ideaList = _db.Ideas.Where(x => x.DepartmentId == currentDepartmentId).ToList();
+
+            int noCommentCount = 0;
+            foreach (var item in ideaList)
+            {
+                if(item.Comments != null)
+                {
+                    noCommentCount++;
+                }
+            }
+            ViewBag.noCmt = noCommentCount;
+
+            // check how many user give idea
+            int userIdeaCount = 0;
+            string currentUserId = "";
+            foreach (var item in ideaList)
+            {
+                if (item.UserId != currentUserId)
+                {
+                    userIdeaCount++;
+                    currentUserId = item.UserId;
+                }
+            }
+
+            ViewBag.userGiveIdea = userIdeaCount;
+
+            return View();
+        }
+
     }
 
 }

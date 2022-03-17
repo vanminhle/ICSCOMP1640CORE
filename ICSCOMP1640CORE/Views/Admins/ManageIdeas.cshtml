@@ -14,36 +14,91 @@
 	}
 }
 
+<head>
+  <link rel="stylesheet" href="~/css/Idea/IdeaIndex.css">
+</head>
 
-@using (Html.BeginForm("ManageIdeas", "Admins", FormMethod.Get))
-{
+
+<main>
+	@using (Html.BeginForm("ManageIdeas", "Admins", FormMethod.Get))
+	{
 	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
-		<h2 class="flex-row text-center mt-2">Ideas</h2>
+		<h2 class="flex-row text-center mt-2">All Ideas</h2>
 		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
-			@Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
+			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
 			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
 		</div>
 	</div>
-}
+	}
 
-<main>
 
 	@foreach (var item in Model)
 	{
-		<div class="card text-white bg-secondary mb-3 rounded">
-			<div class="card-body ">
-				<div class="row">
-					<h4 class="card-title col">Idea name : @item.IdeaName</h4>
-					<p class="col-5"></p>
-					<p class="card-text col" style="top: 5px;">Submit date : @item.SubmitDate</p>
+		<div class="idea-section">
+			<div class="idea-info">
+				<div class="user-idea">
+					<h4>@item.IdeaName</h4>
+					<p>AUTHOR: @item.User.FullName / @item.User.Email</p>
 				</div>
-
-				<div class="row">
-					<p class="card-text col">Author: @item.User.FullName</p>
-					@Html.ActionLink("View", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-info btn-outline-warning col-1", @title = "Info" })
+				<div class="category">
+					<p>IN CATEGORY: @item.Category.Name</p>
 				</div>
-				<p>Category : @item.Category.Name </p>
+			</div>
+			<div class="idea-data">
+				<div class="date-idea">
+					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+				</div>
+				<div class="button">
+					@Html.ActionLink("", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
+				</div>
+				<div class="category">
+					<p>Viewer: @item.View / Comment: @item.Rating / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
+				</div>
 			</div>
 		</div>
+		<br />
 	}
+
+
+
+
+
+	<div class="d-flex justify-content-center mt-4 mb-5">
+	@if (pager.TotalPages > 1)
+	{
+		<ul class="pagination justify-content-end">
+
+			@if (pager.CurrentPage > 0)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="1">First</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+				</li>
+			}
+
+			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+			{
+				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@pge">@pge</a>
+				</li>
+			}
+
+			@if (pager.CurrentPage < pager.TotalPages)
+			{
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+				</li>
+				<li class="page-item">
+					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.TotalPages)">Last</a>
+				</li>
+			}
+
+		</ul>
+	}
+	</div>
+
+
 </main>
+

@@ -5,13 +5,17 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Controllers
@@ -23,12 +27,15 @@ namespace ICSCOMP1640CORE.Controllers
         private readonly INotyfService _notyf;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly IEmailSender _emailSender;
+
+        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
             _notyf = notyf;
+            _emailSender = emailSender;
         }
 
 
@@ -40,6 +47,7 @@ namespace ICSCOMP1640CORE.Controllers
                 .Include(y => y.Category)
                 .Include(y => y.Department)
                 .Include(y => y.User)
+                .Include(y => y.Comments)
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
 
@@ -75,14 +83,17 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public async Task<IActionResult> IdeaDetail(int id)
         {
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
             var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)
+               .Include(y => y.Comments)
                .Include(y => y.User)
                .Where(y => y.DepartmentId == currentUser.DepartmentId)
                .SingleOrDefault(y => y.Id == id);
-
+            ideaInDb.View++;
+            _db.SaveChanges();
             return View(ideaInDb);
         }
 
@@ -163,9 +174,22 @@ namespace ICSCOMP1640CORE.Controllers
                 model.Document = idea.Document;
             }
 
+            //Email
+            var currentDepartmentId = currentUser.DepartmentId;
+            var dataCoordinator = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+            var departmentCoordinator = dataCoordinator.Where(x => x.DepartmentId == currentDepartmentId);
+            foreach (var user in departmentCoordinator)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+                await _emailSender.SendEmailAsync(
+                user.Email,
+                $"Your Department Have New Idea Submit by {user.FullName}",
+                $"Hi, {user.FullName}, Your Department {currentUser.Department.Name} have new Idea ({idea.IdeaName}) submitted by ({user.FullName}) in ({idea.SubmitDate.ToString("dd / mm / yyyy hh: mm tt")})");
+            }
+
             _db.Ideas.Add(model);
             _db.SaveChanges();
-            _notyf.Success("Idea is created successfully.");
+            _notyf.Success("Your Idea is created successfully.");
             return RedirectToAction("IdeaIndex");
         }
 
@@ -251,6 +275,99 @@ namespace ICSCOMP1640CORE.Controllers
             _notyf.Success("Idea is edited successfully.");
             return RedirectToAction("IdeaIndex");
         }
+
+        [HttpGet]
+        public IActionResult LikeIdea(int id)
+        {
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                .Include("Department")
+                .Include("Category")
+                .Include(y => y.Comments)
+                .FirstOrDefault(x => x.Id == id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
+            var isAction = _db.UserActionOnIdeas.Any(x => x.IdeaId == id && x.UserId == userId);
+
+            if (isAction == false)
+            {
+                currentIdeaInDb.ThumbUp++;
+
+                var ideaLike = new UserActionOnIdea()
+                {
+                    UserId = userId,
+                    IdeaId = id,
+                    IsLike = true,
+                    IsDisLike = false,
+                };
+                _db.UserActionOnIdeas.Add(ideaLike);
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
+            {
+                _notyf.Error("You already Like this Idea!");
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
+            {
+                currentIdeaInDb.ThumbUp++;
+                currentIdeaInDb.ThumbDown--;
+                currentActionOnDb.IsLike = true;
+                currentActionOnDb.IsDisLike = false;
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            return View("IdeaDetail", currentIdeaInDb);
+        }
+
+        [HttpGet]
+        public IActionResult DisLikeIdea(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentActionOnDb = _db.UserActionOnIdeas.FirstOrDefault(x => x.UserId == userId && x.IdeaId == id);
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                    .Include("Department")
+                    .Include(y => y.Comments)
+                    .Include("Category")
+                    .FirstOrDefault(x => x.Id == id);
+            var isAction = _db.UserActionOnIdeas.Any(x => x.IdeaId == id && x.UserId == userId);
+
+            if (isAction == false)
+            {
+                currentIdeaInDb.ThumbDown++;
+
+                var ideaDisLike = new UserActionOnIdea()
+                {
+                    UserId = userId,
+                    IdeaId = id,
+                    IsLike = false,
+                    IsDisLike = true,
+                };
+                _db.UserActionOnIdeas.Add(ideaDisLike);
+
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
+            {
+
+                _notyf.Error("You already DisLike this Idea!");
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
+            {
+                currentIdeaInDb.ThumbDown++;
+                currentIdeaInDb.ThumbUp--;
+
+                currentActionOnDb.IsDisLike = true;
+                currentActionOnDb.IsLike = false;
+                _db.SaveChanges();
+                return View("IdeaDetail", currentIdeaInDb);
+            }
+            return View("IdeaDetail", currentIdeaInDb);
+        }
         public ActionResult InforStaff(string id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -295,6 +412,107 @@ namespace ICSCOMP1640CORE.Controllers
             _db.SaveChanges();
             _notyf.Success("Manager account is edited successfully.");
             return RedirectToAction("InforStaff");
+        }
+
+
+        // COMMENTS
+        public async Task<IActionResult> ViewComments()
+        {
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            var CommentInDb = _db.Comments
+                .Include(y => y.User)
+                .ToList();
+            return View(CommentInDb);
+        }
+
+        [HttpGet]
+        public IActionResult CreateComments(int id)
+        {
+            Comment model = new();
+            var Comment = _db.Comments.Select(x => new { x.Id }).ToList();
+            var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
+            var Ideal = _db.Ideas.Select(x => new { x.Id }).ToList();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateComments(Comment comment, int id)
+        {
+            var currentIdeaInDb = _db.Ideas.Include("User")
+                .Include("Department")
+                .Include("Category")
+                .Include(y => y.Comments)
+                .FirstOrDefault(x => x.Id == id);
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);
+            var currentUser = await _userManager.GetUserAsync(User);
+            var model = new Comment();
+            {
+
+                model.IdeaId = infoIdea.Id;
+                model.UserId = userId;
+                model.Content = comment.Content;
+                model.CreatedAt = comment.CreatedAt;
+            }
+
+            await _emailSender.SendEmailAsync(
+            infoIdea.EmailCreator,
+            $"Your Idea ({infoIdea.IdeaName}) Have New Comment Submit by ({currentUser.FullName})",
+            $"Hi, {infoIdea.User.FullName}, Your Idea {infoIdea.IdeaName} have new comment by ({currentUser.FullName}) in ({comment.CreatedAt.ToString("dd / mm / yyyy hh: mm tt")}) with content ({comment.Content})");
+
+            _db.Comments.Add(model);
+            _db.SaveChanges();
+            _notyf.Success("Comment is created successfully.");
+            return RedirectToAction("IdeaDetail", currentIdeaInDb);
+        }
+
+        [HttpGet]
+        public IActionResult DeleteComment(int id)
+        {
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            _db.Comments.Remove(commentInDb);
+            _db.SaveChanges();
+            _notyf.Success("Comment is deleted successfully.", 3);
+            return RedirectToAction("IdeaIndex");
+        }
+
+        [HttpGet]
+        public IActionResult EditComment(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            return View(commentInDb);
+        }
+
+        [HttpPost]
+        public IActionResult EditComment(Comment comment)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(comment);
+            }
+            var commentInDb = _db.Comments.SingleOrDefault(c => c.Id == comment.Id);
+            if (commentInDb == null)
+            {
+                return NotFound();
+            }
+            commentInDb.Content = comment.Content;
+            _db.SaveChanges();
+            _notyf.Success("Comment is edited successfully.", 3);
+            return RedirectToAction("IdeaIndex");
         }
     }
 }

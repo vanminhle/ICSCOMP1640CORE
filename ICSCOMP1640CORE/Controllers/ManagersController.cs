@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -31,7 +32,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
         //Manage Idea Category
         [HttpGet]
-        public IActionResult ManageCategories(string searchCategory, int pg)
+        public IActionResult ManageCategories(string searchCategory, int pg = 1)
         {
             var categoryInDb = _db.Categories.ToList();
             if (!String.IsNullOrEmpty(searchCategory))
@@ -92,10 +93,22 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult DeleteCategory(int id)
         {
             var categoryInDb = _db.Categories.SingleOrDefault(c => c.Id == id);
+            var ideaInDb = _db.Ideas.ToList();
+
             if (categoryInDb == null)
             {
                 return NotFound();
             }
+
+            foreach (var idea in ideaInDb)
+            {
+                if(idea.CategoryId == id)
+                {
+                    _notyf.Error("Category is already used in Idea!", 3);
+                    return RedirectToAction("ManageCategories", "Managers");
+                }
+            }
+
             _db.Categories.Remove(categoryInDb);
             _db.SaveChanges();
             _notyf.Success("Category is deleted successfully.", 3);
@@ -179,9 +192,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public ActionResult InforCoordinator(string id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            id = userId.ToString();
-            var CoordinatorInDb = _db.Users.SingleOrDefault(i => i.Id == id);
+            var CoordinatorInDb = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == id);
             if (CoordinatorInDb == null)
             {
                 return NotFound();
@@ -247,48 +258,81 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
 
         [HttpGet]
-        public IActionResult ManageIdea()
+        public IActionResult ManageIdea(string searchString, int pg = 1)
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
-            var categoryInDb= _db.Categories.ToList();
-            return View(ideaInDb);
+            var categoryInDb = _db.Categories.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ideaInDb = ideaInDb
+                    .Where(s => s.IdeaName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                    .ToList();
+
+            }
+
+            //Pagination
+            const int pageSize = 5;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = ideaInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = ideaInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
         }
 
         [HttpGet]
         public IActionResult ViewDetailIdea(int Id)
         {
-            var ideaInDb = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
-        /*    var idea = _db.Ideas.Include(x => x.User).FirstOrDefault(item => item.Id == Id);*/
+            var commentInDb = _db.Comments.Include(x => x.User).ToList();
+            var ideaInDb = _db.Ideas
+               .Include(y => y.Category)
+               .Include(y => y.Department)
+               .Include(y => y.Comments)
+               .Include(y => y.User)
+               .SingleOrDefault(y => y.Id == Id);
             return View(ideaInDb);
         }
-       /* [HttpGet]
-        public IActionResult DeleteIdea(int id)
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadDocumentIdea(int id)
         {
-            var IdeasInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas.SingleOrDefault(y => y.Id == id);
 
-            if (IdeasInDb == null)
+            if (ideaInDb.Document != null)
             {
-                return NotFound();
+                byte[] fileBytes = ideaInDb.Document;
+
+                return File(
+                    fileBytes,         /*byte []*/
+                    "application/pdf", /*mime type*/
+                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
             }
-            _notyf.Success("Ideas is deleted successfully.");
-            _db.Ideas.Remove(IdeasInDb);
-            _db.SaveChanges();
 
-            return RedirectToAction("ManageIdea");
-        }*/
-
+            return RedirectToAction("ViewDetailIdea", "Managers");
+        }
 
         [HttpGet]
         public IActionResult DeleteAllIdea()
         {
             var ideaInDb = _db.Ideas;
+            var commentInDb = _db.Comments;
             if (ideaInDb == null)
             {
                 return NotFound();
             }
             _db.Ideas.RemoveRange(ideaInDb);
+            _db.Comments.RemoveRange(commentInDb);
             _db.SaveChanges();
-            _notyf.Success("All Ideals is deleted successfully.", 3);
+            _notyf.Success("All idea is deleted successfully.", 3);
             return RedirectToAction("ManageIdea", "Managers");
         }
     }
