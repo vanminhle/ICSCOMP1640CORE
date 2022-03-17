@@ -54,7 +54,7 @@
 					@Html.ActionLink("", "IdeaDetail", "Staffs", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
 				</div>
 				<div class="category">
-					<p>Viewer: @item.View - Rating: @item.Rating - COMMENT: XXX</p>
+					<p>Viewer: @item.View / Comment: @item.Rating / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
 				</div>
 			</div>
 		</div>
@@ -65,7 +65,7 @@
 
 
 
-	<div class="d-flex align-items-start justify-content-between mt-3 mb-4">
+	<div class="d-flex align-items-start justify-content-between mt-4 mb-5">
 	<a class="btn btn-success"  asp-controller="Staffs" asp-action="CreateIdea">Give an Idea</a>
 	@if (pager.TotalPages > 1)
 	{

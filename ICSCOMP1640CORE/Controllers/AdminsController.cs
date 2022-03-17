@@ -535,7 +535,7 @@ namespace ICSCOMP1640CORE.Controllers
 
         //Idea
         [HttpGet]
-        public IActionResult ManageIdeas(string searchString)
+        public IActionResult ManageIdeas(string searchString, int pg = 1)
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
             var categoryInDb = _db.Categories.ToList();
@@ -546,14 +546,57 @@ namespace ICSCOMP1640CORE.Controllers
                     .ToList();
 
             }
-            return View(ideaInDb);
+
+            //Pagination
+            const int pageSize = 5;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = ideaInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = ideaInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
+
+            //return View(ideaInDb);
         }
 
         [HttpGet]
         public IActionResult DetailIdea(int Id)
         {
             var idea = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
-            return View(idea);
+            var ideaInDb = _db.Ideas
+               .Include(y => y.Category)
+               .Include(y => y.Department)
+               .Include(y => y.Comments)
+               .Include(y => y.User)
+               .SingleOrDefault(y => y.Id == Id);
+            return View(ideaInDb);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadDocumentIdea(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            var ideaInDb = _db.Ideas.SingleOrDefault(y => y.Id == id);
+
+            if (ideaInDb.Document != null)
+            {
+                byte[] fileBytes = ideaInDb.Document;
+
+                return File(
+                    fileBytes,         /*byte []*/
+                    "application/pdf", /*mime type*/
+                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+            }
+
+            return RedirectToAction("DetailIdea", "Admins");
         }
     }
 }

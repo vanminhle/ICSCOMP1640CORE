@@ -1,0 +1,24 @@
+﻿@model ICSCOMP1640CORE.Models.Comment
+
+@{
+    ViewData["Title"] = "Edit comment";
+}
+
+<h1 class="mt-2 mb-3">Edit comment</h1>
+
+@if (TempData["Danger"] != null)
+{
+    <div class="alert alert-danger alert-dismissable">
+        <strong>@TempData["Danger"]</strong>
+    </div>
+}
+<form asp-controller="Staffs" asp-action="EditComment" method="post">
+    @Html.HiddenFor(m => m.Id)
+    <div class="form-group">
+        <label for="IdeaContent">Content</label>
+        <textarea class="form-control" id="IdeaContent" rows="5" type="text" class="form-control" asp-for="Content" required></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-outline-success">Edit</button>
+    <a class="btn btn-outline-primary" asp-controller="Staffs" asp-action="IdeaIndex">Cancel</a>
+</form>

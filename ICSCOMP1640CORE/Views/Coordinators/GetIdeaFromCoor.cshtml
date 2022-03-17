@@ -1,7 +1,8 @@
 ﻿@using ICSCOMP1640CORE.Utilities
 @model IEnumerable<ICSCOMP1640CORE.Models.Idea>
 @{
-    ViewBag.Title = "Get Trainee Courses";
+	ViewBag.Title = "Ideas";
+
 	Pager pager = new Pager();
 
 	int pageNo = 0;
@@ -13,53 +14,57 @@
 	}
 }
 
-@using (Html.BeginForm("GetIdeaFromCoor", "Coordinators", FormMethod.Get))
-{
-    <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
-        <h2 class="flex-row text-center mt-2">Idea From Coordinator Department</h2>
-        <div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
-            @Html.TextBox("searchString", null, new { @class = "form-control", @placeholder = "Find By Name" })
-            <button  type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
-        </div>
-    </div>
+<head>
+  <link rel="stylesheet" href="~/css/Idea/IdeaIndex.css">
+</head>
 
 
-    <div class="table-responsive" style="text-align: center">
-        <table class="table table-bordered">
-            <thead class="thead-dark">
-                <tr>
-				<th scope="col" >Idea Name</th>
-				<th scope="col" >Content Of Idea</th>
-                <th scope="col" >Author</th>
-                <th scope="col" >Category</th>
-                <th scope="col" >Submit Date</th>
-                <th scope="col" >Delete</th>
-				<th scope="col" >View</th>
-			</tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-						<th class="align-middle" scope="row">@item.IdeaName</th>
-						<th class="align-middle" scope="row">@item.Content</th>
-						<td class="align-middle" scope="row">@item.User.UserName</td>
-						<td class="align-middle" scope="row">@item.Category.Name</td>
-						<td class="align-middle" scope="row">@item.SubmitDate</td>
-						<td class="align-middle" scope="row">
-							@Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-danger fas fa-trash-alt space", @title = "Delete" })
-						</td>
-						<td class="align-middle" scope="row">
-							@Html.ActionLink("", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-info fa fa-eye", @title = "Info" })
-						</td>
-					</tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+<main>
+	@using (Html.BeginForm("GetIdeaFromCoor", "Coordinators", FormMethod.Get))
+	{
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+		<h2 class="flex-row text-center mt-2">All Ideas</h2>
+		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
+			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
+			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>
+		</div>
+	</div>
+	}
 
-<div class="d-flex justify-content-center mt-3">
+
+	@foreach (var item in Model)
+	{
+		<div class="idea-section">
+			<div class="idea-info">
+				<div class="user-idea">
+					<h4>@item.IdeaName</h4>
+					<p>AUTHOR: @item.User.FullName / @item.User.Email</p>
+				</div>
+				<div class="category">
+					<p>IN CATEGORY: @item.Category.Name</p>
+				</div>
+			</div>
+			<div class="idea-data">
+				<div class="date-idea">
+					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+				</div>
+				<div class="button">
+					@Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-danger fas fa-trash-alt", @title = "Delete" })
+					@Html.ActionLink("", "ViewIdea", "Coordinators", new { id = item.Id }, new { @class = "btn btn-info fas fa-info-circle", @title = "View" })
+				</div>
+				<div class="category">
+					<p>Viewer: @item.View / Comment: @item.Rating / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
+				</div>
+			</div>
+		</div>
+		<br />
+	}
+
+
+
+
+
+	<div class="d-flex justify-content-center mt-4 mb-5">
 	@if (pager.TotalPages > 1)
 	{
 		<ul class="pagination justify-content-end">
@@ -93,4 +98,7 @@
 
 		</ul>
 	}
-</div>
+	</div>
+
+
+</main>
