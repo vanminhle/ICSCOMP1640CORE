@@ -5,13 +5,17 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Controllers
@@ -23,12 +27,15 @@ namespace ICSCOMP1640CORE.Controllers
         private readonly INotyfService _notyf;
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly IEmailSender _emailSender;
+
+        public StaffsController(ApplicationDbContext db, INotyfService notyf, UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IEmailSender emailSender)
         {
             _db = db;
             _userManager = userManager;
             _roleManager = roleManager;
             _notyf = notyf;
+            _emailSender = emailSender;
         }
 
 
@@ -164,9 +171,22 @@ namespace ICSCOMP1640CORE.Controllers
                 model.Document = idea.Document;
             }
 
+            //Email
+            var currentDepartmentId = currentUser.DepartmentId;
+            var dataCoordinator = _userManager.GetUsersInRoleAsync("Coordinator").Result.ToList();
+            var departmentCoordinator = dataCoordinator.Where(x => x.DepartmentId == currentDepartmentId);
+            foreach (var user in departmentCoordinator)
+            {
+                _db.Entry(user).Reference(x => x.Department).Load();
+                await _emailSender.SendEmailAsync(
+                user.Email,
+                $"Your Department Have New Idea Submit by {user.FullName}",
+                $"Hi, {user.FullName}, Your Department {currentUser.Department.Name} have new Idea ({idea.IdeaName}) submitted by ({user.FullName}) in ({idea.SubmitDate.ToString("dd / mm / yyyy hh: mm tt")})");
+            }
+
             _db.Ideas.Add(model);
             _db.SaveChanges();
-            _notyf.Success("Idea is created successfully.");
+            _notyf.Success("Your Idea is created successfully.");
             return RedirectToAction("IdeaIndex");
         }
 
@@ -336,6 +356,12 @@ namespace ICSCOMP1640CORE.Controllers
                 model.Content = comment.Content;
                 model.CreatedAt = comment.CreatedAt;
             }
+
+            await _emailSender.SendEmailAsync(
+            infoIdea.EmailCreator,
+            $"Your Idea ({infoIdea.IdeaName}) Have New Comment Submit by ({currentUser.FullName})",
+            $"Hi, {infoIdea.User.FullName}, Your Idea {infoIdea.IdeaName} have new comment by ({currentUser.FullName}) in ({comment.CreatedAt.ToString("dd / mm / yyyy hh: mm tt")}) with content ({comment.Content})");
+
             _db.Comments.Add(model);
             _db.SaveChanges();
             _notyf.Success("Comment is created successfully.");
