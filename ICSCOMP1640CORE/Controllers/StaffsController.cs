@@ -32,16 +32,44 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
 
-        public async Task<IActionResult> IdeaIndex()
+        public async Task<IActionResult> IdeaIndex(string searchString, int pg = 1)
         {
             var currentUser = await _userManager.GetUserAsync(User);
+
             var ideaInDb = _db.Ideas
                 .Include(y => y.Category)
                 .Include(y => y.Department)
                 .Include(y => y.User)
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
-            return View(ideaInDb);
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                ideaInDb = ideaInDb
+                    .Where(s => s.IdeaName.Contains(searchString, StringComparison.OrdinalIgnoreCase) ||
+                    s.User.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase)
+                    )
+                .ToList();
+            }
+
+            //Pagination
+            const int pageSize = 5;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = ideaInDb.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = ideaInDb.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
+
+            //return View(ideaInDb);
         }
 
         [HttpGet]

@@ -68,14 +68,26 @@ namespace ICSCOMP1640CORE.Models
         public Boolean IsAnonymous { get; set; }
 
         [NotMapped]
-        public string Creator
+        public string EmailCreator
         {
             get
             {
                 if (IsAnonymous)
                     return "Anonymous";
 
-                return User?.UserName;
+                return User?.Email;
+            }
+        }
+
+        [NotMapped]
+        public string NameCreator
+        {
+            get
+            {
+                if (IsAnonymous)
+                    return "Anonymous";
+
+                return User?.FullName;
             }
         }
 
