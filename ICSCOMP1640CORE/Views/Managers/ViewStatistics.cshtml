@@ -1,0 +1,31 @@
+﻿@model ICSCOMP1640CORE.Models.Department
+@{
+    ViewBag.Title = "Department Statistics";
+}
+
+<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
+    <h2 class="flex-row text-center mt-2">Department Statistics</h2>
+</div>
+
+<ul class="list-group">
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Number Of Ideas In Department
+    <span class="badge badge-primary badge-pill">@ViewBag.number</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Number Of Ideas Submitted Anonymously
+    <span class="badge badge-primary badge-pill">@ViewBag.IsAnonymous</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Number Of Ideas Without Comment
+    <span class="badge badge-primary badge-pill">@ViewBag.noCmt</span>
+  </li>
+  <li class="list-group-item d-flex justify-content-between align-items-center">
+    Number Of Contributor
+    <span class="badge badge-primary badge-pill">@ViewBag.userGiveIdea</span>
+  </li>
+</ul>
+
+<div class="mt-4">
+        <a href="##" class="btn btn-primary" onClick="history.go(-1); return false;">Back</a>
+</div>

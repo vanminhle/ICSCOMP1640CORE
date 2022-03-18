@@ -17,7 +17,7 @@
 	}
 }
 
-@using (Html.BeginForm("DepartmentsIndex", "Admins", FormMethod.Get))
+@using (Html.BeginForm("DepartmentsIndex", "Managers", FormMethod.Get))
 {
 	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
 		<h2 class="flex-row text-center mt-2">Departments Index</h2>
@@ -34,8 +34,7 @@
 				<tr>
 					<th scope="col" class="col-5">Department Name</th>
 					<th scope="col" class="col-6">Description</th>
-					<th scope="col" class="col-1">Edit</th>
-					<th scope="col" class="col-1">Delete</th>
+					<th scope="col" class="col-1">Statistics</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -45,10 +44,7 @@
 						<td class="align-middle">@item.Name</td>
 						<td class="align-middle">@item.Description</td>
 						<td class="align-middle">
-							@Html.ActionLink("", "EditDepartment", "Admins", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit", @title="Edit" })
-						</td>
-												<td class="align-middle">
-							@Html.ActionLink("", "DeleteDepartment", "Admins", new { id = item.Id }, new { @class = "btn btn-danger far fa-trash-alt", @title="Delete" })
+							@Html.ActionLink("", "ViewStatistics", "Managers", new { id = item.Id }, new { @class = "btn btn-success fa fa-asterisk", @title="View Statistics" })
 						</td>
 					</tr>
 				}
@@ -57,9 +53,7 @@
 	</div>
 }
 
-<div class="d-flex align-items-start justify-content-between mt-3">
-	<a class="btn btn-primary" asp-controller="Admins" asp-action="CreateDepartment">Create Department</a>
-
+<div class="d-flex justify-content-center mt-3">
 	@if (pager.TotalPages > 1)
 	{
 		<ul class="pagination justify-content-end">
@@ -67,27 +61,27 @@
 			@if (pager.CurrentPage > 1)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="1">First</a>
+					<a class="page-link" asp-controller="Managers" asp-action="DepartmentsIndex" asp-route-pg="1">First</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+					<a class="page-link" asp-controller="Managers" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
 				</li>
 			}
 
 			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
 			{
 				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@pge">@pge</a>
+					<a class="page-link" asp-controller="Managers" asp-action="DepartmentsIndex" asp-route-pg="@pge">@pge</a>
 				</li>
 			}
 
 			@if (pager.CurrentPage < pager.TotalPages)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+					<a class="page-link" asp-controller="Managers" asp-action="DepartmentsIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="DepartmentsIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
+					<a class="page-link" asp-controller="Managers" asp-action="DepartmentsIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
 				</li>
 			}
 
