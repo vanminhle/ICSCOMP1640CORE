@@ -52,7 +52,7 @@
 					@Html.ActionLink("", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
 				</div>
 				<div class="category">
-					<p>Viewer: @item.View / Comment: @item.Rating / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
+					<p>Viewer: @item.View / Comment: @item.Comments.Count / ThumbUp: @item.ThumbUp / ThumbDown: @item.ThumbDown </p>
 				</div>
 			</div>
 		</div>

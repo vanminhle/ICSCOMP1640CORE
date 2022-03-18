@@ -28,7 +28,7 @@
 
 			<br />
 
-			<div class="card text-center">
+			<div class="card text-center mt-4">
 			  <div class="card-header">
 				  ThumbUp: @Model.ThumbUp / ThumbDown: @Model.ThumbDown / Viewer: @Model.View / Rating: @Model.Rating / Comments: @Model.Comments.Count
 			  </div>
@@ -49,20 +49,22 @@
 			 @foreach(var item in Model.Comments)
 			 {
 				<div class="card mt-3">
-				  <div class="card-header">
-					@item.User.FullName (@item.User.Email) said
-					
+				  <div class="card-header d-flex justify-content-between">
+					<div>
+						@item.User.FullName (@item.User.Email) said
+					</div>
+					<div class="d-flex" style="gap: 5px;">
+						@if (item.UserId == ViewBag.id)
+						{
+							@Html.ActionLink("", "EditComment", "Staffs", new { id = item.Id }, new { @class = "btn btn-light fa fa-pencil", @style="border: 1px solid rgba(0,0,0,.125)", @title = "Edit" })
+							@Html.ActionLink("", "DeleteComment", "Staffs", new { id = item.Id }, new { @class = "btn btn-light fa fa-trash-o", @style="border: 1px solid rgba(0,0,0,.125)", @title = "Delete" })
+						}
+					</div>
 				  </div>
 				  <div class="card-body">
 					<blockquote class="blockquote mb-0">
 					  <p style="font-size: 18px;">@item.Content</p>
-                      <div class="custom-control-inline">
-                          @if (item.UserId == ViewBag.id)
-                          {
-                              @Html.ActionLink("", "EditComment", "Staffs", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit", @title = "Edit" })
-                              @Html.ActionLink("", "DeleteComment", "Staffs", new { id = item.Id }, new { @class = "btn btn-danger fa fa-trash", @title = "Delete" })
-                          }
-                      </div>
+
 					  <footer class="blockquote-footer" style="font-size: 16px;">@item.CreatedAt.ToString("dd/mm/yyyy hh:mm tt")</footer>
 					</blockquote>
 				  </div>

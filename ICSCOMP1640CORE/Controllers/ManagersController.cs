@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
@@ -302,6 +303,23 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
 
         [HttpGet]
+        public IActionResult DeleteAllIdea()
+        {
+            var ideaInDb = _db.Ideas;
+            var commentInDb = _db.Comments;
+            if (ideaInDb == null)
+            {
+                return NotFound();
+            }
+            _db.Ideas.RemoveRange(ideaInDb);
+            _db.Comments.RemoveRange(commentInDb);
+            _db.SaveChanges();
+            _notyf.Success("All idea is deleted successfully.", 3);
+            return RedirectToAction("ManageIdea", "Managers");
+        }
+
+
+        [HttpGet]
         public async Task<IActionResult> DownloadDocumentIdea(int id)
         {
             var currentUser = await _userManager.GetUserAsync(User);
@@ -320,20 +338,6 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             return RedirectToAction("ViewDetailIdea", "Managers");
         }
 
-        [HttpGet]
-        public IActionResult DeleteAllIdea()
-        {
-            var ideaInDb = _db.Ideas;
-            var commentInDb = _db.Comments;
-            if (ideaInDb == null)
-            {
-                return NotFound();
-            }
-            _db.Ideas.RemoveRange(ideaInDb);
-            _db.Comments.RemoveRange(commentInDb);
-            _db.SaveChanges();
-            _notyf.Success("All idea is deleted successfully.", 3);
-            return RedirectToAction("ManageIdea", "Managers");
-        }
+
     }
 }
