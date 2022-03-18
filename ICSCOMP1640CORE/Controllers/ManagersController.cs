@@ -5,7 +5,6 @@ using ICSCOMP1640CORE.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -250,7 +249,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult ManageIdea()
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
-            var categoryInDb= _db.Categories.ToList();
+            var categoryInDb = _db.Categories.ToList();
             return View(ideaInDb);
         }
 
@@ -258,24 +257,24 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult ViewDetailIdea(int Id)
         {
             var ideaInDb = _db.Ideas.Include(x => x.User).SingleOrDefault(item => item.Id == Id);
-        /*    var idea = _db.Ideas.Include(x => x.User).FirstOrDefault(item => item.Id == Id);*/
+            /*    var idea = _db.Ideas.Include(x => x.User).FirstOrDefault(item => item.Id == Id);*/
             return View(ideaInDb);
         }
-       /* [HttpGet]
-        public IActionResult DeleteIdea(int id)
-        {
-            var IdeasInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
+        /* [HttpGet]
+         public IActionResult DeleteIdea(int id)
+         {
+             var IdeasInDb = _db.Ideas.SingleOrDefault(x => x.Id == id);
 
-            if (IdeasInDb == null)
-            {
-                return NotFound();
-            }
-            _notyf.Success("Ideas is deleted successfully.");
-            _db.Ideas.Remove(IdeasInDb);
-            _db.SaveChanges();
+             if (IdeasInDb == null)
+             {
+                 return NotFound();
+             }
+             _notyf.Success("Ideas is deleted successfully.");
+             _db.Ideas.Remove(IdeasInDb);
+             _db.SaveChanges();
 
-            return RedirectToAction("ManageIdea");
-        }*/
+             return RedirectToAction("ManageIdea");
+         }*/
 
 
         [HttpGet]
@@ -288,8 +287,78 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             }
             _db.Ideas.RemoveRange(ideaInDb);
             _db.SaveChanges();
-            _notyf.Success("All Ideals is deleted successfully.", 3);
+            _notyf.Success("All Ideas is deleted successfully.", 3);
             return RedirectToAction("ManageIdea", "Managers");
+        }
+
+
+        public IActionResult DepartmentsIndex(string searchString, int pg = 1)
+        {
+            var departments = _db.Departments.ToList();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                departments = departments
+                    .Where(s => s.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            }
+
+            //Pagination
+            const int pageSize = 6;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = departments.Count();
+
+            var pager = new Pager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            var data = departments.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.Pager = pager;
+
+            return View(data);
+        }
+
+        [HttpGet]
+        public IActionResult ViewStatistics(int id)
+        {
+
+            // check number of idea
+            var idea = _db.Ideas.Where(x => x.DepartmentId == id).ToList().Count();
+            ViewBag.number = idea;
+
+            // check anony
+            var ideaAnonymous = _db.Ideas.Where(x => x.DepartmentId == id).Where(x => x.IsAnonymous == true).ToList().Count();
+            ViewBag.IsAnonymous = ideaAnonymous;
+
+            // check number of idea without cmt
+            var ideaList = _db.Ideas.Where(x => x.DepartmentId == id).ToList();
+
+            int noCommentCount = 0;
+            foreach (var item in ideaList)
+            {
+                if (item.Comments == null)
+                {
+                    noCommentCount++;
+                }
+            }
+            ViewBag.noCmt = noCommentCount;
+
+            // check number of contributor
+            int userIdeaCount = 0;
+            string currentUserId = "";
+            foreach (var item in ideaList)
+            {
+                if (item.UserId != currentUserId)
+                {
+                    userIdeaCount++;
+                    currentUserId = item.UserId;
+                }
+            }
+
+            ViewBag.userGiveIdea = userIdeaCount;
+            return View();
         }
     }
 }
