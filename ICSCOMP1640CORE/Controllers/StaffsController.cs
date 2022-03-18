@@ -39,7 +39,7 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
 
-        public async Task<IActionResult> IdeaIndex(string searchString, string sortOrder, int pg = 1)
+        public async Task<IActionResult> IdeaIndex(string searchString, int pg = 1)
         {
             var currentUser = await _userManager.GetUserAsync(User);
 
@@ -50,13 +50,6 @@ namespace ICSCOMP1640CORE.Controllers
                 .Include(y => y.Comments)
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
-
-            var sortIdea = _db.Ideas
-                .Include(y => y.Category)
-                .Include(y => y.Department)
-                .Include(y => y.User)
-                .Include(y => y.Comments)
-                .Where(y => y.DepartmentId == currentUser.DepartmentId);
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -119,7 +112,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return File(
                     fileBytes,         /*byte []*/
                     "application/pdf", /*mime type*/
-                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+                    $"DocumentFile_(Staff-{currentUser.FullName})-(Department-{currentUser.Department}).pdf");    /*name of the file*/
             }
 
             return RedirectToAction("IdeaDetail","Staffs");

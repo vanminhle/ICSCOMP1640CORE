@@ -11,6 +11,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Ionic.Zip;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using System.IO.Compression;
 
 namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 {
@@ -260,7 +264,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         [HttpGet]
         public IActionResult ManageIdea(string searchString, int pg = 1)
         {
-            var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
+            var ideaInDb = _db.Ideas.Include(x => x.User).Include(x => x.Comments).ToList();
             var categoryInDb = _db.Categories.ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -331,7 +335,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
                 return File(
                     fileBytes,         /*byte []*/
                     "application/pdf", /*mime type*/
-                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+                    $"DocumentFile_(Staff-{currentUser.FullName})-(Department-{currentUser.Department}).pdf");    /*name of the file*/
             }
 
             return RedirectToAction("ViewDetailIdea", "Managers");
@@ -406,5 +410,51 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             ViewBag.userGiveIdea = userIdeaCount;
             return View();
         }
+
+        [HttpGet]
+        public IActionResult DownloadAsCsv()
+        {
+            var ideaInDb = _db.Ideas.Include(u => u.User).Include(u => u.Department).Include(c => c.Category).ToList();
+            var builder = new StringBuilder();
+            builder.AppendLine("Idea Name, Category, SubmitIn, Author, Email, Address, PhoneNumber, Age, Gender, Department, Rating, ThumbUp, ThumbDown, View, Content");
+            foreach(var idea in ideaInDb)
+            {
+                builder.AppendLine($"{idea.IdeaName},{idea.Category.Name},{idea.SubmitDate}," +
+                    $"{idea.User.FullName},{idea.User.Email},{idea.User.Address},{idea.User.PhoneNumber}," +
+                    $"{idea.User.Age},{idea.User.Gender},{idea.Department.Name},{idea.Rating},{idea.ThumbUp}," +
+                    $"{idea.ThumbDown},{idea.View}," +
+                    $"{idea.Content.Replace(System.Environment.NewLine, ". ").Replace(",", ";")}");
+            }
+
+            return (File(Encoding.UTF8.GetBytes(builder.ToString()), "text/csv", "IdeaData.csv"));
+        }
+
+
+        [HttpGet]
+        public IActionResult DownloadIdeaZip()
+        {
+            var ideaInDb = _db.Ideas.Include(u => u.User).Include(u => u.Department).Include(c => c.Category).ToList();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                using (var archive = new ZipArchive(ms, ZipArchiveMode.Create, true))
+                {
+                    foreach (var file in ideaInDb)
+                    {
+                        if (file.Document != null)
+                        {
+                            var entry = archive.CreateEntry(file.User.FullName + "-" + file.IdeaName + "-" + file.Department.Name + ".pdf", CompressionLevel.Fastest);
+                            using (var zipStream = entry.Open())
+                            {
+                                zipStream.Write(file.Document, 0, file.Document.Length);
+                            }
+                        }
+
+                    }
+                }
+                return File(ms.ToArray(), "application/zip", "Archive.zip");
+            }
+        }
+
     }
 }

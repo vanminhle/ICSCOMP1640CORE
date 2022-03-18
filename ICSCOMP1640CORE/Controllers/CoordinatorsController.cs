@@ -154,6 +154,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
             var ideaInDb = _db.Ideas.Include(x => x.Department)
                 .Include(x => x.Category)
                 .Include(x => x.User)
+                .Include(x => x.Comments)
                 .Where(x => x.DepartmentId == currentUser.DepartmentId)
                 .ToList();
             if (!String.IsNullOrEmpty(searchString))
@@ -192,7 +193,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
                 return File(
                     fileBytes,         /*byte []*/
                     "application/pdf", /*mime type*/
-                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+                    $"DocumentFile_(Staff-{currentUser.FullName})-(Department-{currentUser.Department}).pdf");    /*name of the file*/
             }
 
             return RedirectToAction("DetailIdea", "Admins");

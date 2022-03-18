@@ -22,7 +22,7 @@
 <main>
 	@using (Html.BeginForm("ManageIdea", "Managers", FormMethod.Get))
 	{
-	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-3 mt-2" style="align-items-sm: baseline;">
 		<h2 class="flex-row text-center mt-2">All Ideas</h2>
 		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
 			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
@@ -30,6 +30,45 @@
 		</div>
 	</div>
 	}
+
+	<!-- Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		  <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Delete All Idea</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				  <span aria-hidden="true">&times;</span>
+				</button>
+			  </div>
+			  <div class="modal-body">
+				Are you sure to delete all idea?
+			  </div>
+			  <div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<a class="btn btn-danger" asp-controller="Managers" asp-action="DeleteAllIdea">Delete All Idea</a>
+			  </div>
+			</div>
+		  </div>
+		</div>
+
+
+	<div class="d-flex align-items-start justify-content-between mb-4">
+		<!-- Button trigger modal -->
+		<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal">
+		  Delete All Idea
+		</button>
+
+		<div class="btn-group">
+		  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+			Download Data
+		  </button>
+		  <div class="dropdown-menu">
+			<a class="dropdown-item" asp-controller="Managers" asp-action="DownloadIdeaZip">Download Document as (.ZIP)</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="DownloadAsCsv">Download Idea Data as (.CSV)</a>
+		  </div>
+		</div>
+	</div>
 
 
 	@foreach (var item in Model)
@@ -63,8 +102,7 @@
 
 
 
-	<div class="d-flex align-items-start justify-content-between mt-4 mb-5">
-	<a class="btn btn-danger"  asp-controller="Managers" asp-action="DeleteAllIdea">Delete All Idea</a>
+	<div class="d-flex justify-content-center mt-4 mb-5">
 	@if (pager.TotalPages > 1)
 	{
 		<ul class="pagination justify-content-end">

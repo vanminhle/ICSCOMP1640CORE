@@ -537,7 +537,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult ManageIdeas(string searchString, int pg = 1)
         {
-            var ideaInDb = _db.Ideas.Include(x => x.User).ToList();
+            var ideaInDb = _db.Ideas.Include(x => x.User).Include(x=>x.Comments).ToList();
             var categoryInDb = _db.Categories.ToList();
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -593,7 +593,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return File(
                     fileBytes,         /*byte []*/
                     "application/pdf", /*mime type*/
-                    $"DocumentFile_(Staff{currentUser.FullName})(Department-{currentUser.Department}).pdf");    /*name of the file*/
+                    $"DocumentFile_(Staff-{currentUser.FullName})-(Department-{currentUser.Department}).pdf");    /*name of the file*/
             }
 
             return RedirectToAction("DetailIdea", "Admins");
