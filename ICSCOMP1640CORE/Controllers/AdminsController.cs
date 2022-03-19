@@ -570,7 +570,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult DetailIdea(int id)
         {
-            var commentInDb = _db.Comments.Include(x => x.User).ToList();
+            var commentInDb = _db.Comments.OrderByDescending(c => c.CreatedAt).Include(x => x.User).ToList();
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
                .Include(y => y.Department)

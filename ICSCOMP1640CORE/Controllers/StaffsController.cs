@@ -85,7 +85,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             ViewBag.id = userId;
-            var commentInDb = _db.Comments.Include(x => x.User).ToList();
+            var commentInDb = _db.Comments.OrderByDescending(c => c.CreatedAt).Include(x => x.User).ToList();
             var currentUser = await _userManager.GetUserAsync(User);
             var ideaInDb = _db.Ideas
                .Include(y => y.Category)
