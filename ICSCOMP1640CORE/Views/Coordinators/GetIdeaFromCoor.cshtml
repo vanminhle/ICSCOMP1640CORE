@@ -46,7 +46,7 @@
 			</div>
 			<div class="idea-data">
 				<div class="date-idea">
-					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+					<p>SUBMIT AT: @item.SubmitDate.ToString("mm/dd/yyyy hh:mm tt"))</p>
 				</div>
 				<div class="button">
 					@Html.ActionLink("", "DeleteIdea","Coordinators", new { Id = item.Id }, new { @class = "btn btn-danger fas fa-trash-alt", @title = "Delete" })

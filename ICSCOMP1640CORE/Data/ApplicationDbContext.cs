@@ -23,6 +23,7 @@ namespace ICSCOMP1640CORE.Data
         public DbSet<Department> Departments { get; set; }
         public DbSet<Idea> Ideas { get; set; }
         public DbSet<UserActionOnIdea> UserActionOnIdeas { get; set; }
+        public DbSet<AcademicIdeaPeriod> AcademicIdeaPeriods { get; set; }
 
     }
 }

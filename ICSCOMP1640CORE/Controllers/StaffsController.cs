@@ -39,8 +39,9 @@ namespace ICSCOMP1640CORE.Controllers
         }
 
 
-        public async Task<IActionResult> IdeaIndex(string searchString, int pg = 1)
+        public async Task<IActionResult> IdeaIndex(string sortOrder, string searchString, int pg = 1)
         {
+
             var currentUser = await _userManager.GetUserAsync(User);
 
             var ideaInDb = _db.Ideas
@@ -51,6 +52,43 @@ namespace ICSCOMP1640CORE.Controllers
                 .Where(y => y.DepartmentId == currentUser.DepartmentId)
                 .ToList();
 
+            //Sort
+
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.SortbyView = String.IsNullOrEmpty(sortOrder) ? "view_sort" : "view_sort";
+            ViewBag.SortbyRating = String.IsNullOrEmpty(sortOrder) ? "rating_sort" : "rating_sort";
+            ViewBag.SortbyLatest = String.IsNullOrEmpty(sortOrder) ? "latest_sort" : "latest_sort";
+            ViewBag.SortbyThumbUp = String.IsNullOrEmpty(sortOrder) ? "thumbup_sort" : "thumbup_sort";
+            ViewBag.SortbyThumbDown = String.IsNullOrEmpty(sortOrder) ? "thumbdown_sort" : "thumbdown_sort";
+            ViewBag.SortbyComment = String.IsNullOrEmpty(sortOrder) ? "comment_sort" : "comment_sort";
+
+            switch (sortOrder)
+            {
+                case "view_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.View).ToList();
+                    break;
+                case "rating_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.Rating).ToList();
+                    break;
+                case "latest_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.SubmitDate).ToList();
+                    break;
+                case "thumbup_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.ThumbUp).ToList();
+                    break;
+                case "thumbdown_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.ThumbDown).ToList();
+                    break;
+                case "comment_sort":
+                    ideaInDb = ideaInDb.OrderByDescending(w => w.Comments.Count).ToList();
+                    break;
+                default:
+                    ideaInDb.OrderBy(n => n.IdeaName);
+                    break;
+            }
+
+
+            //Search
             if (!String.IsNullOrEmpty(searchString))
             {
                 ideaInDb = ideaInDb
@@ -121,6 +159,16 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult CreateIdea()
         {
+            DateTime createTime = DateTime.Now;
+
+            var PeriodNow = _db.AcademicIdeaPeriods.SingleOrDefault(x => x.Id == 1);
+            int DateTimeCompare = DateTime.Compare(createTime, PeriodNow.ClosureDate);
+
+            if (DateTimeCompare > 0)
+            {
+                _notyf.Error($"You can't Create New Idea! Because the time for giving new Idea is end! {PeriodNow.ClosureDate}");
+            }
+
             Idea model = new Idea();
             var categoryList = _db.Categories.Select(x => new { x.Id, x.Name }).ToList();
             var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
@@ -420,7 +468,6 @@ namespace ICSCOMP1640CORE.Controllers
         // COMMENTS
         public async Task<IActionResult> ViewComments()
         {
-
             var currentUser = await _userManager.GetUserAsync(User);
             var CommentInDb = _db.Comments
                 .Include(y => y.User)
@@ -431,6 +478,16 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult CreateComments(int id)
         {
+            DateTime createTime = DateTime.Now;
+
+            var PeriodNow = _db.AcademicIdeaPeriods.SingleOrDefault(x => x.Id == 1);
+            int DateTimeCompare = DateTime.Compare(createTime, PeriodNow.FinalClosureDate);
+
+            if (DateTimeCompare > 0)
+            {
+                _notyf.Error($"You can't Give any Comment! Because the time for giving comment is end! {PeriodNow.FinalClosureDate}");
+            }
+
             Comment model = new();
             var Comment = _db.Comments.Select(x => new { x.Id }).ToList();
             var infoIdea = _db.Ideas.OfType<Idea>().FirstOrDefault(t => t.Id == id);

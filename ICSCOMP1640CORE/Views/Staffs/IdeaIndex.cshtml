@@ -24,7 +24,7 @@
 <main>
 	@using (Html.BeginForm("IdeaIndex", "Staffs", FormMethod.Get))
 	{
-	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-3 mt-2" style="align-items-sm: baseline;">
 		<h2 class="flex-row text-center mt-2">All Ideas</h2>
 		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
 			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
@@ -33,6 +33,23 @@
 	</div>
 	}
 
+	<div class="d-flex align-items-start justify-content-between mb-4">
+	<a class="btn btn-success" asp-controller="Staffs" asp-action="CreateIdea">Give an Idea</a>
+
+		<div class="btn-group">
+		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Sort
+		  </button>
+		  <div class="dropdown-menu">
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyLatest">Latest Idea</a>
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyRating">Most Popular</a>
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyView">Most Viewed</a>
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyThumbUp">ThumbUp</a>
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyThumbDown">ThumbDown</a>
+			<a class="dropdown-item" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-sortOrder="@ViewBag.SortbyComment">Latest Comment</a>
+		  </div>
+		</div>
+	</div>
 
 	@foreach (var item in Model)
 	{
@@ -48,7 +65,7 @@
 			</div>
 			<div class="idea-data">
 				<div class="date-idea">
-					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+					<p>SUBMIT AT: @item.SubmitDate.ToString("mm/dd/yyyy hh:mm tt")</p>
 				</div>
 				<div class="button">
 					@if(User.FindFirstValue(ClaimTypes.NameIdentifier) == item.UserId)
@@ -67,24 +84,7 @@
 	}
 
 
-
-
-
-	<div class="d-flex align-items-start justify-content-between mt-4 mb-5">
-		<div>
-		<a class="btn btn-success"  asp-controller="Staffs" asp-action="CreateIdea">Give an Idea</a>
-
-		<div class="btn-group">
-		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			Action
-		  </button>
-		  <div class="dropdown-menu">
-			<a class="dropdown-item" href="#">Something else here</a>
-			<div class="dropdown-divider"></div>
-			<a class="dropdown-item" href="#">Separated link</a>
-		  </div>
-		</div>
-	</div>
+	<div class="d-flex justify-content-center mt-4 mb-5">
 
 	@if (pager.TotalPages > 1)
 	{
@@ -93,27 +93,27 @@
 			@if (pager.CurrentPage > 0)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="1">First</a>
+					<a class="page-link" asp-controller="Staffs" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="IdeaIndex" asp-route-pg="1">First</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+					<a class="page-link" asp-controller="Staffs" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
 				</li>
 			}
 
 			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
 			{
 				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@pge">@pge</a>
+					<a class="page-link" asp-controller="Staffs"asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="IdeaIndex" asp-route-pg="@pge">@pge</a>
 				</li>
 			}
 
 			@if (pager.CurrentPage < pager.TotalPages)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+					<a class="page-link" asp-controller="Staffs" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="IdeaIndex" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Staffs" asp-action="IdeaIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
+					<a class="page-link" asp-controller="Staffs" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="IdeaIndex" asp-route-pg="@(pager.TotalPages)">Last</a>
 				</li>
 			}
 

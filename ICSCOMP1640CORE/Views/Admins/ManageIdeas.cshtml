@@ -46,7 +46,7 @@
 			</div>
 			<div class="idea-data">
 				<div class="date-idea">
-					<p>SUBMIT AT: @item.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")</p>
+					<p>SUBMIT AT: @item.SubmitDate.ToString("mm/dd/yyyy hh:mm tt")</p>
 				</div>
 				<div class="button">
 					@Html.ActionLink("", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })

@@ -154,9 +154,9 @@ namespace ICSCOMP1640CORE.Controllers
                 _notyf.Warning("Department is already exists.");
                 return View(department);
             }
-            _notyf.Success("Department is edited successfully.");
             departmentInDb.Name = department.Name.Trim();
             departmentInDb.Description = department.Description;
+            _notyf.Success("Department is edited successfully.");
             _db.SaveChanges();
 
             return RedirectToAction("DepartmentsIndex");
@@ -597,6 +597,79 @@ namespace ICSCOMP1640CORE.Controllers
             }
 
             return RedirectToAction("DetailIdea", "Admins");
+        }
+
+
+        //Academic Idea Period
+
+        [HttpGet]
+        public IActionResult AcademicIdeaPeriodSet()
+        {
+            var PeriodNow = _db.AcademicIdeaPeriods.ToList();
+
+            var PeriodinDb = _db.AcademicIdeaPeriods.SingleOrDefault(x => x.Id == 1);
+
+            if (PeriodinDb == null)
+            {
+                return NotFound();
+            }
+
+            return View(PeriodinDb);
+        }
+
+        [HttpPost]
+        public IActionResult AcademicIdeaPeriodSet(AcademicIdeaPeriod model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var PeriodinDb = _db.AcademicIdeaPeriods.SingleOrDefault(x => x.Id == 1);
+
+            if (PeriodinDb == null)
+            {
+                return BadRequest();
+            }
+
+            string academicYear = model.AcademicYear.ToString();
+            string ClosureYear = model.ClosureDate.Year.ToString();
+            string FinalYear = model.FinalClosureDate.Year.ToString();
+
+            int DateTimeCompare = DateTime.Compare(model.ClosureDate, model.FinalClosureDate);
+
+
+            if (academicYear != ClosureYear && academicYear != FinalYear && ClosureYear != FinalYear)
+            {
+                _notyf.Error("Year is invalid! Year should be the same in Academic, Closure and Final Closure!");
+            }
+            /*else if(DateTimeCompare < 0)
+            {
+                _notyf.Error("Invalid Date! Closure Date is earlier than Final Closure Date");
+            }*/
+            else if (DateTimeCompare == 0)
+            {
+                _notyf.Error("Invalid Date! Closure Date and Final Closure Date are the same!");
+            }
+            else if (DateTimeCompare > 0)
+            {
+                _notyf.Error("Invalid Date! Closure Date is later than Final Closure Date!");
+            }
+            else
+            {
+
+                PeriodinDb.AcademicYear = model.AcademicYear;
+                PeriodinDb.ClosureDate = model.ClosureDate;
+                PeriodinDb.FinalClosureDate = model.FinalClosureDate;
+
+                _db.Update(PeriodinDb);
+                _db.SaveChanges();
+
+                _notyf.Success("Academic Year & Idea Period Have Been Set");
+            }
+
+
+            return RedirectToAction("AcademicIdeaPeriodSet");
         }
     }
 }

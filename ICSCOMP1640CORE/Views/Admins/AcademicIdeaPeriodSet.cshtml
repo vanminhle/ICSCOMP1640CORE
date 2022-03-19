@@ -1,0 +1,67 @@
+﻿@model ICSCOMP1640CORE.Models.AcademicIdeaPeriod
+
+@{
+	ViewBag.Title = "Academic and Idea Period";
+}
+
+<h1 class="mt-5">Academic and Idea Period</h1>
+<p class="mb-5"><strong>Format: (mm/dd/yyyy)</strong></p>
+
+<div class="row">
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Academic Year</h5>
+        <p class="card-text">The Academic Year of University (For to determine the current Academic Year)</p>
+		<div class="btn btn-primary">@Model.AcademicYear</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Closure Date</h5>
+        <p class="card-text">The Closure Date for Give Idea (Any New Idea can't be submit after this Date)</p>
+		<div class="btn btn-warning">@Model.ClosureDate.ToShortDateString()</div>
+      </div>
+    </div>
+  </div>
+    <div class="col-sm-4">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Final Closure Date</h5>
+        <p class="card-text">The Final Closure Date for Idea Comment (Comment can't be give after this Date)</p>
+		<div class="btn btn-danger">@Model.FinalClosureDate.ToShortDateString()</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<form asp-controller="Admins" asp-action="AcademicIdeaPeriodSet" method="post">
+	<div class="mw-100 mb-5 mt-4">
+		<div class="form-row">
+			<div class="form-group col-md-2">
+				<label>Academic Year</label>
+				<input type="number" min="2015" max="2077" step="1" class="form-control" asp-for="AcademicYear" required>
+				@Html.ValidationMessageFor(m => m.AcademicYear, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="form-group col-md-3">
+				<label>Closure Date</label>
+				<input type="date" class="form-control" asp-for="ClosureDate" required>
+				@Html.ValidationMessageFor(m => m.ClosureDate, "", new { @class = "text-danger" })
+			</div>
+
+			<div class="form-group col-md-2">
+				<label>Final Closure Date</label>
+				<input type="date" class="form-control" asp-for="FinalClosureDate" required>
+				@Html.ValidationMessageFor(m => m.FinalClosureDate, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="mt-2">
+			<button type="submit" class="btn btn-outline-success">Change</button>
+		</div>
+	</div>
+</form>
