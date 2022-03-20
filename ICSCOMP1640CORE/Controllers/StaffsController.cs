@@ -166,7 +166,8 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (DateTimeCompare > 0)
             {
-                _notyf.Error($"You can't Create New Idea! Because the time for giving new Idea is end! {PeriodNow.ClosureDate}");
+                _notyf.Error($"You cant Create New Idea! Because the time for giving new Idea is end! {PeriodNow.ClosureDate.ToShortDateString()}");
+                return RedirectToAction("IdeaIndex");
             }
 
             Idea model = new Idea();
@@ -485,7 +486,8 @@ namespace ICSCOMP1640CORE.Controllers
 
             if (DateTimeCompare > 0)
             {
-                _notyf.Error($"You can't Give any Comment! Because the time for giving comment is end! {PeriodNow.FinalClosureDate}");
+                _notyf.Error($"You cant Give any Comment! Because the time for giving comment is end! {PeriodNow.FinalClosureDate.ToShortDateString()}");
+                return Redirect(Request.Headers["Referer"].ToString());
             }
 
             Comment model = new();
@@ -517,14 +519,14 @@ namespace ICSCOMP1640CORE.Controllers
             }
 
             await _emailSender.SendEmailAsync(
-            infoIdea.EmailCreator,
+            infoIdea.User.Email,
             $"Your Idea ({infoIdea.IdeaName}) Have New Comment Submit by ({currentUser.FullName})",
             $"Hi, {infoIdea.User.FullName}, Your Idea {infoIdea.IdeaName} have new comment by ({currentUser.FullName}) in ({comment.CreatedAt.ToString("dd / mm / yyyy hh: mm tt")}) with content ({comment.Content})");
 
             _db.Comments.Add(model);
             _db.SaveChanges();
             _notyf.Success("Comment is created successfully.");
-            return RedirectToAction("IdeaDetail", currentIdeaInDb);
+            return RedirectToAction("IdeaDetail", "Staffs", new { id = infoIdea.Id });
         }
 
         [HttpGet]
