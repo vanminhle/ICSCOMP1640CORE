@@ -1,6 +1,7 @@
 ﻿using ICSCOMP1640CORE.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace ICSCOMP1640CORE.Data.SeedData
 {
@@ -112,6 +113,23 @@ namespace ICSCOMP1640CORE.Data.SeedData
                 );
 
             #endregion UserRole
+
+            #region PeriodData
+
+            var academicIdeaPeriod = new AcademicIdeaPeriod()
+            {
+                Id = 1,
+                AcademicYear = 2022,
+                ClosureDate = new DateTime(2022, 03, 21, 12, 00, 00),
+                FinalClosureDate = new DateTime(2022, 03, 25, 12, 00, 00),
+
+            };
+
+            builder.Entity<AcademicIdeaPeriod>().HasData(
+                academicIdeaPeriod
+                );
+
+            #endregion PeriodData
         }
     }
 }
