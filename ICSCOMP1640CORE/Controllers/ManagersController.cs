@@ -264,7 +264,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 		[HttpGet]
 		public IActionResult ManageIdea(string sortOrder, string searchString, int pg = 1)
 		{
-			var ideaInDb = _db.Ideas.Include(x => x.User).Include(x => x.Comments).ToList();
+			var ideaInDb = _db.Ideas.Include(x => x.User).Include(x=>x.Department).Include(x => x.Comments).ToList();
 			var categoryInDb = _db.Categories.ToList();
 			if (!String.IsNullOrEmpty(searchString))
 			{
@@ -418,12 +418,12 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 			ViewBag.IsAnonymous = ideaAnonymous;
 
 			// check number of idea without cmt
-			var ideaList = _db.Ideas.Where(x => x.DepartmentId == id).ToList() ;
+			var ideaList = _db.Ideas.Where(x => x.DepartmentId == id).Include(y => y.Comments).ToList() ;
 
 			int noCommentCount = 0;
 			foreach (var item in ideaList)
 			{
-				if (item.Comments == null && item.Comments.Any())
+				if (item.Comments.Count == 0)
 				{
 					noCommentCount++;
 				}
