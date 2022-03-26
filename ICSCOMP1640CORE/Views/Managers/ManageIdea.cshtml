@@ -59,6 +59,21 @@
 		  Delete All Idea
 		</button>
 
+		<div>
+		<div class="btn-group">
+		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Sort
+		  </button>
+		  <div class="dropdown-menu">
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyLatest">Latest Idea</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyRating">Most Popular</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyView">Most Viewed</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyThumbUp">ThumbUp</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyThumbDown">ThumbDown</a>
+			<a class="dropdown-item" asp-controller="Managers" asp-action="ManageIdea" asp-route-sortOrder="@ViewBag.SortbyComment">Latest Comment</a>
+		  </div>
+		</div>
+
 		<div class="btn-group">
 		  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 			Download Data
@@ -67,6 +82,7 @@
 			<a class="dropdown-item" asp-controller="Managers" asp-action="DownloadIdeaZip">Download Document as (.ZIP)</a>
 			<a class="dropdown-item" asp-controller="Managers" asp-action="DownloadAsCsv">Download Idea Data as (.CSV)</a>
 		  </div>
+		</div>
 		</div>
 	</div>
 
@@ -85,7 +101,7 @@
 			</div>
 			<div class="idea-data">
 				<div class="date-idea">
-					<p>SUBMIT AT: @item.SubmitDate.ToString("mm/dd/yyyy hh:mm tt")</p>
+					<p>SUBMIT AT: @item.SubmitDate.ToString("MM/dd/yyyy hh:mm tt")</p>
 				</div>
 				<div class="button">
 					@Html.ActionLink("", "ViewDetailIdea", "Managers", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
@@ -110,27 +126,27 @@
 			@if (pager.CurrentPage > 0)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Managers" asp-action="ManageIdea" asp-route-pg="1">First</a>
+					<a class="page-link" asp-controller="Managers" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdea" asp-route-pg="1">First</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Managers" asp-action="ManageIdea" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+					<a class="page-link" asp-controller="Managers" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdea" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
 				</li>
 			}
 
 			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
 			{
 				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-					<a class="page-link" asp-controller="Managers" asp-action="ManageIdea" asp-route-pg="@pge">@pge</a>
+					<a class="page-link" asp-controller="Managers" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdea" asp-route-pg="@pge">@pge</a>
 				</li>
 			}
 
 			@if (pager.CurrentPage < pager.TotalPages)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Managers" asp-action="ManageIdea" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+					<a class="page-link" asp-controller="Managers" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdea" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Managers" asp-action="ManageIdea" asp-route-pg="@(pager.TotalPages)">Last</a>
+					<a class="page-link" asp-controller="Managers" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdea" asp-route-pg="@(pager.TotalPages)">Last</a>
 				</li>
 			}
 

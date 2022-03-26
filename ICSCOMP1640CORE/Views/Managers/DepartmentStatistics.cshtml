@@ -4,7 +4,7 @@
 	ViewData["Department List"] = "";
 }
 @{
-	ViewBag.Title = "Departments Index";
+	ViewBag.Title = "Department Statistics";
 
 	Pager pager = new Pager();
 
@@ -20,7 +20,7 @@
 @using (Html.BeginForm("DepartmentsIndex", "Managers", FormMethod.Get))
 {
 	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
-		<h2 class="flex-row text-center mt-2">Departments Index</h2>
+		<h2 class="flex-row text-center mt-2">Department Statistics</h2>
 		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
 			@Html.TextBox("searchString" ,null, new { @class = "form-control", @placeholder = "Find By Name" })
 			<button type="submit" class="btn btn-primary"><i class="fa fa-search rounded-circle" aria-hidden="true"></i></button>

@@ -262,7 +262,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 		}
 
 		[HttpGet]
-		public IActionResult ManageIdea(string searchString, int pg = 1)
+		public IActionResult ManageIdea(string sortOrder, string searchString, int pg = 1)
 		{
 			var ideaInDb = _db.Ideas.Include(x => x.User).Include(x => x.Comments).ToList();
 			var categoryInDb = _db.Categories.ToList();
@@ -273,6 +273,41 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 					.ToList();
 
 			}
+
+			//Sort
+			ViewBag.CurrentSort = sortOrder;
+			ViewBag.SortbyView = String.IsNullOrEmpty(sortOrder) ? "view_sort" : "view_sort";
+			ViewBag.SortbyRating = String.IsNullOrEmpty(sortOrder) ? "rating_sort" : "rating_sort";
+			ViewBag.SortbyLatest = String.IsNullOrEmpty(sortOrder) ? "latest_sort" : "latest_sort";
+			ViewBag.SortbyThumbUp = String.IsNullOrEmpty(sortOrder) ? "thumbup_sort" : "thumbup_sort";
+			ViewBag.SortbyThumbDown = String.IsNullOrEmpty(sortOrder) ? "thumbdown_sort" : "thumbdown_sort";
+			ViewBag.SortbyComment = String.IsNullOrEmpty(sortOrder) ? "comment_sort" : "comment_sort";
+
+			switch (sortOrder)
+			{
+				case "view_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.View).ToList();
+					break;
+				case "rating_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.Rating).ToList();
+					break;
+				case "latest_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.SubmitDate).ToList();
+					break;
+				case "thumbup_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.ThumbUp).ToList();
+					break;
+				case "thumbdown_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.ThumbDown).ToList();
+					break;
+				case "comment_sort":
+					ideaInDb = ideaInDb.OrderByDescending(w => w.Comments.Count).ToList();
+					break;
+				default:
+					ideaInDb.OrderBy(n => n.IdeaName);
+					break;
+			}
+
 
 			//Pagination
 			const int pageSize = 5;
@@ -342,7 +377,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 		}
 
 		[HttpGet]
-		public IActionResult DepartmentsIndex(string searchString, int pg = 1)
+		public IActionResult DepartmentStatistics(string searchString, int pg = 1)
 		{
 			var departments = _db.Departments.ToList();
 			if (!String.IsNullOrEmpty(searchString))
@@ -383,12 +418,12 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 			ViewBag.IsAnonymous = ideaAnonymous;
 
 			// check number of idea without cmt
-			var ideaList = _db.Ideas.Where(x => x.DepartmentId == id).ToList();
+			var ideaList = _db.Ideas.Where(x => x.DepartmentId == id).ToList() ;
 
 			int noCommentCount = 0;
 			foreach (var item in ideaList)
 			{
-				if (item.Comments == null)
+				if (item.Comments == null && item.Comments.Any())
 				{
 					noCommentCount++;
 				}
@@ -397,13 +432,13 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 
 			// check number of contributor
 			int userIdeaCount = 0;
-			string currentUserId = "";
+			string[] userString = new string[0];
 			foreach (var item in ideaList)
 			{
-				if (item.UserId != currentUserId)
+				if (userString.Contains(item.UserId) == false)
 				{
 					userIdeaCount++;
-					currentUserId = item.UserId;
+					userString = userString.Concat(new[] { item.UserId }).ToArray();
 				}
 			}
 

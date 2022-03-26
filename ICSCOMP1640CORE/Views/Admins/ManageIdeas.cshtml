@@ -22,7 +22,7 @@
 <main>
 	@using (Html.BeginForm("ManageIdeas", "Admins", FormMethod.Get))
 	{
-	<div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items-sm: baseline;">
+	<div class="d-flex flex-sm-row flex-column justify-content-between mb-3 mt-2" style="align-items-sm: baseline;">
 		<h2 class="flex-row text-center mt-2">All Ideas</h2>
 		<div class="d-flex mt-2 align-self-md-baseline align-self-sm-stretch" style="gap: 4px">
 			@Html.TextBox("searchString" ,null, new { @class = "form-control" })
@@ -30,6 +30,26 @@
 		</div>
 	</div>
 	}
+
+	<div class="d-flex align-items-start justify-content-between mb-4">
+	<button type="button" class="btn btn-success" onClick="document.location.reload(true)">
+		  Refresh
+	</button>
+
+		<div class="btn-group">
+		  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			Sort
+		  </button>
+		  <div class="dropdown-menu">
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyLatest">Latest Idea</a>
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyRating">Most Popular</a>
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyView">Most Viewed</a>
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyThumbUp">ThumbUp</a>
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyThumbDown">ThumbDown</a>
+			<a class="dropdown-item" asp-controller="Admins" asp-action="ManageIdeas" asp-route-sortOrder="@ViewBag.SortbyComment">Latest Comment</a>
+		  </div>
+		</div>
+	</div>
 
 
 	@foreach (var item in Model)
@@ -46,7 +66,7 @@
 			</div>
 			<div class="idea-data">
 				<div class="date-idea">
-					<p>SUBMIT AT: @item.SubmitDate.ToString("mm/dd/yyyy hh:mm tt")</p>
+					<p>SUBMIT AT: @item.SubmitDate.ToString("MM/dd/yyyy hh:mm tt")</p>
 				</div>
 				<div class="button">
 					@Html.ActionLink("", "DetailIdea", "Admins", new { id = item.Id }, new { @class = "btn btn-outline-info fa fa-info-circle" })
@@ -71,27 +91,27 @@
 			@if (pager.CurrentPage > 0)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="1">First</a>
+					<a class="page-link" asp-controller="Admins" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdeas" asp-route-pg="1">First</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
+					<a class="page-link" asp-controller="Admins" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage-1)">Previous</a>
 				</li>
 			}
 
 			@for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
 			{
 				<li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@pge">@pge</a>
+					<a class="page-link" asp-controller="Admins" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdeas" asp-route-pg="@pge">@pge</a>
 				</li>
 			}
 
 			@if (pager.CurrentPage < pager.TotalPages)
 			{
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+					<a class="page-link" asp-controller="Admins" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdeas" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
 				</li>
 				<li class="page-item">
-					<a class="page-link" asp-controller="Admins" asp-action="ManageIdeas" asp-route-pg="@(pager.TotalPages)">Last</a>
+					<a class="page-link" asp-controller="Admins" asp-route-sortOrder="@ViewBag.CurrentSort" asp-action="ManageIdeas" asp-route-pg="@(pager.TotalPages)">Last</a>
 				</li>
 			}
 
