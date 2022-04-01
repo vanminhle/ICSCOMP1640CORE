@@ -3,8 +3,9 @@
     ViewBag.Title = "Statistics";
 }
 
+@Html.HiddenFor(m=>m.Id)
 <div class="d-flex flex-sm-row flex-column justify-content-between mb-4 mt-2" style="align-items: baseline;">
-    <h2 class="flex-row text-center mt-2">Department Statistics</h2>
+    <h2 class="mt-2">@ViewBag.departmentName Statistics</h2>
 </div>
 
 <ul class="list-group">

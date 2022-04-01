@@ -88,11 +88,14 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         public IActionResult DeleteStaff(string Id)
         {
             var staffindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+            var ideaofstaff = _db.Ideas.SingleOrDefault(item => item.UserId == Id);
+
             if (staffindb == null)
             {
                 return NotFound();
             }
             _db.Users.Remove(staffindb);
+            _db.Ideas.Remove(ideaofstaff);
             _db.SaveChanges();
 
             _notyf.Success("Staff account is deleted successfully.");

@@ -353,12 +353,12 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.UserActionOnIdeas.Add(ideaLike);
 
                 _db.SaveChanges();
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
             {
                 _notyf.Error("You already Like this Idea!");
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
             {
@@ -368,9 +368,9 @@ namespace ICSCOMP1640CORE.Controllers
                 currentActionOnDb.IsDisLike = false;
 
                 _db.SaveChanges();
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View("IdeaDetail", currentIdeaInDb);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         [HttpGet]
@@ -399,13 +399,13 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.UserActionOnIdeas.Add(ideaDisLike);
 
                 _db.SaveChanges();
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             else if (isAction == true && (currentActionOnDb.IsLike == false && currentActionOnDb.IsDisLike == true))
             {
 
                 _notyf.Error("You already DisLike this Idea!");
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
             else if (isAction == true && (currentActionOnDb.IsLike == true && currentActionOnDb.IsDisLike == false))
             {
@@ -415,9 +415,9 @@ namespace ICSCOMP1640CORE.Controllers
                 currentActionOnDb.IsDisLike = true;
                 currentActionOnDb.IsLike = false;
                 _db.SaveChanges();
-                return View("IdeaDetail", currentIdeaInDb);
+                return Redirect(Request.Headers["Referer"].ToString());
             }
-            return View("IdeaDetail", currentIdeaInDb);
+            return Redirect(Request.Headers["Referer"].ToString());
         }
         public ActionResult InforStaff(string id)
         {
@@ -540,7 +540,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Comments.Remove(commentInDb);
             _db.SaveChanges();
             _notyf.Success("Comment is deleted successfully.", 3);
-            return RedirectToAction("IdeaIndex");
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
         [HttpGet]

@@ -408,6 +408,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 		[HttpGet]
 		public IActionResult ViewStatistics(int id)
 		{
+			var departmentInDb = _db.Departments.SingleOrDefault(y => y.Id == id).Name;
 
 			// check number of idea
 			var idea = _db.Ideas.Where(x => x.DepartmentId == id).ToList().Count();
@@ -443,6 +444,8 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 			}
 
 			ViewBag.userGiveIdea = userIdeaCount;
+			ViewBag.departmentName = departmentInDb;
+
 			return View();
 		}
 
