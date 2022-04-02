@@ -348,10 +348,6 @@ namespace ICSCOMP1640CORE.Controllers
         {
             Manager model = new Manager();
 
-            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-            var department = _db.Departments.ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
-
             return View(model);
         }
 
@@ -391,7 +387,8 @@ namespace ICSCOMP1640CORE.Controllers
                 await _emailSender.SendEmailAsync(
                     manager.Email,
                     "Confirm your email",
-                    $"Hi, {manager.FullName} Please confirm your email account {manager.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hi, {manager.FullName} Please confirm your email account {manager.Email}" +
+                    $" by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
             }
             _notyf.Success("Manager account is created successfully.");
             return RedirectToAction("ManageManagers");
@@ -678,10 +675,6 @@ namespace ICSCOMP1640CORE.Controllers
             {
                 _notyf.Error("Year is invalid! Year should be the same in Academic, Closure and Final Closure!");
             }
-            /*else if(DateTimeCompare < 0)
-            {
-                _notyf.Error("Invalid Date! Closure Date is earlier than Final Closure Date");
-            }*/
             else if (DateTimeCompare == 0)
             {
                 _notyf.Error("Invalid Date! Closure Date and Final Closure Date are the same!");
@@ -702,7 +695,6 @@ namespace ICSCOMP1640CORE.Controllers
 
                 _notyf.Success("Academic Year & Idea Period Have Been Set");
             }
-
 
             return RedirectToAction("AcademicIdeaPeriodSet");
         }

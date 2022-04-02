@@ -116,6 +116,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
 
+
                 var user = new User {
                     UserName = Input.Email,
                     Email = Input.Email,
@@ -127,6 +128,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                     DepartmentId = Input.DepartmentId,
 
                 };
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 _userManager.AddToRoleAsync(user, "Staff").GetAwaiter().GetResult();
                 if (result.Succeeded)
@@ -142,7 +144,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Hi! Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"Hi! {Input.FullName} Please confirm your account with Email {Input.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -158,7 +160,17 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                 }
                 foreach (var error in result.Errors)
                 {
-                    _notyf.Error(error.Description, 3);
+                    if (_userManager.FindByEmailAsync(Input.Email).GetAwaiter().GetResult() != null)
+                    {
+                        //TempData["Danger"] = "The email address is already registered";
+                        _notyf.Error("This email address is already registered! Please try again!");
+                        return Redirect(Request.Headers["Referer"].ToString());
+                    }
+                    else
+                    {
+                        _notyf.Error(error.Description, 3);
+                        return Redirect(Request.Headers["Referer"].ToString());
+                    }
                     //ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
