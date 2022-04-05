@@ -140,8 +140,7 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public async Task<IActionResult> DownloadDocumentIdea(int id)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            var ideaInDb = _db.Ideas.SingleOrDefault(y => y.Id == id);
+            var ideaInDb = _db.Ideas.Include(y => y.Department).Include(y => y.User).SingleOrDefault(y => y.Id == id);
 
             if (ideaInDb.Document != null)
             {
@@ -150,7 +149,7 @@ namespace ICSCOMP1640CORE.Controllers
                 return File(
                     fileBytes,         /*byte []*/
                     "application/pdf", /*mime type*/
-                    $"DocumentFile_(Staff-{currentUser.FullName})-(Department-{currentUser.Department}).pdf");    /*name of the file*/
+                    $"DocumentFile_(Staff-{ideaInDb.User.FullName})-(Department-{ideaInDb.Department.Name}).pdf");    /*name of the file*/
             }
 
             return RedirectToAction("IdeaDetail","Staffs");
