@@ -220,7 +220,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
         }
 
         [HttpGet]
-        public async Task<IActionResult> DownloadDocumentIdea(int id)
+        public IActionResult DownloadDocumentIdea(int id)
         {
             var ideaInDb = _db.Ideas.Include(y => y.Department).Include(y => y.User).SingleOrDefault(y => y.Id == id);
 
