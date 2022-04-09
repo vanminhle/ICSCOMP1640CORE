@@ -436,8 +436,8 @@ namespace ICSCOMP1640CORE.Controllers
             Id = userId.ToString();
             var StaffInDb = _db.Users.SingleOrDefault(i => i.Id == Id);
 
-            var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
-            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
+            /*var departmentList = _db.Departments.Select(x => new { x.Id, x.Name }).ToList();
+            ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");*/
             return View(StaffInDb);
         }
 
@@ -455,7 +455,7 @@ namespace ICSCOMP1640CORE.Controllers
             StaffInDb.Address = staff.Address;
             StaffInDb.Age = staff.Age;
             StaffInDb.Gender = staff.Gender;
-            StaffInDb.DepartmentId = staff.DepartmentId;
+            StaffInDb.DepartmentId = StaffInDb.DepartmentId;
             StaffInDb.PhoneNumber = staff.PhoneNumber;
 
             _db.Update(StaffInDb);
