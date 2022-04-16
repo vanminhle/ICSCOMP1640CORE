@@ -32,7 +32,6 @@
 					<th scope="col" class="col-4">Full Name</th>
 					<th scope="col" class="col-4">Email</th>
 					<th scope="col" class="col-1">Gender</th>
-					<th scope="col" class="col-2">Department</th>
 					<th scope="col" class="col-1">Verified</th>
 					<th scope="col" class="col-1">Edit</th>
 					<th scope="col" class="col-1">Info</th>
@@ -46,7 +45,6 @@
 						<td class="align-middle" scope="row">@item.FullName</td>
 						<td class="align-middle" scope="row">@item.Email</td>
 						<td class="align-middle" scope="row">@item.Gender</td>
-						<td class="align-middle" scope="row">@item.Department.Name</td>
 						<th class="align-middle" scope="row">@item.EmailConfirmed</th>
 						<td class="align-middle">
 							@Html.ActionLink("", "EditManager", "Admins", new { id = item.Id }, new { @class = "btn btn-success fas fa-edit", @title = "Edit" })

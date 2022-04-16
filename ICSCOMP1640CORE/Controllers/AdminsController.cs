@@ -169,7 +169,7 @@ namespace ICSCOMP1640CORE.Controllers
         {
             Coordinator model = new Coordinator();
 
-            var departmentList = _db.Departments.Where(x => x.IsAssignedCoordinator == false).Select(x => new { x.Id, x.Name }).ToList();
+            var departmentList = _db.Departments.Where(x => x.IsAssignedCoordinator == false).Where(x => x.Name != "Manager").Select(x => new { x.Id, x.Name }).ToList();
             var department = _db.Departments.ToList();
             ViewBag.departmentList = new SelectList(departmentList, "Id", "Name");
 
@@ -242,7 +242,16 @@ namespace ICSCOMP1640CORE.Controllers
                 await _emailSender.SendEmailAsync(
                     coordinator.Email,
                     "Confirm your email",
-                    $"Hi, {coordinator.FullName} Please confirm your email account {coordinator.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hi, {coordinator.FullName}<br>" +
+                    $"<br>" +
+                    $"Please confirm your email account {coordinator.Email} " +
+                    $"by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.<br> " +
+                    $"You are the Quality Assurance Coordinator of {coordinator.Department.Name} Department in the University<br> " +
+                    $"<br>" +
+                    $"Regards<br>" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"-- IDEA COLLECTING SYSTEM");
             }
             _notyf.Success("Coordinator account is created successfully.");
             return RedirectToAction("ManageCoordinators");
@@ -285,7 +294,13 @@ namespace ICSCOMP1640CORE.Controllers
         [HttpGet]
         public IActionResult DeleteCondinator(string Id)
         {
-            var coordinatorindb = _db.Users.SingleOrDefault(item => item.Id == Id);
+
+            var coordinatorindb = _db.Users.OfType<User>().Include("Department").FirstOrDefault(t => t.Id == Id);
+
+            var Department = _db.Departments.SingleOrDefault(x => x.Id == coordinatorindb.DepartmentId);
+            Department.IsAssignedCoordinator = false;
+            _db.Departments.Update(Department);
+
             _db.Users.Remove(coordinatorindb);
             _db.SaveChanges();
 
@@ -387,8 +402,16 @@ namespace ICSCOMP1640CORE.Controllers
                 await _emailSender.SendEmailAsync(
                     manager.Email,
                     "Confirm your email",
-                    $"Hi, {manager.FullName} Please confirm your email account {manager.Email}" +
-                    $" by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hi, {manager.FullName}<br>" +
+                    $"<br>" +
+                    $"Please confirm your email account {manager.Email} " +
+                    $"by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.<br> " +
+                    $"You are the Quality Assurance Manager in the University<br> " +
+                    $"<br>" +
+                    $"Regards<br>" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"-- IDEA COLLECTING SYSTEM");
             }
             _notyf.Success("Manager account is created successfully.");
             return RedirectToAction("ManageManagers");

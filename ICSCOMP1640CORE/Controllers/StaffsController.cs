@@ -233,8 +233,17 @@ namespace ICSCOMP1640CORE.Controllers
                 _db.Entry(user).Reference(x => x.Department).Load();
                 await _emailSender.SendEmailAsync(
                 user.Email,
-                $"Your Department Have New Idea Submit by {user.FullName}",
-                $"Hi, {user.FullName}, Your Department {currentUser.Department.Name} have new Idea ({idea.IdeaName}) submitted by ({user.FullName}) in ({idea.SubmitDate.ToString("dd / mm / yyyy hh: mm tt")})");
+                 "Your Department Have New Idea!",
+                    $"Hi, {user.FullName}<br>" +
+                    $"<br>" +
+                    $"Your Department: {currentUser.Department.Name} <br>" +
+                    $"Have new Idea submitted by: {currentUser.FullName} <br>" +
+                    $"At: {idea.SubmitDate.ToString("dd/mm/yyyy hh:mm tt")}<br>" +
+                    $"<br>" +
+                    $"Regards<br>" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"-- IDEA COLLECTING SYSTEM");
             }
 
             _db.Ideas.Add(model);
@@ -519,8 +528,20 @@ namespace ICSCOMP1640CORE.Controllers
 
             await _emailSender.SendEmailAsync(
             infoIdea.User.Email,
-            $"Your Idea ({infoIdea.IdeaName}) Have New Comment Submit by ({currentUser.FullName})",
-            $"Hi, {infoIdea.User.FullName}, Your Idea {infoIdea.IdeaName} have new comment by ({currentUser.FullName}) in ({comment.CreatedAt.ToString("dd / mm / yyyy hh: mm tt")}) with content ({comment.Content})");
+             "Your Idea Have New Comment!",
+                    $"Hi, {infoIdea.User.FullName}<br>" +
+                    $"<br>" +
+                    $"Your Idea: {infoIdea.IdeaName} <br>" +
+                    $"Have new Comment given by: {currentUser.FullName} <br>" +
+                    $"At: {comment.CreatedAt.ToString("dd/mm/yyyy hh:mm tt")}<br>" +
+                    $"With content: {comment.Content}" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"Regards<br>" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"-- IDEA COLLECTING SYSTEM");
+
 
             _db.Comments.Add(model);
             _db.SaveChanges();

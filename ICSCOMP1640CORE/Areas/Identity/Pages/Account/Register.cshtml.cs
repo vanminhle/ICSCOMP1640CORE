@@ -144,7 +144,15 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Hi! {Input.FullName} Please confirm your account with Email {Input.Email} by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Hi, {Input.FullName}<br>" +
+                    $"<br>" +
+                    $"Please confirm your email account {Input.Email} " +
+                    $"by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.<br> " +
+                    $"<br>" +
+                    $"Regards<br>" +
+                    $"<br>" +
+                    $"<br>" +
+                    $"-- IDEA COLLECTING SYSTEM");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

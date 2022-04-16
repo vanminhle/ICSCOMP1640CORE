@@ -167,7 +167,7 @@ namespace ICSCOMP1640CORE.Areas.Identity.Pages.Account.Manage
 			if (!String.IsNullOrEmpty(searchString))
 			{
 				data = data
-					.Where(s => s.FullName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+					.Where(s => s.FullName.Contains(searchString.ToLower(), StringComparison.OrdinalIgnoreCase))
 				.ToList();
 			}
 			foreach (var user in data)
