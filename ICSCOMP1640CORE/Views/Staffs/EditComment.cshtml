@@ -14,6 +14,7 @@
 }
 <form asp-controller="Staffs" asp-action="EditComment" method="post">
     @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.IdeaId)
     <div class="form-group">
         <label for="IdeaContent">Content</label>
         <textarea class="form-control" id="IdeaContent" rows="5" type="text" class="form-control" asp-for="Content" required></textarea>

@@ -457,7 +457,7 @@ namespace ICSCOMP1640CORE.Controllers
             _db.Users.Remove(managerindb);
             _db.SaveChanges();
 
-            _notyf.Success("Coordinator account is deleted successfully.");
+            _notyf.Success("Manager account is deleted successfully.");
             return RedirectToAction("ManageManagers");
         }
 

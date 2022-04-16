@@ -593,7 +593,7 @@ namespace ICSCOMP1640CORE.Controllers
             commentInDb.Content = comment.Content;
             _db.SaveChanges();
             _notyf.Success("Comment is edited successfully.", 3);
-            return RedirectToAction("IdeaIndex");
+            return RedirectToAction("IdeaDetail", new {id = comment.IdeaId});
         }
     }
 }
