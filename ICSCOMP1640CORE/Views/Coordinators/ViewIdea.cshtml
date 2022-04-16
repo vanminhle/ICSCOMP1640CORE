@@ -13,13 +13,13 @@
 	<div class="infor">
 		<div class="title">
 			<div class="title-Infor" style="font-size:35px;text-align: center; padding-bottom:10px;">
-				@Model.NameCreator
+				@Model.User.FullName
 			</div>
 			<div style="font-size:23px;text-align: center; padding-bottom:18px;">
 				@Model.IdeaName
 			</div>
 			<div style="text-align: center; display: flex; flex-direction: column; gap: 10px;">
-				<p style="margin-bottom: 0px;">Email: @Model.EmailCreator</p>
+				<p style="margin-bottom: 0px;">Email: @Model.User.Email</p>
 				<p style="margin-bottom: 0px;">Submit At: @Model.SubmitDate.ToString("MM/dd/yyyy hh:mm tt")</p>
 				<p style="margin-bottom: 0px;">Category: @Model.Category.Name</p>
 				<p style="margin-bottom: 0px;">Department: @Model.Department.Name</p>
